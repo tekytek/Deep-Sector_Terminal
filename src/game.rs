@@ -594,16 +594,79 @@ impl Game {
         match key.code {
             KeyCode::Char('m') | KeyCode::Esc => self.change_screen(GameScreen::MainMenu),
             KeyCode::Char('b') => {
-                // Create buy order (to be implemented)
-                self.message = Some("Buy order functionality to be implemented".to_string());
+                // Create buy order
+                if self.orders_view_active && self.player.is_docked {
+                    // In a real implementation, this would open a form or dialog
+                    // For now, we'll create a sample buy order
+                    let item_name = "Iron"; // Would come from user input in full implementation
+                    let quantity = 10;
+                    let target_price = 50;
+                    let notes = "Test buy order";
+                    
+                    match self.trading_system.create_buy_order(
+                        &mut self.player, 
+                        item_name, 
+                        quantity, 
+                        target_price, 
+                        notes
+                    ) {
+                        Ok(_) => self.show_message(format!("Created buy order for {} {}", quantity, item_name)),
+                        Err(e) => self.show_message(format!("Error creating buy order: {}", e)),
+                    }
+                } else if !self.player.is_docked {
+                    self.show_message("You must be docked at a station to create orders".to_string());
+                } else {
+                    self.show_message("You can only create orders in the active orders view".to_string());
+                }
             },
             KeyCode::Char('s') => {
-                // Create sell order (to be implemented)
-                self.message = Some("Sell order functionality to be implemented".to_string());
+                // Create sell order
+                if self.orders_view_active && self.player.is_docked {
+                    // In a real implementation, this would open a form or dialog
+                    // For now, we'll create a sample sell order for an item the player might have
+                    
+                    // Check if player has any items to sell
+                    // First get an item if available
+                    let item_to_sell = self.player.inventory.items.iter().next().map(|(item, _qty)| {
+                        (item.name.clone(), item.value)
+                    });
+                    
+                    if let Some((item_name, item_value)) = item_to_sell {
+                        let quantity = 1; // Keep it simple for testing
+                        let target_price = item_value + 10; // Sell for profit
+                        let notes = "Test sell order";
+                        
+                        match self.trading_system.create_sell_order(
+                            &mut self.player, 
+                            &item_name, 
+                            quantity, 
+                            target_price, 
+                            notes
+                        ) {
+                            Ok(_) => self.show_message(format!("Created sell order for {} {}", quantity, item_name)),
+                            Err(e) => self.show_message(format!("Error creating sell order: {}", e)),
+                        }
+                    } else {
+                        self.show_message("You have no items to sell".to_string());
+                    }
+                } else if !self.player.is_docked {
+                    self.show_message("You must be docked at a station to create orders".to_string());
+                } else {
+                    self.show_message("You can only create orders in the active orders view".to_string());
+                }
             },
             KeyCode::Char('c') => {
-                // Cancel selected order (to be implemented)
-                self.message = Some("Cancel order functionality to be implemented".to_string());
+                // Cancel selected order
+                if self.orders_view_active && self.player.is_docked {
+                    match self.trading_system.cancel_selected_order(&mut self.player) {
+                        Ok(_) => self.show_message("Order cancelled successfully".to_string()),
+                        Err(e) => self.show_message(format!("Error cancelling order: {}", e)),
+                    }
+                } else if !self.player.is_docked {
+                    self.show_message("You must be docked at a station to cancel orders".to_string());
+                } else {
+                    self.show_message("You can only cancel orders in the active orders view".to_string());
+                }
             },
             KeyCode::Up => {
                 // Navigate up through orders
@@ -616,8 +679,10 @@ impl Game {
             KeyCode::Tab => {
                 // Toggle between active and completed orders
                 self.orders_view_active = !self.orders_view_active;
+                // Clear selection when changing views
+                self.trading_system.deselect_order();
                 let status = if self.orders_view_active { "active" } else { "completed" };
-                self.message = Some(format!("Viewing {} orders", status));
+                self.show_message(format!("Viewing {} orders", status));
             },
             _ => {}
         }

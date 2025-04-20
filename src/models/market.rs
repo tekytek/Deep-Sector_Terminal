@@ -493,9 +493,46 @@ impl Market {
             }
         }
         
-        // Update trade orders
-        // This would typically check for orders that should be executed
-        // based on current market prices
+        // Update trade orders - check if any orders should be executed based on current prices
+        let items_copy = self.items.clone(); // Clone to avoid borrowing issues
+        let order_current_time = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or(Duration::from_secs(0))
+            .as_secs();
+            
+        for order in &mut self.trade_orders {
+            if order.status != OrderStatus::Active {
+                continue;
+            }
+            
+            // Get the current market price for the item
+            if let Some(market_item) = items_copy.get(&order.item_name) {
+                let current_price = market_item.current_price;
+                
+                match order.order_type {
+                    OrderType::Buy => {
+                        // Execute buy orders when price falls below or equals target price
+                        if current_price <= order.target_price {
+                            order.status = OrderStatus::Completed;
+                            order.executed_at = Some(order_current_time);
+                            
+                            // In a real implementation, we would transfer money and goods here
+                            // For now, we just mark the order as completed
+                        }
+                    },
+                    OrderType::Sell => {
+                        // Execute sell orders when price rises above or equals target price
+                        if current_price >= order.target_price {
+                            order.status = OrderStatus::Completed;
+                            order.executed_at = Some(order_current_time);
+                            
+                            // In a real implementation, we would transfer money and goods here
+                            // For now, we just mark the order as completed
+                        }
+                    }
+                }
+            }
+        }
         
         // Mark expired orders
         let current_time = std::time::SystemTime::now()

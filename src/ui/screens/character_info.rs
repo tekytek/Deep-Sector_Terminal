@@ -6,8 +6,7 @@ use tui::{
     widgets::{Block, Borders, List, ListItem, Paragraph, Tabs, Wrap},
     Frame,
 };
-use crate::game::{Game, GameScreen};
-use crate::models::skills::SkillCategory;
+use crate::game::Game;
 use crate::ui::colors;
 
 // Character info screen enum to track which tab is active

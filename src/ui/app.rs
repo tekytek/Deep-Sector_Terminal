@@ -8,7 +8,7 @@ use crossterm::{
     ExecutableCommand,
 };
 use tui::{
-    backend::{Backend, CrosstermBackend},
+    backend::CrosstermBackend,
     Terminal,
 };
 

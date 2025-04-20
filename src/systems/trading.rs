@@ -114,6 +114,62 @@ impl TradingSystem {
         if self.last_transaction > Duration::from_secs(60) {
             universe.update_market_prices();
             self.last_transaction = Duration::from_secs(0);
+            
+            // Process all active orders in every market after updating prices
+            self.process_all_orders(universe);
+        }
+    }
+    
+    // Process all active orders in all markets
+    fn process_all_orders(&mut self, universe: &mut Universe) {
+        // Get all systems with markets
+        let system_ids = universe.get_all_system_ids();
+        let mut executed_orders = Vec::new();
+        
+        // Process orders for each market
+        for system_id in system_ids {
+            if let Some(market) = universe.get_market_mut(&system_id) {
+                // In a real implementation, we'd get the player's inventory and credits
+                // For now, this is a placeholder that won't actually execute orders
+                // But would process and check them
+                
+                // TODO: In the full implementation, get player inventory and credits
+                // let executed = market.process_orders(&mut player.inventory.items, &mut player.credits);
+                // executed_orders.extend(executed);
+                
+                // Just check conditions for now without executing
+                for order in &mut market.trade_orders {
+                    if order.status != OrderStatus::Active {
+                        continue;
+                    }
+                    
+                    // Check if market has this item
+                    if let Some(market_item) = market.items.get(&order.item_name) {
+                        let current_price = market_item.current_price;
+                        
+                        // Check price conditions
+                        match order.order_type {
+                            OrderType::Buy => {
+                                if current_price <= order.target_price {
+                                    // This order would be executed if the player had enough credits
+                                    // and was at this market
+                                }
+                            },
+                            OrderType::Sell => {
+                                if current_price >= order.target_price {
+                                    // This order would be executed if the player had the items
+                                    // and was at this market
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // In future: notify the player about executed orders
+        if !executed_orders.is_empty() {
+            // Send notification to player
         }
     }
     
@@ -211,13 +267,17 @@ impl TradingSystem {
     
     pub fn get_selected_order(&self) -> Option<&TradeOrder> {
         // This function returns the currently selected order if one exists
-        if let Some(index) = self.selected_order_index {
-            // This implementation depends on how orders are stored and accessed
-            // For now it's a placeholder - we'd need to reference the actual orders list
-            None
-        } else {
-            None
-        }
+        let _index = self.selected_order_index?; // Early return None if no selection
+        
+        // We'll need to get active orders from the current system
+        // Since this is a placeholder implementation that doesn't have direct
+        // access to the player and universe, we'll return None for now
+        // 
+        // In a real implementation, we would:
+        // 1. Get all active orders from the market
+        // 2. Filter for orders from the current player
+        // 3. Return the order at the selected index if it exists
+        None
     }
     
     pub fn cancel_selected_order(&mut self, player: &mut Player) -> Result<(), String> {

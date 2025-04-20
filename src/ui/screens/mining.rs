@@ -63,7 +63,7 @@ fn draw_no_resources_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
     f.render_widget(paragraph, area);
 }
 
-fn draw_resource_fields<B: Backend>(f: &mut Frame<B>, game: &Game, fields: &[ResourceField], area: Rect) {
+fn draw_resource_fields<B: Backend>(f: &mut Frame<B>, _game: &Game, fields: &[ResourceField], area: Rect) {
     let block = Block::default()
         .title(Span::styled(" DETECTED RESOURCE FIELDS ", Style::default().fg(colors::PRIMARY)))
         .borders(Borders::ALL)
