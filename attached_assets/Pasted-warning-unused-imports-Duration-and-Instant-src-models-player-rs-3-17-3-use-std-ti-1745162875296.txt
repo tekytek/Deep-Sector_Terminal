@@ -1,0 +1,724 @@
+warning: unused imports: `Duration` and `Instant`
+ --> src/models/player.rs:3:17
+  |
+3 | use std::time::{Duration, Instant};
+  |                 ^^^^^^^^  ^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused imports: `Duration` and `Instant`
+ --> src/models/skills.rs:1:17
+  |
+1 | use std::time::{Duration, Instant};
+  |                 ^^^^^^^^  ^^^^^^^
+
+warning: unused import: `Instant`
+ --> src/models/blueprint.rs:1:27
+  |
+1 | use std::time::{Duration, Instant};
+  |                           ^^^^^^^
+
+warning: unused import: `Item`
+ --> src/models/blueprint.rs:5:27
+  |
+5 | use crate::models::item::{Item, ItemType};
+  |                           ^^^^
+
+warning: unused import: `SkillCategory`
+ --> src/models/blueprint.rs:6:36
+  |
+6 | use crate::models::skills::{Skill, SkillCategory};
+  |                                    ^^^^^^^^^^^^^
+
+warning: unused import: `ResourceType`
+ --> src/systems/crafting.rs:2:43
+  |
+2 | use crate::models::item::{Item, ItemType, ResourceType};
+  |                                           ^^^^^^^^^^^^
+
+warning: unused imports: `Color`, `Row`, and `Table`
+ --> src/ui/screens/navigation.rs:4:13
+  |
+4 |     style::{Color, Style},
+  |             ^^^^^
+5 |     text::{Span, Spans},
+6 |     widgets::{Block, Borders, Paragraph, Table, Row},
+  |                                          ^^^^^  ^^^
+
+warning: unused imports: `Block`, `Borders`, and `Color`
+ --> src/ui/screens/market.rs:4:13
+  |
+4 |     style::{Color, Style},
+  |             ^^^^^
+5 |     text::{Span, Spans},
+6 |     widgets::{Block, Borders, Paragraph, Table, Row},
+  |               ^^^^^  ^^^^^^^
+
+warning: unused imports: `Block`, `Borders`, `Color`, `Row`, and `Table`
+ --> src/ui/screens/ship.rs:4:13
+  |
+4 |     style::{Color, Style},
+  |             ^^^^^
+5 |     text::{Span, Spans},
+6 |     widgets::{Block, Borders, Paragraph, Table, Row},
+  |               ^^^^^  ^^^^^^^             ^^^^^  ^^^
+
+warning: unused import: `Color`
+ --> src/ui/screens/mining.rs:4:13
+  |
+4 |     style::{Color, Style},
+  |             ^^^^^
+
+warning: unused imports: `Block`, `Borders`, and `Color`
+ --> src/ui/screens/crafting.rs:4:13
+  |
+4 |     style::{Color, Style},
+  |             ^^^^^
+5 |     text::{Span, Spans},
+6 |     widgets::{Block, Borders, Paragraph, Table, Row},
+  |               ^^^^^  ^^^^^^^
+
+warning: unused imports: `Block`, `Borders`, and `Color`
+ --> src/ui/widgets/status_bar.rs:4:13
+  |
+4 |     style::{Color, Style},
+  |             ^^^^^
+5 |     text::{Span, Spans},
+6 |     widgets::{Block, Borders, Paragraph},
+  |               ^^^^^  ^^^^^^^
+
+warning: unused imports: `Color`, `Constraint`, `Direction`, and `Layout`
+ --> src/ui/widgets/menu.rs:3:14
+  |
+3 |     layout::{Constraint, Direction, Layout, Rect},
+  |              ^^^^^^^^^^  ^^^^^^^^^  ^^^^^^
+4 |     style::{Color, Style},
+  |             ^^^^^
+
+warning: unused import: `Instant`
+ --> src/network/protocol.rs:3:27
+  |
+3 | use std::time::{Duration, Instant};
+  |                           ^^^^^^^
+
+warning: unused import: `crate::models::item::Item`
+ --> src/network/protocol.rs:7:5
+  |
+7 | use crate::models::item::Item;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::net::SocketAddr`
+ --> src/network/client.rs:9:5
+  |
+9 | use std::net::SocketAddr;
+  |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `dotenv::dotenv`
+  --> src/network/server.rs:10:5
+   |
+10 | use dotenv::dotenv;
+   |     ^^^^^^^^^^^^^^
+
+warning: unused import: `std::env`
+  --> src/network/server.rs:11:5
+   |
+11 | use std::env;
+   |     ^^^^^^^^
+
+warning: unused import: `crate::models::ship::Ship`
+  --> src/network/server.rs:17:5
+   |
+17 | use crate::models::ship::Ship;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::universe::Universe`
+  --> src/network/server.rs:18:5
+   |
+18 | use crate::models::universe::Universe;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: value assigned to `message` is never read
+   --> src/network/server.rs:303:25
+    |
+303 |                 let mut message = String::new();
+    |                         ^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` on by default
+
+warning: value assigned to `message` is never read
+   --> src/network/server.rs:362:25
+    |
+362 |                 let mut message = String::new();
+    |                         ^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: value assigned to `success` is never read
+   --> src/network/server.rs:415:25
+    |
+415 |                 let mut success = false;
+    |                         ^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: value assigned to `message` is never read
+   --> src/network/server.rs:416:25
+    |
+416 |                 let mut message = String::new();
+    |                         ^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: variable does not need to be mutable
+   --> src/network/server.rs:358:21
+    |
+358 |                 let mut game_state = game.lock().await;
+    |                     ----^^^^^^^^^^
+    |                     |
+    |                     help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` on by default
+
+warning: variable does not need to be mutable
+   --> src/network/server.rs:412:21
+    |
+412 |                 let mut game_state = game.lock().await;
+    |                     ----^^^^^^^^^^
+    |                     |
+    |                     help: remove this `mut`
+
+warning: variable does not need to be mutable
+   --> src/network/server.rs:417:21
+    |
+417 |                 let mut updated_market = None;
+    |                     ----^^^^^^^^^^^^^^
+    |                     |
+    |                     help: remove this `mut`
+
+warning: field `current_market` is never read
+  --> src/network/client.rs:25:5
+   |
+18 | pub struct GameClient {
+   |            ---------- field in this struct
+...
+25 |     current_market: Option<Market>,
+   |     ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: fields `id` and `addr` are never read
+  --> src/network/server.rs:23:5
+   |
+22 | struct ClientConnection {
+   |        ---------------- fields in this struct
+23 |     id: Uuid,
+   |     ^^
+24 |     username: String,
+25 |     addr: SocketAddr,
+   |     ^^^^
+
+warning: field `config` is never read
+  --> src/network/server.rs:35:5
+   |
+31 | pub struct GameServer {
+   |            ---------- field in this struct
+...
+35 |     config: GameConfig,
+   |     ^^^^^^
+
+warning: `space_trader` (lib) generated 30 warnings (run `cargo fix --lib -p space_trader` to apply 23 suggestions)
+warning: unused imports: `Color`, `Row`, and `Table`
+ --> src/ui/screens/navigation.rs:4:13
+  |
+4 |     style::{Color, Style},
+  |             ^^^^^
+5 |     text::{Span, Spans},
+6 |     widgets::{Block, Borders, Paragraph, Table, Row},
+  |                                          ^^^^^  ^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused imports: `Duration` and `Instant`
+ --> src/models/player.rs:3:17
+  |
+3 | use std::time::{Duration, Instant};
+  |                 ^^^^^^^^  ^^^^^^^
+
+warning: constant `ENERGY` is never used
+  --> src/ui/colors.rs:14:11
+   |
+14 | pub const ENERGY: Color = Color::Rgb(130, 60, 255);       // #823CFF (pu...
+   |           ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: constant `SHIELD` is never used
+  --> src/ui/colors.rs:15:11
+   |
+15 | pub const SHIELD: Color = Color::Rgb(60, 170, 255);       // #3CAAFF (sh...
+   |           ^^^^^^
+
+warning: constant `HULL` is never used
+  --> src/ui/colors.rs:16:11
+   |
+16 | pub const HULL: Color = Color::Rgb(180, 180, 180);        // #B4B4B4 (hu...
+   |           ^^^^
+
+warning: constant `STARS_BG` is never used
+  --> src/ui/colors.rs:17:11
+   |
+17 | pub const STARS_BG: Color = Color::Rgb(5, 10, 25);        // #050A19 (de...
+   |           ^^^^^^^^
+
+warning: function `create_status_bar` is never used
+   --> src/ui/screens/style_utils.rs:106:8
+    |
+106 | pub fn create_status_bar(title: &str) -> Block {
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: function `format_menu_option` is never used
+   --> src/ui/screens/style_utils.rs:114:8
+    |
+114 | pub fn format_menu_option(key: char, label: &str, is_selected: bool) ->...
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `create_gauge_text` is never used
+   --> src/ui/screens/style_utils.rs:130:8
+    |
+130 | pub fn create_gauge_text(label: &str, current: u32, max: u32, color: Co...
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: function `draw_menu` is never used
+  --> src/ui/widgets/menu.rs:12:8
+   |
+12 | pub fn draw_menu<B: Backend>(
+   |        ^^^^^^^^^
+
+warning: function `get_station_art` is never used
+  --> src/ui/ascii_art.rs:62:8
+   |
+62 | pub fn get_station_art() -> String {
+   |        ^^^^^^^^^^^^^^^
+
+warning: methods `advance_storyline` and `set_storyline` are never used
+  --> src/models/player.rs:30:12
+   |
+20 | impl Character {
+   | -------------- methods in this implementation
+...
+30 |     pub fn advance_storyline(&mut self) -> bool {
+   |            ^^^^^^^^^^^^^^^^^
+...
+46 |     pub fn set_storyline(&mut self, storyline: Storyline) -> bool {
+   |            ^^^^^^^^^^^^^
+
+warning: associated items `with_character` and `update_skills` are never used
+   --> src/models/player.rs:118:12
+    |
+70  | impl Player {
+    | ----------- associated items in this implementation
+...
+118 |     pub fn with_character(name: &str, faction: FactionType, storyline: ...
+    |            ^^^^^^^^^^^^^^
+...
+131 |     pub fn update_skills(&mut self) {
+    |            ^^^^^^^^^^^^^
+
+warning: methods `repair`, `recharge_shield`, `take_damage`, and `get_cargo_space_available` are never used
+   --> src/models/ship.rs:74:12
+    |
+37  | impl Ship {
+    | --------- methods in this implementation
+...
+74  |     pub fn repair(&mut self, amount: u32) {
+    |            ^^^^^^
+...
+78  |     pub fn recharge_shield(&mut self, amount: u32) {
+    |            ^^^^^^^^^^^^^^^
+...
+82  |     pub fn take_damage(&mut self, amount: u32) -> bool {
+    |            ^^^^^^^^^^^
+...
+103 |     pub fn get_cargo_space_available(&self) -> u32 {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `to_string`, `required_mining_level`, and `danger_level` are never used
+  --> src/models/universe.rs:20:12
+   |
+19 | impl ResourceFieldType {
+   | ---------------------- methods in this implementation
+20 |     pub fn to_string(&self) -> String {
+   |            ^^^^^^^^^
+...
+72 |     pub fn required_mining_level(&self) -> u8 {
+   |            ^^^^^^^^^^^^^^^^^^^^^
+...
+83 |     pub fn danger_level(&self) -> u8 {
+   |            ^^^^^^^^^^^^
+
+warning: associated items `new`, `add_item`, `buy_item`, `sell_item`, and `update_prices` are never used
+  --> src/models/market.rs:22:12
+   |
+21 | impl Market {
+   | ----------- associated items in this implementation
+22 |     pub fn new(system_id: &str) -> Self {
+   |            ^^^
+...
+30 |     pub fn add_item(&mut self, item: Item, quantity: u32, base_price: u3...
+   |            ^^^^^^^^
+...
+41 |     pub fn buy_item(&mut self, item_name: &str, quantity: u32) -> Option...
+   |            ^^^^^^^^
+...
+53 |     pub fn sell_item(&mut self, item: Item, quantity: u32) -> u32 {
+   |            ^^^^^^^^^
+...
+67 |     pub fn update_prices(&mut self, game_time: u64) {
+   |            ^^^^^^^^^^^^^
+
+warning: associated function `new` is never used
+  --> src/models/item.rs:34:12
+   |
+33 | impl Item {
+   | --------- associated function in this implementation
+34 |     pub fn new(name: &str, value: u32, weight: u32, item_type: ItemType)...
+   |            ^^^
+
+warning: constant `SKILL_POINTS_PER_SECOND` is never used
+ --> src/models/skills.rs:5:7
+  |
+5 | const SKILL_POINTS_PER_SECOND: f32 = 0.1; // Base rate for skill point ac...
+  |       ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `SKILL_LEVEL_THRESHOLDS` is never used
+ --> src/models/skills.rs:6:7
+  |
+6 | const SKILL_LEVEL_THRESHOLDS: [u32; 5] = [100, 300, 600, 1000, 1500]; // ...
+  |       ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `to_string` and `description` are never used
+  --> src/models/skills.rs:19:12
+   |
+18 | impl SkillCategory {
+   | ------------------ methods in this implementation
+19 |     pub fn to_string(&self) -> String {
+   |            ^^^^^^^^^
+...
+30 |     pub fn description(&self) -> String {
+   |            ^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/models/skills.rs:62:12
+    |
+51  | impl Skill {
+    | ---------- methods in this implementation
+...
+62  |     pub fn activate(&mut self) -> bool {
+    |            ^^^^^^^^
+...
+72  |     pub fn deactivate(&mut self) -> bool {
+    |            ^^^^^^^^^^
+...
+81  |     pub fn update(&mut self, current_time: f64) {
+    |            ^^^^^^
+...
+104 |     fn calculate_level(&self) -> u8 {
+    |        ^^^^^^^^^^^^^^^
+...
+113 |     pub fn get_progress_to_next_level(&self) -> f32 {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+128 |     pub fn get_efficiency_bonus(&self) -> f32 {
+    |            ^^^^^^^^^^^^^^^^^^^^
+...
+133 |     pub fn get_time_reduction(&self) -> f32 {
+    |            ^^^^^^^^^^^^^^^^^^
+...
+138 |     pub fn get_quality_bonus(&self) -> f32 {
+    |            ^^^^^^^^^^^^^^^^^
+
+warning: methods `get_skill`, `get_skill_mut`, `update_all`, `activate_skill`, and `deactivate_skill` are never used
+   --> src/models/skills.rs:164:12
+    |
+149 | impl SkillSet {
+    | ------------- methods in this implementation
+...
+164 |     pub fn get_skill(&self, category: &SkillCategory) -> Option<&Skill> {
+    |            ^^^^^^^^^
+...
+168 |     pub fn get_skill_mut(&mut self, category: &SkillCategory) -> Option...
+    |            ^^^^^^^^^^^^^
+...
+172 |     pub fn update_all(&mut self) {
+    |            ^^^^^^^^^^
+...
+179 |     pub fn activate_skill(&mut self, category: &SkillCategory) -> bool {
+    |            ^^^^^^^^^^^^^^
+...
+187 |     pub fn deactivate_skill(&mut self, category: &SkillCategory) -> bool {
+    |            ^^^^^^^^^^^^^^^^
+
+warning: method `to_string` is never used
+  --> src/models/blueprint.rs:18:12
+   |
+17 | impl BlueprintCategory {
+   | ---------------------- method in this implementation
+18 |     pub fn to_string(&self) -> String {
+   |            ^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/models/blueprint.rs:65:12
+    |
+64  | impl Blueprint {
+    | -------------- associated items in this implementation
+65  |     pub fn new(
+    |            ^^^
+...
+103 |     pub fn start_research(&mut self) -> bool {
+    |            ^^^^^^^^^^^^^^
+...
+113 |     pub fn update_research(&mut self, research_skill: &Skill) -> bool {
+    |            ^^^^^^^^^^^^^^^
+...
+145 |     pub fn get_research_progress_percentage(&self) -> f32 {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+153 |     pub fn improve_quality(&mut self) -> bool {
+    |            ^^^^^^^^^^^^^^^
+...
+172 |     pub fn get_crafting_time(&self, engineering_skill: &Skill) -> Durat...
+    |            ^^^^^^^^^^^^^^^^^
+...
+183 |     pub fn create_copy(&self) -> Option<Self> {
+    |            ^^^^^^^^^^^
+...
+220 |     pub fn use_blueprint(&mut self) -> bool {
+    |            ^^^^^^^^^^^^^
+
+warning: methods `add_blueprint`, `get_blueprint`, `get_blueprint_mut`, `remove_blueprint`, and `update_research` are never used
+   --> src/models/blueprint.rs:251:12
+    |
+244 | impl BlueprintLibrary {
+    | --------------------- methods in this implementation
+...
+251 |     pub fn add_blueprint(&mut self, blueprint: Blueprint) {
+    |            ^^^^^^^^^^^^^
+...
+255 |     pub fn get_blueprint(&self, id: &str) -> Option<&Blueprint> {
+    |            ^^^^^^^^^^^^^
+...
+259 |     pub fn get_blueprint_mut(&mut self, id: &str) -> Option<&mut Bluepr...
+    |            ^^^^^^^^^^^^^^^^^
+...
+263 |     pub fn remove_blueprint(&mut self, id: &str) -> bool {
+    |            ^^^^^^^^^^^^^^^^
+...
+272 |     pub fn update_research(&mut self, research_skill: &Skill) {
+    |            ^^^^^^^^^^^^^^^
+
+warning: methods `to_string`, `description`, and `starting_ship` are never used
+  --> src/models/faction.rs:13:12
+   |
+12 | impl FactionType {
+   | ---------------- methods in this implementation
+13 |     pub fn to_string(&self) -> String {
+   |            ^^^^^^^^^
+...
+22 |     pub fn description(&self) -> String {
+   |            ^^^^^^^^^^^
+...
+31 |     pub fn starting_ship(&self) -> Ship {
+   |            ^^^^^^^^^^^^^
+
+warning: methods `advance` and `get_progress_percentage` are never used
+   --> src/models/faction.rs:97:12
+    |
+84  | impl Storyline {
+    | -------------- methods in this implementation
+...
+97  |     pub fn advance(&mut self) -> bool {
+    |            ^^^^^^^
+...
+110 |     pub fn get_progress_percentage(&self) -> f32 {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_storylines_for_faction` is never used
+   --> src/models/faction.rs:119:8
+    |
+119 | pub fn get_storylines_for_faction(faction: &FactionType) -> Vec<Storyli...
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `is_traveling` and `get_remaining_travel_time` are never used
+   --> src/systems/navigation.rs:96:12
+    |
+16  | impl NavigationSystem {
+    | --------------------- methods in this implementation
+...
+96  |     pub fn is_traveling(&self) -> bool {
+    |            ^^^^^^^^^^^^
+...
+100 |     pub fn get_remaining_travel_time(&self) -> Duration {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `select_resource` is never used
+  --> src/systems/mining.rs:67:12
+   |
+12 | impl MiningSystem {
+   | ----------------- method in this implementation
+...
+67 |     pub fn select_resource(&mut self, resource_name: String) {
+   |            ^^^^^^^^^^^^^^^
+
+warning: method `select_blueprint` is never used
+   --> src/systems/crafting.rs:118:12
+    |
+19  | impl CraftingSystem {
+    | ------------------- method in this implementation
+...
+118 |     pub fn select_blueprint(&mut self, index: usize) {
+    |            ^^^^^^^^^^^^^^^^
+
+warning: methods `set_time_multiplier` and `get_time_multiplier` are never used
+  --> src/systems/time.rs:38:12
+   |
+12 | impl TimeSystem {
+   | --------------- methods in this implementation
+...
+38 |     pub fn set_time_multiplier(&mut self, multiplier: f32) {
+   |            ^^^^^^^^^^^^^^^^^^^
+...
+42 |     pub fn get_time_multiplier(&self) -> f32 {
+   |            ^^^^^^^^^^^^^^^^^^^
+
+warning: constant `DEFAULT_SERVER_PORT` is never used
+  --> src/network/protocol.rs:25:11
+   |
+25 | pub const DEFAULT_SERVER_PORT: u16 = 7890;
+   |           ^^^^^^^^^^^^^^^^^^^
+
+warning: constant `HEARTBEAT_INTERVAL` is never used
+  --> src/network/protocol.rs:26:11
+   |
+26 | pub const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
+   |           ^^^^^^^^^^^^^^^^^^
+
+warning: constant `CONNECTION_TIMEOUT` is never used
+  --> src/network/protocol.rs:27:11
+   |
+27 | pub const CONNECTION_TIMEOUT: Duration = Duration::from_secs(10);
+   |           ^^^^^^^^^^^^^^^^^^
+
+warning: struct `GameClient` is never constructed
+  --> src/network/client.rs:18:12
+   |
+18 | pub struct GameClient {
+   |            ^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/network/client.rs:32:12
+    |
+30  | impl GameClient {
+    | --------------- associated items in this implementation
+31  |     /// Create a new game client
+32  |     pub fn new(username: String) -> Self {
+    |            ^^^
+...
+49  |     pub async fn connect(&mut self, server_host: &str, port: Option<u16...
+    |                  ^^^^^^^
+...
+184 |     pub async fn disconnect(&mut self) -> NetworkResult<()> {
+    |                  ^^^^^^^^^^
+...
+208 |     pub async fn receive_message(&self) -> NetworkResult<Message> {
+    |                  ^^^^^^^^^^^^^^^
+...
+230 |     pub async fn request_game_state(&self) -> NetworkResult<()> {
+    |                  ^^^^^^^^^^^^^^^^^^
+...
+248 |     pub async fn navigate_to_system(&self, destination: String) -> Netw...
+    |                  ^^^^^^^^^^^^^^^^^^
+...
+287 |     pub fn get_universe(&self) -> Option<&Universe> {
+    |            ^^^^^^^^^^^^
+...
+292 |     pub fn get_player_ship(&self) -> Option<&Ship> {
+    |            ^^^^^^^^^^^^^^^
+...
+297 |     pub fn is_connected(&self) -> bool {
+    |            ^^^^^^^^^^^^
+
+warning: struct `ClientConnection` is never constructed
+  --> src/network/server.rs:22:8
+   |
+22 | struct ClientConnection {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: struct `GameServer` is never constructed
+  --> src/network/server.rs:31:12
+   |
+31 | pub struct GameServer {
+   |            ^^^^^^^^^^
+
+warning: associated items `new`, `start`, `handle_connection`, `process_message`, and `broadcast` are never used
+   --> src/network/server.rs:40:18
+    |
+38  | impl GameServer {
+    | --------------- associated items in this implementation
+39  |     /// Create a new game server with optional password protection
+40  |     pub async fn new(password: Option<String>) -> Self {
+    |                  ^^^
+...
+68  |     pub async fn start(&self, port: Option<u16>) -> NetworkResult<()> {
+    |                  ^^^^^
+...
+128 |     async fn handle_connection(
+    |              ^^^^^^^^^^^^^^^^^
+...
+258 |     async fn process_message(
+    |              ^^^^^^^^^^^^^^^
+...
+476 |     pub async fn broadcast(&self, message: Message) -> NetworkResult<()> {
+    |                  ^^^^^^^^^
+
+warning: constant `CONNECTION_TIMEOUT` is never used
+   --> src/network/server.rs:494:7
+    |
+494 | const CONNECTION_TIMEOUT: std::time::Duration = std::time::Duration::fr...
+    |       ^^^^^^^^^^^^^^^^^^
+
+warning: variants `ConnectionError`, `AuthError`, `SerializationError`, `ServerError`, `ClientError`, and `Timeout` are never constructed
+  --> src/network/error.rs:10:5
+   |
+5  | pub enum NetworkError {
+   |          ------------ variants in this enum
+...
+10 |     ConnectionError(String),
+   |     ^^^^^^^^^^^^^^^
+...
+13 |     AuthError(String),
+   |     ^^^^^^^^^
+...
+16 |     SerializationError(String),
+   |     ^^^^^^^^^^^^^^^^^^
+...
+19 |     ServerError(String),
+   |     ^^^^^^^^^^^
+...
+22 |     ClientError(String),
+   |     ^^^^^^^^^^^
+...
+25 |     Timeout,
+   |     ^^^^^^^
+   |
+   = note: `NetworkError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: type alias `NetworkResult` is never used
+  --> src/network/error.rs:28:10
+   |
+28 | pub type NetworkResult<T> = Result<T, NetworkError>;
+   |          ^^^^^^^^^^^^^
+
+warning: `space_trader` (bin "space_trader") generated 68 warnings (25 duplicates) (run `cargo fix --bin "space_trader"` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running `target/debug/space_trader`

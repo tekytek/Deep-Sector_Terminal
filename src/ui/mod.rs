@@ -19,14 +19,22 @@ use screens::{
     inventory::draw_inventory,
     help::draw_help,
     main_menu::draw_main_menu,
+    character_creation::draw_character_creation,
 };
 use widgets::status_bar::draw_status_bar;
 
 pub fn draw<B: Backend>(f: &mut Frame<B>, game: &Game) {
-    // For main menu, use the full screen for the animated background
-    if game.current_screen == GameScreen::MainMenu {
-        draw_main_menu(f, game, f.size());
-        return;
+    // For main menu and character creation, use the full screen
+    match game.current_screen {
+        GameScreen::MainMenu => {
+            draw_main_menu(f, game, f.size());
+            return;
+        },
+        GameScreen::CharacterCreation => {
+            draw_character_creation(f, game, f.size());
+            return;
+        },
+        _ => {}
     }
 
     // For other screens, create the standard layout
@@ -45,6 +53,7 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, game: &Game) {
     // Draw the main content based on the current screen
     match game.current_screen {
         GameScreen::MainMenu => {}, // Already handled
+        GameScreen::CharacterCreation => {}, // Already handled
         GameScreen::Navigation => draw_navigation_screen(f, game, chunks[1]),
         GameScreen::Market => draw_market_screen(f, game, chunks[1]),
         GameScreen::Ship => draw_ship_screen(f, game, chunks[1]),

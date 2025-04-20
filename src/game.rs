@@ -22,6 +22,7 @@ use crate::utils::save_load::{save_game, load_game};
 #[derive(PartialEq, Clone, Serialize, Deserialize)]
 pub enum GameScreen {
     MainMenu,
+    CharacterCreation,
     Navigation,
     Market,
     Ship,
@@ -55,6 +56,16 @@ pub struct Game {
     pub animation_frame: u64,
     #[serde(default)]
     pub show_animation_effects: bool,
+    
+    // Character creation related fields
+    #[serde(default)]
+    pub character_name: String,
+    #[serde(default)]
+    pub selected_faction: usize,
+    #[serde(default)]
+    pub selected_storyline: usize,
+    #[serde(default)]
+    pub creation_stage: u8, // 0=name, 1=faction, 2=storyline, 3=confirm
 }
 
 impl Game {
@@ -69,7 +80,7 @@ impl Game {
                 Self {
                     player,
                     universe,
-                    current_screen: GameScreen::MainMenu,
+                    current_screen: GameScreen::CharacterCreation, // Start with character creation
                     previous_screen: GameScreen::MainMenu,
                     navigation_system: NavigationSystem::new(),
                     trading_system: TradingSystem::new(),
@@ -83,6 +94,11 @@ impl Game {
                     message_time: None,
                     animation_frame: 0,
                     show_animation_effects: true,
+                    // Initialize character creation fields
+                    character_name: String::new(),
+                    selected_faction: 0,
+                    selected_storyline: 0,
+                    creation_stage: 0,
                 }
             }
         }
@@ -120,6 +136,7 @@ impl Game {
     pub fn handle_input(&mut self, key: KeyEvent) {
         match self.current_screen {
             GameScreen::MainMenu => self.handle_main_menu_input(key),
+            GameScreen::CharacterCreation => self.handle_character_creation_input(key),
             GameScreen::Navigation => self.handle_navigation_input(key),
             GameScreen::Market => self.handle_market_input(key),
             GameScreen::Ship => self.handle_ship_input(key),
@@ -142,6 +159,261 @@ impl Game {
             KeyCode::Char('h') => self.change_screen(GameScreen::Help),
             KeyCode::Char('q') => self.change_screen(GameScreen::Quit),
             _ => {}
+        }
+    }
+    
+    fn handle_character_creation_input(&mut self, key: KeyEvent) {
+        use crate::models::faction::{FactionType, Storyline};
+        
+        match self.creation_stage {
+            // Character Name Input
+            0 => {
+                match key.code {
+                    KeyCode::Char(c) => {
+                        // Add character to name
+                        self.character_name.push(c);
+                    },
+                    KeyCode::Backspace => {
+                        // Remove last character from name
+                        if !self.character_name.is_empty() {
+                            self.character_name.pop();
+                        }
+                    },
+                    KeyCode::Enter => {
+                        // Advance to faction selection if name isn't empty
+                        if !self.character_name.is_empty() {
+                            self.creation_stage = 1;
+                        } else {
+                            self.show_message("Please enter a name".to_string());
+                        }
+                    },
+                    _ => {}
+                }
+            },
+            // Faction Selection
+            1 => {
+                match key.code {
+                    KeyCode::Char('1') => {
+                        self.selected_faction = 0; // Traders
+                        self.creation_stage = 2;
+                    },
+                    KeyCode::Char('2') => {
+                        self.selected_faction = 1; // Miners
+                        self.creation_stage = 2;
+                    },
+                    KeyCode::Char('3') => {
+                        self.selected_faction = 2; // Military
+                        self.creation_stage = 2;
+                    },
+                    KeyCode::Char('4') => {
+                        self.selected_faction = 3; // Scientists
+                        self.creation_stage = 2;
+                    },
+                    KeyCode::Backspace => {
+                        // Go back to name input
+                        self.creation_stage = 0;
+                    },
+                    _ => {}
+                }
+            },
+            // Storyline Selection
+            2 => {
+                match key.code {
+                    KeyCode::Char('1') => {
+                        self.selected_storyline = 0;
+                        self.creation_stage = 3;
+                    },
+                    KeyCode::Char('2') => {
+                        self.selected_storyline = 1;
+                        self.creation_stage = 3;
+                    },
+                    KeyCode::Char('3') => {
+                        self.selected_storyline = 2;
+                        self.creation_stage = 3;
+                    },
+                    KeyCode::Backspace => {
+                        // Go back to faction selection
+                        self.creation_stage = 1;
+                    },
+                    _ => {}
+                }
+            },
+            // Confirmation
+            3 => {
+                match key.code {
+                    KeyCode::Char('y') => {
+                        // Create the character and start the game
+                        let faction_type = match self.selected_faction {
+                            0 => FactionType::Traders,
+                            1 => FactionType::Miners,
+                            2 => FactionType::Military,
+                            3 => FactionType::Scientists,
+                            _ => FactionType::Traders, // Default fallback
+                        };
+                        
+                        let storyline = self.get_selected_storyline(faction_type.clone());
+                        
+                        // Create new player with selected options
+                        self.player = crate::models::player::Player::with_character(
+                            &self.character_name,
+                            faction_type,
+                            storyline
+                        );
+                        
+                        // Proceed to main game
+                        self.change_screen(GameScreen::MainMenu);
+                    },
+                    KeyCode::Char('n') => {
+                        // Start over
+                        self.character_name.clear();
+                        self.selected_faction = 0;
+                        self.selected_storyline = 0;
+                        self.creation_stage = 0;
+                    },
+                    KeyCode::Backspace => {
+                        // Go back to storyline selection
+                        self.creation_stage = 2;
+                    },
+                    _ => {}
+                }
+            },
+            _ => {
+                // Reset to first stage if somehow outside valid stages
+                self.creation_stage = 0;
+            }
+        }
+    }
+    
+    fn get_selected_storyline(&self, faction: FactionType) -> Storyline {
+        match faction {
+            FactionType::Traders => {
+                match self.selected_storyline {
+                    0 => Storyline::new(
+                        "trader_commerce",
+                        FactionType::Traders,
+                        "Commerce Pioneer",
+                        "Establish trade routes throughout the galaxy and become a wealthy merchant.",
+                        5
+                    ),
+                    1 => Storyline::new(
+                        "trader_smuggler",
+                        FactionType::Traders,
+                        "Smuggler's Run",
+                        "Master the art of moving goods through dangerous territories for higher profits.",
+                        5
+                    ),
+                    2 => Storyline::new(
+                        "trader_entrepreneur",
+                        FactionType::Traders,
+                        "Galactic Entrepreneur",
+                        "Build your own trading empire by investing in stations and infrastructure.",
+                        5
+                    ),
+                    _ => Storyline::new(
+                        "trader_default",
+                        FactionType::Traders,
+                        "Getting Started",
+                        "Learn the basics of trading and navigation.",
+                        5
+                    ),
+                }
+            },
+            FactionType::Miners => {
+                match self.selected_storyline {
+                    0 => Storyline::new(
+                        "miner_prospector",
+                        FactionType::Miners,
+                        "Elite Prospector",
+                        "Discover and claim the richest mining locations in the galaxy.",
+                        5
+                    ),
+                    1 => Storyline::new(
+                        "miner_refiner",
+                        FactionType::Miners,
+                        "Master Refiner",
+                        "Specialize in processing raw materials into high-value refined goods.",
+                        5
+                    ),
+                    2 => Storyline::new(
+                        "miner_asteroids",
+                        FactionType::Miners,
+                        "Asteroid Baron",
+                        "Control the asteroid belts and establish mining operations throughout the system.",
+                        5
+                    ),
+                    _ => Storyline::new(
+                        "miner_default",
+                        FactionType::Miners,
+                        "Getting Started",
+                        "Learn the basics of mining and resource gathering.",
+                        5
+                    ),
+                }
+            },
+            FactionType::Military => {
+                match self.selected_storyline {
+                    0 => Storyline::new(
+                        "military_defense",
+                        FactionType::Military,
+                        "System Defense",
+                        "Protect civilian shipping lanes from pirates and other threats.",
+                        5
+                    ),
+                    1 => Storyline::new(
+                        "military_special_ops",
+                        FactionType::Military,
+                        "Special Operations",
+                        "Undertake covert missions in rival territories and hostile zones.",
+                        5
+                    ),
+                    2 => Storyline::new(
+                        "military_fleet",
+                        FactionType::Military,
+                        "Fleet Commander",
+                        "Lead a squadron of ships to maintain galactic peace and order.",
+                        5
+                    ),
+                    _ => Storyline::new(
+                        "military_default",
+                        FactionType::Military,
+                        "Getting Started",
+                        "Learn the basics of combat and fleet operations.",
+                        5
+                    ),
+                }
+            },
+            FactionType::Scientists => {
+                match self.selected_storyline {
+                    0 => Storyline::new(
+                        "scientist_researcher",
+                        FactionType::Scientists,
+                        "Research Pioneer",
+                        "Discover new technologies by studying cosmic phenomena and artifacts.",
+                        5
+                    ),
+                    1 => Storyline::new(
+                        "scientist_explorer",
+                        FactionType::Scientists,
+                        "Galactic Explorer",
+                        "Chart unexplored regions of space and document new discoveries.",
+                        5
+                    ),
+                    2 => Storyline::new(
+                        "scientist_biotech",
+                        FactionType::Scientists,
+                        "Biotechnology Expert",
+                        "Research alien biology and develop enhancements for human survival in space.",
+                        5
+                    ),
+                    _ => Storyline::new(
+                        "scientist_default",
+                        FactionType::Scientists,
+                        "Getting Started",
+                        "Learn the basics of research and exploration.",
+                        5
+                    ),
+                }
+            },
         }
     }
 
