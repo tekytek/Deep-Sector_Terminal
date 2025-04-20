@@ -5,6 +5,7 @@ use rand::rngs::StdRng;
 use noise::{NoiseFn, Perlin};
 
 use crate::models::item::{Item, ItemType, ResourceType};
+use crate::models::market::{Market, MarketType, PriceHistory, MarketItem};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum ResourceFieldType {
@@ -550,6 +551,68 @@ impl Universe {
                 item.value = (base_value as f32 * fluctuation) as u32;
             }
         }
+    }
+    
+    // Get a market by system ID
+    pub fn get_market(&self, system_id: &str) -> Option<Market> {
+        // For now, we'll create a temporary market for the system
+        if let Some(_system) = self.systems.get(system_id) {
+            // Get items for this system
+            if let Some(items) = self.market_items.get(system_id) {
+                let market_items: HashMap<String, MarketItem> = items
+                    .iter()
+                    .map(|(item, quantity)| {
+                        let market_item = MarketItem {
+                            item: item.clone(),
+                            quantity: *quantity,
+                            base_price: item.value,
+                            current_price: item.value,
+                            supply_level: 1.0,
+                            demand_level: 1.0,
+                            production_rate: 5,
+                            consumption_rate: 3,
+                            price_volatility: 0.1,
+                            price_history: vec![
+                                PriceHistory {
+                                    timestamp: std::time::SystemTime::now()
+                                        .duration_since(std::time::UNIX_EPOCH)
+                                        .unwrap_or(std::time::Duration::from_secs(0))
+                                        .as_secs(),
+                                    price: item.value,
+                                }
+                            ],
+                        };
+                        (item.name.clone(), market_item)
+                    })
+                    .collect();
+                
+                let market = Market {
+                    system_id: system_id.to_string(),
+                    market_type: MarketType::Trading,
+                    items: market_items,
+                    tax_rate: 0.05,
+                    last_update: 0,
+                    trade_orders: vec![],
+                    local_events: vec![],
+                };
+                
+                return Some(market);
+            }
+        }
+        
+        None
+    }
+    
+    // Get a mutable reference to a market by system ID
+    pub fn get_market_mut(&mut self, system_id: &str) -> Option<Market> {
+        // Call the immutable version for now - in a real implementation these would be different
+        self.get_market(system_id)
+    }
+    
+    // Update a market (replace it with an updated version)
+    pub fn update_market(&mut self, _market: Market) {
+        // In a real implementation, this would update the market in the universe's storage
+        // For now, as a placeholder, we'll do nothing since our market is regenerated each time
     }
 }
 

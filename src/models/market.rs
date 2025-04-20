@@ -20,6 +20,41 @@ pub enum EconomicEvent {
     LocalPeace,            // Local effect, decreases military goods, increases civilian goods
 }
 
+// Order types for automated trading
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum OrderType {
+    Buy,        // Buy order
+    Sell        // Sell order
+}
+
+// Status of the order
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum OrderStatus {
+    Active,     // Order is active and waiting for conditions to be met
+    Completed,  // Order has been completed successfully
+    Cancelled,  // Order was cancelled by the player
+    Failed,     // Order failed to execute (e.g., insufficient funds, inventory full)
+    Expired     // Order expired (time limit reached)
+}
+
+// Trade order for automatic buying/selling based on price conditions
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TradeOrder {
+    pub id: Uuid,                  // Unique ID for the order
+    pub player_id: String,         // ID of the player who placed the order
+    pub system_id: String,         // Target star system for the order
+    pub item_name: String,         // Name of the item to buy/sell
+    pub order_type: OrderType,     // Buy or sell
+    pub quantity: u32,             // Quantity to buy/sell
+    pub target_price: u32,         // Target price to trigger the order
+    pub price_condition: String,   // "below" for buy orders, "above" for sell orders
+    pub status: OrderStatus,       // Current status of the order
+    pub created_at: u64,           // When the order was created (timestamp)
+    pub expires_at: Option<u64>,   // When the order expires (timestamp, optional)
+    pub executed_at: Option<u64>,  // When the order was executed (timestamp, if completed)
+    pub notes: String,             // Additional notes/comments for the order
+}
+
 // Record of price changes for displaying trends
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PriceHistory {
@@ -61,6 +96,7 @@ pub struct Market {
     pub local_events: Vec<EconomicEvent>,
     pub market_type: MarketType,
     pub tax_rate: f32,             // Local tax rate applied to transactions
+    pub trade_orders: Vec<TradeOrder>, // Active trade orders in this market
 }
 
 impl Market {
@@ -72,6 +108,7 @@ impl Market {
             local_events: Vec::new(),
             market_type: MarketType::Trading, // Default to trading market
             tax_rate: 0.05, // 5% default tax rate
+            trade_orders: Vec::new(), // No orders initially
         }
     }
 
@@ -456,6 +493,29 @@ impl Market {
             }
         }
         
+        // Update trade orders
+        // This would typically check for orders that should be executed
+        // based on current market prices
+        
+        // Mark expired orders
+        let current_time = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or(Duration::from_secs(0))
+            .as_secs();
+            
+        for order in &mut self.trade_orders {
+            if order.status != OrderStatus::Active {
+                continue;
+            }
+            
+            // Check for expiration
+            if let Some(expires_at) = order.expires_at {
+                if current_time > expires_at {
+                    order.status = OrderStatus::Cancelled;
+                }
+            }
+        }
+        
         // Randomly generate new economic events (5% chance per update)
         if rand::random::<f32>() < 0.05 {
             self.generate_random_event();
@@ -611,5 +671,245 @@ impl Market {
         }
         
         None
+    }
+    
+    // === Trade Order Methods ===
+    
+    // Create a new buy order
+    pub fn create_buy_order(&mut self, player_id: &str, item_name: &str, quantity: u32, target_price: u32, expires_at: Option<u64>, notes: &str) -> Option<Uuid> {
+        // Verify item exists in market
+        if !self.items.contains_key(item_name) {
+            return None;
+        }
+        
+        let current_time = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or(Duration::from_secs(0))
+            .as_secs();
+            
+        let order_id = Uuid::new_v4();
+        
+        let order = TradeOrder {
+            id: order_id,
+            player_id: player_id.to_string(),
+            system_id: self.system_id.clone(),
+            item_name: item_name.to_string(),
+            order_type: OrderType::Buy,
+            quantity,
+            target_price,
+            price_condition: "below".to_string(),
+            status: OrderStatus::Active,
+            created_at: current_time,
+            expires_at,
+            executed_at: None,
+            notes: notes.to_string(),
+        };
+        
+        self.trade_orders.push(order);
+        Some(order_id)
+    }
+    
+    // Create a new sell order
+    pub fn create_sell_order(&mut self, player_id: &str, item_name: &str, quantity: u32, target_price: u32, expires_at: Option<u64>, notes: &str) -> Option<Uuid> {
+        // For sell orders, we don't need to verify if the item exists in the market
+        // since the player could be selling something not currently available
+        
+        let current_time = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or(Duration::from_secs(0))
+            .as_secs();
+            
+        let order_id = Uuid::new_v4();
+        
+        let order = TradeOrder {
+            id: order_id,
+            player_id: player_id.to_string(),
+            system_id: self.system_id.clone(),
+            item_name: item_name.to_string(),
+            order_type: OrderType::Sell,
+            quantity,
+            target_price,
+            price_condition: "above".to_string(),
+            status: OrderStatus::Active,
+            created_at: current_time,
+            expires_at,
+            executed_at: None,
+            notes: notes.to_string(),
+        };
+        
+        self.trade_orders.push(order);
+        Some(order_id)
+    }
+    
+    // Cancel an existing order
+    pub fn cancel_order(&mut self, order_id: &Uuid, player_id: &str) -> bool {
+        if let Some(pos) = self.trade_orders.iter().position(|order| {
+            order.id == *order_id && order.player_id == player_id && order.status == OrderStatus::Active
+        }) {
+            self.trade_orders[pos].status = OrderStatus::Cancelled;
+            true
+        } else {
+            false
+        }
+    }
+    
+    // Get all active orders for a player
+    pub fn get_player_orders(&self, player_id: &str) -> Vec<&TradeOrder> {
+        self.trade_orders.iter()
+            .filter(|order| order.player_id == player_id && order.status == OrderStatus::Active)
+            .collect()
+    }
+    
+    // Process all active orders and execute any that meet their conditions
+    pub fn process_orders(&mut self, player_inventory: &mut HashMap<Item, u32>, player_credits: &mut u32) -> Vec<TradeOrder> {
+        let current_time = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or(Duration::from_secs(0))
+            .as_secs();
+            
+        // First, collect all orders that need to be processed
+        let mut orders_to_process = Vec::new();
+        let mut orders_to_mark_expired = Vec::new();
+        
+        // Gather info without mutably borrowing self
+        for (order_idx, order) in self.trade_orders.iter().enumerate() {
+            // Skip if not active
+            if order.status != OrderStatus::Active {
+                continue;
+            }
+            
+            // Check for expiration
+            if let Some(expires_at) = order.expires_at {
+                if current_time > expires_at {
+                    orders_to_mark_expired.push(order_idx);
+                    continue;
+                }
+            }
+            
+            // Get current price of the item
+            if let Some(market_item) = self.items.get(&order.item_name) {
+                let current_price = market_item.current_price;
+                let market_quantity = market_item.quantity;
+                
+                match order.order_type {
+                    OrderType::Buy => {
+                        // Execute if price falls below target price
+                        if current_price <= order.target_price {
+                            // Calculate total cost
+                            let base_cost = current_price * order.quantity;
+                            let tax = (base_cost as f32 * self.tax_rate) as u32;
+                            let total_cost = base_cost + tax;
+                            
+                            // Check if the player has enough credits and market has enough quantity
+                            if *player_credits >= total_cost && market_quantity >= order.quantity {
+                                orders_to_process.push((
+                                    order_idx,
+                                    order.clone(),
+                                    total_cost,
+                                    None
+                                ));
+                            }
+                        }
+                    },
+                    OrderType::Sell => {
+                        // Execute if price rises above target price
+                        if current_price >= order.target_price {
+                            // Find matching item in player inventory
+                            let mut item_to_sell = None;
+                            let mut available_quantity = 0;
+                            
+                            // Check if player has the item to sell
+                            for (item, quantity) in player_inventory.iter() {
+                                if item.name == order.item_name {
+                                    item_to_sell = Some(item.clone());
+                                    available_quantity = *quantity;
+                                    break;
+                                }
+                            }
+                            
+                            if let Some(item) = item_to_sell {
+                                // Check if player has enough quantity
+                                if available_quantity >= order.quantity {
+                                    // Calculate expected revenue (will be more accurate when we actually sell)
+                                    let expected_revenue = (current_price as f32 * 0.9) as u32 * order.quantity;
+                                    
+                                    orders_to_process.push((
+                                        order_idx,
+                                        order.clone(),
+                                        expected_revenue,
+                                        Some(item)
+                                    ));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Now mark expired orders
+        for order_idx in orders_to_mark_expired {
+            if let Some(order) = self.trade_orders.get_mut(order_idx) {
+                order.status = OrderStatus::Cancelled;
+            }
+        }
+        
+        // Track which orders were executed
+        let mut executed_orders = Vec::new();
+        
+        // Now process the orders that meet the conditions
+        // We can do this without borrowing self.trade_orders at the same time
+        for (order_idx, order, price, item_to_sell) in orders_to_process {
+            match order.order_type {
+                OrderType::Buy => {
+                    // Execute the buy order - this will modify market state
+                    if let Some((item, quantity, _)) = self.buy_item(&order.item_name, order.quantity) {
+                        // Deduct cost from player credits
+                        *player_credits -= price;
+                        
+                        // Add item to player inventory
+                        *player_inventory.entry(item).or_insert(0) += quantity;
+                        
+                        // Mark order as completed - but we need to do it after all processing
+                        if let Some(order) = self.trade_orders.get_mut(order_idx) {
+                            order.status = OrderStatus::Completed;
+                            order.executed_at = Some(current_time);
+                            
+                            // Track the completed order
+                            executed_orders.push(order.clone());
+                        }
+                    }
+                },
+                OrderType::Sell => {
+                    if let Some(item) = item_to_sell {
+                        // Execute the sell order
+                        let revenue = self.sell_item(item.clone(), order.quantity);
+                        
+                        // Add revenue to player credits
+                        *player_credits += revenue;
+                        
+                        // Reduce player inventory
+                        if let Some(qty) = player_inventory.get_mut(&item) {
+                            *qty -= order.quantity;
+                            if *qty == 0 {
+                                player_inventory.remove(&item);
+                            }
+                        }
+                        
+                        // Mark order as completed
+                        if let Some(order) = self.trade_orders.get_mut(order_idx) {
+                            order.status = OrderStatus::Completed;
+                            order.executed_at = Some(current_time);
+                            
+                            // Track the completed order
+                            executed_orders.push(order.clone());
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Return list of executed orders
+        executed_orders
     }
 }

@@ -1,17 +1,26 @@
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
 use rand::Rng;
+use uuid::Uuid;
 
 use crate::models::player::Player;
 use crate::models::universe::Universe;
 use crate::models::item::Item;
-use crate::models::market::{Market, MarketType, EconomicEvent, PriceHistory};
+use crate::models::market::{Market, MarketType, EconomicEvent, PriceHistory, TradeOrder, OrderType, OrderStatus};
 
 #[derive(Serialize, Deserialize)]
 pub struct TradingSystem {
     buy_mode: bool,
     transaction_cooldown: Duration,
     last_transaction: Duration,
+    
+    // Order management fields
+    #[serde(default)]
+    current_order_tab: usize,
+    #[serde(default)]
+    order_buy_mode: bool,
+    #[serde(default, skip)]
+    selected_order_index: Option<usize>,
 }
 
 impl TradingSystem {
@@ -20,6 +29,9 @@ impl TradingSystem {
             buy_mode: true,
             transaction_cooldown: Duration::from_millis(500),
             last_transaction: Duration::from_secs(0),
+            current_order_tab: 0,
+            order_buy_mode: true,
+            selected_order_index: None,
         }
     }
 
@@ -131,6 +143,247 @@ impl TradingSystem {
             "Military Equipment" => Some((-4.2, "Decreasing".to_string())),
             "Ship Parts" => Some((0.8, "Stable".to_string())),
             _ => None,
+        }
+    }
+    
+    // === Order Management Methods ===
+    
+    // Order tab UI management
+    pub fn get_order_tab_index(&self) -> usize {
+        self.current_order_tab
+    }
+    
+    pub fn next_order_tab(&mut self) {
+        self.current_order_tab = (self.current_order_tab + 1) % 3;
+        self.selected_order_index = None; // Reset selection when changing tabs
+    }
+    
+    pub fn previous_order_tab(&mut self) {
+        self.current_order_tab = if self.current_order_tab == 0 { 2 } else { self.current_order_tab - 1 };
+        self.selected_order_index = None; // Reset selection when changing tabs
+    }
+    
+    pub fn is_order_buy_mode(&self) -> bool {
+        self.order_buy_mode
+    }
+    
+    pub fn toggle_order_type(&mut self) {
+        self.order_buy_mode = !self.order_buy_mode;
+    }
+    
+    // Order selection
+    pub fn get_selected_order_index(&self) -> Option<usize> {
+        self.selected_order_index
+    }
+    
+    pub fn select_order(&mut self, index: usize) {
+        self.selected_order_index = Some(index);
+    }
+    
+    pub fn deselect_order(&mut self) {
+        self.selected_order_index = None;
+    }
+    
+    pub fn select_next_order(&mut self) {
+        // If there's a current selection, increment it
+        if let Some(index) = self.selected_order_index {
+            let next_index = index + 1;
+            // Here we don't check for upper bounds - this should be done when rendering
+            // orders, since the available orders can change between updates
+            self.selected_order_index = Some(next_index);
+        } else {
+            // If nothing is selected, select the first order
+            self.selected_order_index = Some(0);
+        }
+    }
+    
+    pub fn select_previous_order(&mut self) {
+        // If there's a current selection, decrement it unless at index 0
+        if let Some(index) = self.selected_order_index {
+            if index > 0 {
+                self.selected_order_index = Some(index - 1);
+            }
+        } else {
+            // If nothing is selected, select the first order
+            self.selected_order_index = Some(0);
+        }
+    }
+    
+    pub fn get_selected_order(&self) -> Option<&TradeOrder> {
+        // This function returns the currently selected order if one exists
+        if let Some(index) = self.selected_order_index {
+            // This implementation depends on how orders are stored and accessed
+            // For now it's a placeholder - we'd need to reference the actual orders list
+            None
+        } else {
+            None
+        }
+    }
+    
+    pub fn cancel_selected_order(&mut self, player: &mut Player) -> Result<(), String> {
+        // If there's a selected order, try to cancel it
+        if let Some(index) = self.selected_order_index {
+            self.cancel_order(player, index)
+        } else {
+            Err("No order selected".to_string())
+        }
+    }
+    
+    // Order creation
+    pub fn create_buy_order(&mut self, player: &mut Player, item_name: &str, 
+                           quantity: u32, target_price: u32, notes: &str) -> Result<Uuid, String> {
+        // Verify player is docked
+        if !player.is_docked {
+            return Err("You must be docked at a station to create orders".to_string());
+        }
+        
+        // Get system market from player's current location
+        let system_id = player.current_system.id.clone();
+        let mut universe = Universe::new(); // This may need to change depending on your architecture
+        
+        // Find the market for this system
+        let mut market = universe.get_market(&system_id)
+            .ok_or("Cannot find market for current system")?
+            .clone(); // Clone to avoid borrow issues
+            
+        // Check if item exists in market
+        if !market.items.contains_key(item_name) {
+            return Err("Item not available in this market".to_string());
+        }
+        
+        // Create the order
+        let player_id = player.id.to_string();
+        let order_id = market.create_buy_order(
+            &player_id, 
+            item_name, 
+            quantity, 
+            target_price, 
+            None,  // No expiration date for now
+            notes
+        ).ok_or("Failed to create buy order")?;
+        
+        // Update the market back to the universe
+        universe.update_market(market);
+        
+        Ok(order_id)
+    }
+    
+    pub fn create_sell_order(&mut self, player: &mut Player, item_name: &str, 
+                            quantity: u32, target_price: u32, notes: &str) -> Result<Uuid, String> {
+        // Verify player is docked
+        if !player.is_docked {
+            return Err("You must be docked at a station to create orders".to_string());
+        }
+        
+        // Verify player has the item and enough quantity
+        let has_enough = player.inventory.items.iter()
+            .any(|(item, qty)| item.name == item_name && *qty >= quantity);
+            
+        if !has_enough {
+            return Err("You don't have enough of this item".to_string());
+        }
+        
+        // Get system market from player's current location
+        let system_id = player.current_system.id.clone();
+        let mut universe = Universe::new(); // This may need to change depending on your architecture
+        
+        // Find the market for this system
+        let mut market = universe.get_market(&system_id)
+            .ok_or("Cannot find market for current system")?
+            .clone(); // Clone to avoid borrow issues
+            
+        // Create the order
+        let player_id = player.id.to_string();
+        let order_id = market.create_sell_order(
+            &player_id, 
+            item_name, 
+            quantity, 
+            target_price, 
+            None,  // No expiration date for now
+            notes
+        ).ok_or("Failed to create sell order")?;
+        
+        // Update the market back to the universe
+        universe.update_market(market);
+        
+        Ok(order_id)
+    }
+    
+    // Order cancellation
+    pub fn cancel_order(&mut self, player: &mut Player, order_index: usize) -> Result<(), String> {
+        // Verify player is docked
+        if !player.is_docked {
+            return Err("You must be docked at a station to manage orders".to_string());
+        }
+        
+        // Get active orders for the player
+        let system_id = player.current_system.id.clone();
+        let mut universe = Universe::new();
+        
+        // Get the market for this system
+        let mut market = universe.get_market(&system_id)
+            .ok_or("Cannot find market for current system")?
+            .clone();
+            
+        // Get player's active orders
+        let player_id = player.id.to_string();
+        let active_orders: Vec<&TradeOrder> = market.trade_orders.iter()
+            .filter(|order| order.player_id == player_id && order.status == OrderStatus::Active)
+            .collect();
+            
+        // Validate order index
+        if order_index >= active_orders.len() {
+            return Err("Invalid order selection".to_string());
+        }
+        
+        // Get the order ID to cancel
+        let order_id = active_orders[order_index].id;
+        
+        // Cancel the order
+        if market.cancel_order(&order_id, &player_id) {
+            // Update the market back to the universe
+            universe.update_market(market);
+            Ok(())
+        } else {
+            Err("Failed to cancel order".to_string())
+        }
+    }
+    
+    // Get active orders for display
+    pub fn get_active_orders(&self, player: &Player) -> Vec<TradeOrder> {
+        // Get the player's system
+        let system_id = player.current_system.id.clone();
+        let universe = Universe::new();
+        
+        if let Some(market) = universe.get_market(&system_id) {
+            let player_id = player.id.to_string();
+            market.trade_orders.iter()
+                .filter(|order| order.player_id == player_id && order.status == OrderStatus::Active)
+                .cloned()
+                .collect()
+        } else {
+            Vec::new()
+        }
+    }
+    
+    // Get completed orders for display
+    pub fn get_completed_orders(&self, player: &Player) -> Vec<TradeOrder> {
+        // Get the player's system
+        let system_id = player.current_system.id.clone();
+        let universe = Universe::new();
+        
+        if let Some(market) = universe.get_market(&system_id) {
+            let player_id = player.id.to_string();
+            market.trade_orders.iter()
+                .filter(|order| order.player_id == player_id && 
+                      (order.status == OrderStatus::Completed || 
+                       order.status == OrderStatus::Cancelled || 
+                       order.status == OrderStatus::Failed ||
+                       order.status == OrderStatus::Expired))
+                .cloned()
+                .collect()
+        } else {
+            Vec::new()
         }
     }
 }

@@ -9,3 +9,4 @@ pub mod help;
 pub mod style_utils;
 pub mod character_creation;
 pub mod character_info;
+pub mod orders;

@@ -31,6 +31,7 @@ pub enum GameScreen {
     Crafting,
     Inventory,
     Character, // New screen for character and skills information
+    Orders,    // Trade order management screen
     Help,
     Quit,
 }
@@ -72,6 +73,10 @@ pub struct Game {
     // Character info screen related fields
     #[serde(default)]
     pub character_info_tab: usize, // 0=skills, 1=reputation, 2=assets, 3=background
+    
+    // Orders screen related fields
+    #[serde(default)]
+    pub orders_view_active: bool, // true=viewing active orders, false=viewing completed orders
 }
 
 impl Game {
@@ -106,6 +111,7 @@ impl Game {
                     selected_storyline: 0,
                     creation_stage: 0,
                     character_info_tab: 0,
+                    orders_view_active: true,
                 }
             }
         }
@@ -151,6 +157,7 @@ impl Game {
             GameScreen::Crafting => self.handle_crafting_input(key),
             GameScreen::Inventory => self.handle_inventory_input(key),
             GameScreen::Character => self.handle_character_input(key),
+            GameScreen::Orders => self.handle_orders_input(key),
             GameScreen::Help => self.handle_help_input(key),
             GameScreen::Quit => self.handle_quit_input(key),
         }
@@ -165,6 +172,7 @@ impl Game {
             KeyCode::Char('c') => self.change_screen(GameScreen::Crafting),
             KeyCode::Char('i') => self.change_screen(GameScreen::Inventory),
             KeyCode::Char('p') => self.change_screen(GameScreen::Character), // 'p' for profile/pilot
+            KeyCode::Char('o') => self.change_screen(GameScreen::Orders),    // 'o' for orders
             KeyCode::Char('h') => self.change_screen(GameScreen::Help),
             KeyCode::Char('q') => self.change_screen(GameScreen::Quit),
             _ => {}
@@ -577,6 +585,40 @@ impl Game {
     fn handle_help_input(&mut self, key: KeyEvent) {
         match key.code {
             KeyCode::Char('m') => self.change_screen(GameScreen::MainMenu),
+            _ => {}
+        }
+    }
+    
+    // Handle input for the Orders screen
+    fn handle_orders_input(&mut self, key: KeyEvent) {
+        match key.code {
+            KeyCode::Char('m') | KeyCode::Esc => self.change_screen(GameScreen::MainMenu),
+            KeyCode::Char('b') => {
+                // Create buy order (to be implemented)
+                self.message = Some("Buy order functionality to be implemented".to_string());
+            },
+            KeyCode::Char('s') => {
+                // Create sell order (to be implemented)
+                self.message = Some("Sell order functionality to be implemented".to_string());
+            },
+            KeyCode::Char('c') => {
+                // Cancel selected order (to be implemented)
+                self.message = Some("Cancel order functionality to be implemented".to_string());
+            },
+            KeyCode::Up => {
+                // Navigate up through orders
+                self.trading_system.select_previous_order();
+            },
+            KeyCode::Down => {
+                // Navigate down through orders
+                self.trading_system.select_next_order();
+            },
+            KeyCode::Tab => {
+                // Toggle between active and completed orders
+                self.orders_view_active = !self.orders_view_active;
+                let status = if self.orders_view_active { "active" } else { "completed" };
+                self.message = Some(format!("Viewing {} orders", status));
+            },
             _ => {}
         }
     }

@@ -83,6 +83,11 @@ impl App {
                     GameScreen::Crafting => draw_crafting_screen(f, &game, f.size()),
                     GameScreen::Inventory => draw_inventory(f, &game, f.size()),
                     GameScreen::Character => draw_character_info(f, &game, f.size()),
+                    GameScreen::Orders => {
+                        // Import and call the appropriate function
+                        use crate::ui::screens::orders::draw_orders_screen;
+                        draw_orders_screen(f, &game, f.size());
+                    },
                     GameScreen::Help => draw_help(f, &game, f.size()),
                     GameScreen::Quit => {
                         // Draw quit confirmation
