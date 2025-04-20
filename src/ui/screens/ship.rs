@@ -10,6 +10,7 @@ use tui::{
 use crate::game::Game;
 use crate::ui::colors;
 use crate::ui::ascii_art;
+use crate::ui::screens::style_utils;
 
 pub fn draw_ship_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     // Split the screen into sections
@@ -29,10 +30,8 @@ pub fn draw_ship_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 }
 
 fn draw_ship_visual<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
-    let block = Block::default()
-        .title(Span::styled(format!(" VESSEL: {} ", game.player.ship.name), Style::default().fg(colors::PRIMARY)))
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(colors::SECONDARY));
+    let vessel_title = format!("VESSEL: {}", game.player.ship.name);
+    let block = style_utils::create_primary_block(&vessel_title);
 
     let ship_art = ascii_art::get_ship_art(&game.player.ship.ship_type);
     
@@ -64,10 +63,7 @@ fn draw_ship_visual<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 }
 
 fn draw_ship_stats<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
-    let block = Block::default()
-        .title(Span::styled(" TECHNICAL SPECIFICATIONS ", Style::default().fg(colors::INFO)))
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(colors::SECONDARY));
+    let block = style_utils::create_info_block("TECHNICAL SPECIFICATIONS");
 
     let ship = &game.player.ship;
 

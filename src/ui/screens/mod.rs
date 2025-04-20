@@ -6,3 +6,4 @@ pub mod crafting;
 pub mod main_menu;
 pub mod inventory;
 pub mod help;
+pub mod style_utils;

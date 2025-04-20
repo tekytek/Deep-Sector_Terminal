@@ -3,17 +3,15 @@ use tui::{
     layout::{Constraint, Direction, Layout, Rect},
     style::{Style},
     text::{Span, Spans},
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Paragraph},
     Frame,
 };
 use crate::game::Game;
 use crate::ui::colors;
+use crate::ui::screens::style_utils;
 
 pub fn draw_help<B: Backend>(f: &mut Frame<B>, _game: &Game, area: Rect) {
-    let block = Block::default()
-        .title(Span::styled(" COMMAND MANUAL ", Style::default().fg(colors::PRIMARY)))
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(colors::SECONDARY));
+    let block = style_utils::create_primary_block("COMMAND MANUAL");
     
     f.render_widget(block, area);
     
