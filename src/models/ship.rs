@@ -1,4 +1,5 @@
 use serde::{Serialize, Deserialize};
+use crate::models::item::ResourceType;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum ShipType {
@@ -32,6 +33,11 @@ pub struct Ship {
     pub jump_range: u32,
     pub weapon_power: u32,
     pub mining_power: u32,
+    // Specialized cargo bays for different resource types
+    pub mineral_bay_capacity: u32,  // For mineral ores
+    pub gas_bay_capacity: u32,      // For gas resources
+    pub ice_bay_capacity: u32,      // For ice resources
+    pub exotic_bay_capacity: u32,   // For exotic materials
 }
 
 impl Ship {
@@ -51,6 +57,13 @@ impl Ship {
             ShipType::Fighter => (120, 15, 90, 8, 10, 1),
         };
 
+        // Initialize specialized cargo bays based on ship type
+        let (mineral_bay, gas_bay, ice_bay, exotic_bay) = match ship_type {
+            ShipType::Miner => (30, 10, 10, 5),  // Mining ships get large specialized bays
+            ShipType::Freighter => (10, 10, 10, 5), // Freighters get balanced bay sizes
+            _ => (5, 5, 5, 2),  // Other ships get minimal specialized storage
+        };
+        
         Ship {
             name: name.to_string(),
             ship_type,
@@ -63,6 +76,11 @@ impl Ship {
             jump_range: jump_range_override.unwrap_or(jump_range),
             weapon_power: weapon_power_override.unwrap_or(weapon_power),
             mining_power: mining_power_override.unwrap_or(mining_power),
+            // Set specialized cargo bay capacities
+            mineral_bay_capacity: mineral_bay,
+            gas_bay_capacity: gas_bay,
+            ice_bay_capacity: ice_bay,
+            exotic_bay_capacity: exotic_bay,
         }
     }
     
@@ -104,5 +122,33 @@ impl Ship {
         // In a full implementation, we would subtract the used cargo space from cargo_capacity
         // For this example, just return the full capacity
         self.cargo_capacity
+    }
+    
+    // Get total specialized cargo capacity
+    pub fn get_total_specialized_cargo(&self) -> u32 {
+        self.mineral_bay_capacity + self.gas_bay_capacity + 
+        self.ice_bay_capacity + self.exotic_bay_capacity
+    }
+    
+    // Check capacity for specific resource type
+    pub fn get_capacity_for_resource(&self, resource_type: &ResourceType) -> u32 {
+        match resource_type {
+            ResourceType::Mineral => self.mineral_bay_capacity,
+            ResourceType::Gas => self.gas_bay_capacity,
+            ResourceType::Ice => self.ice_bay_capacity,
+            ResourceType::Exotic => self.exotic_bay_capacity,
+            _ => 0, // Other resources use standard cargo
+        }
+    }
+    
+    // Display specialized cargo bay information
+    pub fn get_specialized_cargo_info(&self) -> String {
+        format!(
+            "Mining Bays: Mineral: {}/{} | Gas: {}/{} | Ice: {}/{} | Exotic: {}/{}", 
+            0, self.mineral_bay_capacity, // Used/Total
+            0, self.gas_bay_capacity,     // These would track actual usage in full implementation
+            0, self.ice_bay_capacity,
+            0, self.exotic_bay_capacity
+        )
     }
 }
