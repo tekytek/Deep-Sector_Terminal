@@ -1,0 +1,3607 @@
+{
+  "player": {
+    "id": "1130b4aa-255e-43ef-a31f-098ab5895ff9",
+    "character": {
+      "name": "Server Admin",
+      "faction": "Traders",
+      "active_storyline": {
+        "id": "server_admin",
+        "faction": "Traders",
+        "name": "Server Administrator",
+        "description": "Manage the game universe and oversee player activities.",
+        "background": "",
+        "progress": 0,
+        "total_steps": 10,
+        "completed": false,
+        "starting_skills": []
+      },
+      "completed_storylines": []
+    },
+    "credits": 5000,
+    "ship": {
+      "name": "United Trade Federation Merchant Vessel",
+      "ship_type": "Freighter",
+      "hull": 200,
+      "max_hull": 200,
+      "shield": 100,
+      "max_shield": 100,
+      "cargo_capacity": 150,
+      "speed": 60,
+      "jump_range": 6,
+      "weapon_power": 2,
+      "mining_power": 1,
+      "mineral_bay_capacity": 10,
+      "gas_bay_capacity": 10,
+      "ice_bay_capacity": 10,
+      "exotic_bay_capacity": 5,
+      "fuel_capacity": 1500,
+      "current_fuel": 1500,
+      "fuel_consumption_rate": 1.5
+    },
+    "inventory": {
+      "items": {},
+      "capacity": 150
+    },
+    "current_system": {
+      "id": "sol",
+      "name": "Sol",
+      "x": 0.0,
+      "y": 0.0,
+      "celestial_bodies": [],
+      "resource_fields": [],
+      "stations": [],
+      "resources": []
+    },
+    "is_docked": true,
+    "skills": {
+      "skills": [
+        {
+          "category": "Mining",
+          "points": 0,
+          "level": 0,
+          "active": false,
+          "last_update": 1745167977.0740874
+        },
+        {
+          "category": "Trading",
+          "points": 0,
+          "level": 0,
+          "active": false,
+          "last_update": 1745167977.0740874
+        },
+        {
+          "category": "Combat",
+          "points": 0,
+          "level": 0,
+          "active": false,
+          "last_update": 1745167977.0740876
+        },
+        {
+          "category": "Navigation",
+          "points": 0,
+          "level": 0,
+          "active": false,
+          "last_update": 1745167977.0740876
+        },
+        {
+          "category": "Research",
+          "points": 0,
+          "level": 0,
+          "active": false,
+          "last_update": 1745167977.0740876
+        },
+        {
+          "category": "Engineering",
+          "points": 0,
+          "level": 0,
+          "active": false,
+          "last_update": 1745167977.0740876
+        }
+      ]
+    },
+    "blueprints": {
+      "blueprints": []
+    },
+    "last_update": 1745167977.0740879
+  },
+  "universe": {
+    "systems": {
+      "sol": {
+        "id": "sol",
+        "name": "Sol",
+        "x": 0.0,
+        "y": 0.0,
+        "celestial_bodies": [
+          {
+            "id": "sol_sun",
+            "name": "The Sun",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 109.0
+          },
+          {
+            "id": "sol_mercury",
+            "name": "Mercury",
+            "body_type": "Planet",
+            "position_x": 0.4,
+            "position_y": 0.0,
+            "size": 0.38
+          },
+          {
+            "id": "sol_venus",
+            "name": "Venus",
+            "body_type": "Planet",
+            "position_x": 0.0,
+            "position_y": 0.7,
+            "size": 0.95
+          },
+          {
+            "id": "sol_earth",
+            "name": "Earth",
+            "body_type": "Planet",
+            "position_x": 1.0,
+            "position_y": 0.0,
+            "size": 1.0
+          },
+          {
+            "id": "sol_moon",
+            "name": "Moon",
+            "body_type": "Moon",
+            "position_x": 1.05,
+            "position_y": 0.05,
+            "size": 0.27
+          },
+          {
+            "id": "sol_mars",
+            "name": "Mars",
+            "body_type": "Planet",
+            "position_x": 0.0,
+            "position_y": 1.5,
+            "size": 0.53
+          },
+          {
+            "id": "sol_jupiter",
+            "name": "Jupiter",
+            "body_type": "Planet",
+            "position_x": -5.2,
+            "position_y": 0.0,
+            "size": 11.2
+          },
+          {
+            "id": "sol_saturn",
+            "name": "Saturn",
+            "body_type": "Planet",
+            "position_x": 0.0,
+            "position_y": -9.5,
+            "size": 9.5
+          },
+          {
+            "id": "sol_jump_gate",
+            "name": "Sol Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": 12.0,
+            "position_y": 12.0,
+            "size": 0.5
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 80,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 2.8,
+            "position_y": 0.0
+          },
+          {
+            "field_type": "IceField",
+            "size": 70,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": 0.0,
+            "position_y": -10.5
+          },
+          {
+            "field_type": "GasField",
+            "size": 90,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": -6.2,
+            "position_y": 0.5
+          },
+          {
+            "field_type": "MoonResidue",
+            "size": 40,
+            "resources": [
+              [
+                "Titanium",
+                60
+              ],
+              [
+                "Regolith",
+                70
+              ],
+              [
+                "Silicates",
+                55
+              ],
+              [
+                "Rare Earth Elements",
+                25
+              ]
+            ],
+            "position_x": 1.2,
+            "position_y": 0.1
+          },
+          {
+            "field_type": "StarCorona",
+            "size": 100,
+            "resources": [
+              [
+                "Plasma",
+                80
+              ],
+              [
+                "Stellar Matter",
+                60
+              ],
+              [
+                "Fusion Particles",
+                40
+              ],
+              [
+                "Solar Wind",
+                70
+              ]
+            ],
+            "position_x": 0.0,
+            "position_y": 0.0
+          }
+        ],
+        "stations": [
+          {
+            "id": "sol_earth_station",
+            "name": "Earth Trading Hub",
+            "station_type": "Trading",
+            "position_x": 1.2,
+            "position_y": 0.2,
+            "faction": null,
+            "services": [
+              "Market",
+              "Trade Missions",
+              "Passenger Transport"
+            ]
+          },
+          {
+            "id": "sol_mars_station",
+            "name": "Mars Mining Facility",
+            "station_type": "Mining",
+            "position_x": 0.2,
+            "position_y": 1.5,
+            "faction": null,
+            "services": [
+              "Ore Refining",
+              "Mining Equipment",
+              "Resource Market"
+            ]
+          },
+          {
+            "id": "sol_jupiter_station",
+            "name": "Jupiter Research Outpost",
+            "station_type": "Research",
+            "position_x": -5.0,
+            "position_y": 0.5,
+            "faction": null,
+            "services": [
+              "Blueprint Research",
+              "Technology Exchange",
+              "Science Missions"
+            ]
+          },
+          {
+            "id": "sol_saturn_station",
+            "name": "Saturn Industrial Complex",
+            "station_type": "Industrial",
+            "position_x": 0.5,
+            "position_y": -9.0,
+            "faction": null,
+            "services": [
+              "Manufacturing",
+              "Ship Construction",
+              "Equipment Crafting"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Iron",
+            70
+          ],
+          [
+            "Copper",
+            50
+          ],
+          [
+            "Water",
+            90
+          ],
+          [
+            "Hydrogen",
+            80
+          ],
+          [
+            "Oxygen",
+            60
+          ]
+        ]
+      },
+      "gliese_570": {
+        "id": "gliese_570",
+        "name": "Gliese 570",
+        "x": 5.1267247,
+        "y": 10.327575,
+        "celestial_bodies": [
+          {
+            "id": "gliese_570_star",
+            "name": "Gliese 570 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.4248089
+          },
+          {
+            "id": "gliese_570_jump_gate",
+            "name": "Gliese 570 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -5.832138,
+            "position_y": -9.115866,
+            "size": 0.5
+          },
+          {
+            "id": "gliese_570_planet_1",
+            "name": "Gliese 570 Planet 1",
+            "body_type": "Planet",
+            "position_x": 4.3343277,
+            "position_y": 2.3304327,
+            "size": 0.3608353
+          },
+          {
+            "id": "gliese_570_moon_1",
+            "name": "Gliese 570 Moon 1",
+            "body_type": "Moon",
+            "position_x": 4.636422,
+            "position_y": 2.7947452,
+            "size": 0.121489316
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 50,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": -4.66696,
+            "position_y": -7.8903103
+          },
+          {
+            "field_type": "GasField",
+            "size": 86,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": -4.598236,
+            "position_y": 3.3766966
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Iron",
+            52
+          ],
+          [
+            "Hydrogen",
+            52
+          ]
+        ]
+      },
+      "wolf_359": {
+        "id": "wolf_359",
+        "name": "Wolf 359",
+        "x": 7.3821335,
+        "y": 15.188368,
+        "celestial_bodies": [
+          {
+            "id": "wolf_359_star",
+            "name": "Wolf 359 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.1895463
+          },
+          {
+            "id": "wolf_359_jump_gate",
+            "name": "Wolf 359 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -0.28808594,
+            "position_y": 0.52731514,
+            "size": 0.5
+          },
+          {
+            "id": "wolf_359_planet_1",
+            "name": "Wolf 359 Planet 1",
+            "body_type": "Planet",
+            "position_x": -1.4317074,
+            "position_y": -2.227994,
+            "size": 0.79169023
+          },
+          {
+            "id": "wolf_359_planet_2",
+            "name": "Wolf 359 Planet 2",
+            "body_type": "Planet",
+            "position_x": -3.0917845,
+            "position_y": -1.1783628,
+            "size": 0.44876102
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 84,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 7.910841,
+            "position_y": -5.018528
+          },
+          {
+            "field_type": "IceField",
+            "size": 56,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": 1.7257166,
+            "position_y": 5.354948
+          },
+          {
+            "field_type": "GasField",
+            "size": 92,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": -3.622623,
+            "position_y": 3.479597
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Hydrogen",
+            87
+          ],
+          [
+            "Gold",
+            87
+          ]
+        ]
+      },
+      "ross_248": {
+        "id": "ross_248",
+        "name": "Ross 248",
+        "x": -6.0603867,
+        "y": -3.4072402,
+        "celestial_bodies": [
+          {
+            "id": "ross_248_star",
+            "name": "Ross 248 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.4631088
+          },
+          {
+            "id": "ross_248_jump_gate",
+            "name": "Ross 248 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": 6.512995,
+            "position_y": 0.341074,
+            "size": 0.5
+          },
+          {
+            "id": "ross_248_planet_1",
+            "name": "Ross 248 Planet 1",
+            "body_type": "Planet",
+            "position_x": -2.163453,
+            "position_y": -6.874014,
+            "size": 1.1821585
+          },
+          {
+            "id": "ross_248_moon_1",
+            "name": "Ross 248 Moon 1",
+            "body_type": "Moon",
+            "position_x": -1.7436501,
+            "position_y": -6.4885187,
+            "size": 0.10283303
+          },
+          {
+            "id": "ross_248_planet_2",
+            "name": "Ross 248 Planet 2",
+            "body_type": "Planet",
+            "position_x": -7.6218743,
+            "position_y": 0.04483372,
+            "size": 0.87169003
+          },
+          {
+            "id": "ross_248_planet_3",
+            "name": "Ross 248 Planet 3",
+            "body_type": "Planet",
+            "position_x": 0.87225884,
+            "position_y": -2.6513586,
+            "size": 0.7935914
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 87,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 5.799204,
+            "position_y": 0.09594536
+          }
+        ],
+        "stations": [
+          {
+            "id": "ross_248_industrial_complex_station_1",
+            "name": "Ross 248 Industrial Complex",
+            "station_type": "Industrial",
+            "position_x": -4.254896,
+            "position_y": 2.9044418,
+            "faction": null,
+            "services": [
+              "Manufacturing",
+              "Ship Construction",
+              "Equipment Crafting"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Iron",
+            65
+          ],
+          [
+            "Water",
+            65
+          ],
+          [
+            "Water",
+            65
+          ]
+        ]
+      },
+      "lalande_21185": {
+        "id": "lalande_21185",
+        "name": "Lalande 21185",
+        "x": -5.127133,
+        "y": -4.9397535,
+        "celestial_bodies": [
+          {
+            "id": "lalande_21185_star",
+            "name": "Lalande 21185 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.4836036
+          },
+          {
+            "id": "lalande_21185_jump_gate",
+            "name": "Lalande 21185 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -9.434841,
+            "position_y": -3.3096313,
+            "size": 0.5
+          },
+          {
+            "id": "lalande_21185_planet_1",
+            "name": "Lalande 21185 Planet 1",
+            "body_type": "Planet",
+            "position_x": -1.987742,
+            "position_y": 4.2931914,
+            "size": 1.0878441
+          },
+          {
+            "id": "lalande_21185_moon_1",
+            "name": "Lalande 21185 Moon 1",
+            "body_type": "Moon",
+            "position_x": -1.6669004,
+            "position_y": 4.4970636,
+            "size": 0.24273428
+          },
+          {
+            "id": "lalande_21185_planet_2",
+            "name": "Lalande 21185 Planet 2",
+            "body_type": "Planet",
+            "position_x": 2.5698473,
+            "position_y": 0.7133913,
+            "size": 1.0769714
+          },
+          {
+            "id": "lalande_21185_planet_3",
+            "name": "Lalande 21185 Planet 3",
+            "body_type": "Planet",
+            "position_x": 1.2370133,
+            "position_y": 5.8899384,
+            "size": 0.44557017
+          },
+          {
+            "id": "lalande_21185_moon_3",
+            "name": "Lalande 21185 Moon 3",
+            "body_type": "Moon",
+            "position_x": 1.485345,
+            "position_y": 6.340925,
+            "size": 0.16516432
+          },
+          {
+            "id": "lalande_21185_black_hole",
+            "name": "Lalande 21185 Black Hole",
+            "body_type": "BlackHole",
+            "position_x": -1.9116831,
+            "position_y": -2.169465,
+            "size": 0.5998359
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 55,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": -5.041151,
+            "position_y": -1.4489269
+          },
+          {
+            "field_type": "GasField",
+            "size": 95,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": 5.810277,
+            "position_y": -1.0233335
+          },
+          {
+            "field_type": "BlackHoleAccretion",
+            "size": 71,
+            "resources": [
+              [
+                "Dark Matter",
+                40
+              ],
+              [
+                "Exotic Particles",
+                35
+              ],
+              [
+                "Gravitonium",
+                20
+              ],
+              [
+                "Cosmic Dust",
+                60
+              ]
+            ],
+            "position_x": -0.28346062,
+            "position_y": -3.2310715
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Silver",
+            49
+          ],
+          [
+            "Oxygen",
+            49
+          ],
+          [
+            "Hydrogen",
+            49
+          ]
+        ]
+      },
+      "alpha_centauri": {
+        "id": "alpha_centauri",
+        "name": "Alpha Centauri",
+        "x": -5.797253,
+        "y": 18.44249,
+        "celestial_bodies": [
+          {
+            "id": "alpha_centauri_star",
+            "name": "Alpha Centauri Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.2597964
+          },
+          {
+            "id": "alpha_centauri_jump_gate",
+            "name": "Alpha Centauri Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": 1.8501854,
+            "position_y": 4.9203033,
+            "size": 0.5
+          },
+          {
+            "id": "alpha_centauri_planet_1",
+            "name": "Alpha Centauri Planet 1",
+            "body_type": "Planet",
+            "position_x": -6.1994257,
+            "position_y": -0.94652474,
+            "size": 0.5056027
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 69,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 0.5533924,
+            "position_y": 2.4384289
+          },
+          {
+            "field_type": "GasField",
+            "size": 80,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": 5.919777,
+            "position_y": 3.3739433
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Silver",
+            46
+          ],
+          [
+            "Water",
+            46
+          ]
+        ]
+      },
+      "groombridge_34": {
+        "id": "groombridge_34",
+        "name": "Groombridge 34",
+        "x": -16.26923,
+        "y": -13.992386,
+        "celestial_bodies": [
+          {
+            "id": "groombridge_34_star",
+            "name": "Groombridge 34 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.1892754
+          },
+          {
+            "id": "groombridge_34_jump_gate",
+            "name": "Groombridge 34 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": 0.028176308,
+            "position_y": -9.919462,
+            "size": 0.5
+          },
+          {
+            "id": "groombridge_34_planet_1",
+            "name": "Groombridge 34 Planet 1",
+            "body_type": "Planet",
+            "position_x": 0.10917233,
+            "position_y": -7.4433255,
+            "size": 0.50031585
+          },
+          {
+            "id": "groombridge_34_moon_1",
+            "name": "Groombridge 34 Moon 1",
+            "body_type": "Moon",
+            "position_x": 0.52125883,
+            "position_y": -7.088762,
+            "size": 0.13034248
+          },
+          {
+            "id": "groombridge_34_planet_2",
+            "name": "Groombridge 34 Planet 2",
+            "body_type": "Planet",
+            "position_x": -2.5611494,
+            "position_y": -1.350876,
+            "size": 0.74129
+          },
+          {
+            "id": "groombridge_34_moon_2",
+            "name": "Groombridge 34 Moon 2",
+            "body_type": "Moon",
+            "position_x": -2.2697208,
+            "position_y": -1.0667717,
+            "size": 0.1543223
+          },
+          {
+            "id": "groombridge_34_planet_3",
+            "name": "Groombridge 34 Planet 3",
+            "body_type": "Planet",
+            "position_x": 0.73987025,
+            "position_y": 3.2109082,
+            "size": 0.30992988
+          },
+          {
+            "id": "groombridge_34_moon_3",
+            "name": "Groombridge 34 Moon 3",
+            "body_type": "Moon",
+            "position_x": 1.0131685,
+            "position_y": 3.587125,
+            "size": 0.19873267
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 45,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 7.9320755,
+            "position_y": 1.7278118
+          },
+          {
+            "field_type": "GasField",
+            "size": 77,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": 5.992216,
+            "position_y": 2.8057938
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Iron",
+            46
+          ]
+        ]
+      },
+      "61_cygni": {
+        "id": "61_cygni",
+        "name": "61 Cygni",
+        "x": -6.766097,
+        "y": -2.955857,
+        "celestial_bodies": [
+          {
+            "id": "61_cygni_star",
+            "name": "61 Cygni Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 0.97094023
+          },
+          {
+            "id": "61_cygni_jump_gate",
+            "name": "61 Cygni Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -5.7005906,
+            "position_y": -3.9585876,
+            "size": 0.5
+          },
+          {
+            "id": "61_cygni_planet_1",
+            "name": "61 Cygni Planet 1",
+            "body_type": "Planet",
+            "position_x": 0.96411055,
+            "position_y": 5.5477085,
+            "size": 0.9504287
+          },
+          {
+            "id": "61_cygni_planet_2",
+            "name": "61 Cygni Planet 2",
+            "body_type": "Planet",
+            "position_x": 6.7394576,
+            "position_y": 0.9291824,
+            "size": 0.7389618
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 71,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": -5.7614613,
+            "position_y": -3.0731144
+          },
+          {
+            "field_type": "IceField",
+            "size": 49,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": 5.6251698,
+            "position_y": 1.6799564
+          },
+          {
+            "field_type": "GasField",
+            "size": 61,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": 2.802908,
+            "position_y": 2.0449276
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Silver",
+            66
+          ],
+          [
+            "Copper",
+            66
+          ]
+        ]
+      },
+      "tau_ceti": {
+        "id": "tau_ceti",
+        "name": "Tau Ceti",
+        "x": 3.156178,
+        "y": -2.6112785,
+        "celestial_bodies": [
+          {
+            "id": "tau_ceti_star",
+            "name": "Tau Ceti Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.1745068
+          },
+          {
+            "id": "tau_ceti_jump_gate",
+            "name": "Tau Ceti Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": 6.282337,
+            "position_y": 7.835785,
+            "size": 0.5
+          },
+          {
+            "id": "tau_ceti_planet_1",
+            "name": "Tau Ceti Planet 1",
+            "body_type": "Planet",
+            "position_x": -0.5674934,
+            "position_y": 4.373706,
+            "size": 0.62160355
+          },
+          {
+            "id": "tau_ceti_moon_1",
+            "name": "Tau Ceti Moon 1",
+            "body_type": "Moon",
+            "position_x": -0.27989978,
+            "position_y": 4.6971755,
+            "size": 0.17087567
+          },
+          {
+            "id": "tau_ceti_planet_2",
+            "name": "Tau Ceti Planet 2",
+            "body_type": "Planet",
+            "position_x": 3.9450302,
+            "position_y": -0.08303179,
+            "size": 0.5917512
+          },
+          {
+            "id": "tau_ceti_moon_2",
+            "name": "Tau Ceti Moon 2",
+            "body_type": "Moon",
+            "position_x": 4.2375436,
+            "position_y": 0.377334,
+            "size": 0.19920662
+          },
+          {
+            "id": "tau_ceti_planet_3",
+            "name": "Tau Ceti Planet 3",
+            "body_type": "Planet",
+            "position_x": -2.7469163,
+            "position_y": -0.25351653,
+            "size": 0.49691695
+          },
+          {
+            "id": "tau_ceti_moon_3",
+            "name": "Tau Ceti Moon 3",
+            "body_type": "Moon",
+            "position_x": -2.4865868,
+            "position_y": 0.1970149,
+            "size": 0.14524391
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "MoonResidue",
+            "size": 31,
+            "resources": [
+              [
+                "Titanium",
+                60
+              ],
+              [
+                "Regolith",
+                70
+              ],
+              [
+                "Silicates",
+                55
+              ],
+              [
+                "Rare Earth Elements",
+                25
+              ]
+            ],
+            "position_x": 4.2667947,
+            "position_y": 0.4233706
+          },
+          {
+            "field_type": "AsteroidField",
+            "size": 61,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": -6.868582,
+            "position_y": 3.7591991
+          },
+          {
+            "field_type": "IceField",
+            "size": 76,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": -6.4369965,
+            "position_y": -8.549002
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Oxygen",
+            43
+          ],
+          [
+            "Water",
+            43
+          ],
+          [
+            "Silver",
+            43
+          ]
+        ]
+      },
+      "epsilon_eridani": {
+        "id": "epsilon_eridani",
+        "name": "Epsilon Eridani",
+        "x": 5.776724,
+        "y": 0.97540903,
+        "celestial_bodies": [
+          {
+            "id": "epsilon_eridani_star",
+            "name": "Epsilon Eridani Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.2808255
+          },
+          {
+            "id": "epsilon_eridani_jump_gate",
+            "name": "Epsilon Eridani Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": 4.5238667,
+            "position_y": -7.2212696,
+            "size": 0.5
+          },
+          {
+            "id": "epsilon_eridani_planet_1",
+            "name": "Epsilon Eridani Planet 1",
+            "body_type": "Planet",
+            "position_x": -3.8452594,
+            "position_y": 1.2442963,
+            "size": 0.6993506
+          },
+          {
+            "id": "epsilon_eridani_planet_2",
+            "name": "Epsilon Eridani Planet 2",
+            "body_type": "Planet",
+            "position_x": -2.826963,
+            "position_y": 7.219704,
+            "size": 1.0680741
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 89,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": -0.47292328,
+            "position_y": -5.3567924
+          },
+          {
+            "field_type": "IceField",
+            "size": 31,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": 1.6996288,
+            "position_y": -4.023006
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Silver",
+            70
+          ]
+        ]
+      },
+      "struve_2398": {
+        "id": "struve_2398",
+        "name": "Struve 2398",
+        "x": -4.576804,
+        "y": -8.402245,
+        "celestial_bodies": [
+          {
+            "id": "struve_2398_star",
+            "name": "Struve 2398 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.2181408
+          },
+          {
+            "id": "struve_2398_jump_gate",
+            "name": "Struve 2398 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -2.0717192,
+            "position_y": -6.5873384,
+            "size": 0.5
+          },
+          {
+            "id": "struve_2398_planet_1",
+            "name": "Struve 2398 Planet 1",
+            "body_type": "Planet",
+            "position_x": -3.72085,
+            "position_y": 1.1366231,
+            "size": 0.56322783
+          },
+          {
+            "id": "struve_2398_moon_1",
+            "name": "Struve 2398 Moon 1",
+            "body_type": "Moon",
+            "position_x": -3.485669,
+            "position_y": 1.479502,
+            "size": 0.25922832
+          },
+          {
+            "id": "struve_2398_planet_2",
+            "name": "Struve 2398 Planet 2",
+            "body_type": "Planet",
+            "position_x": 4.695599,
+            "position_y": 2.6793902,
+            "size": 0.47820953
+          },
+          {
+            "id": "struve_2398_moon_2",
+            "name": "Struve 2398 Moon 2",
+            "body_type": "Moon",
+            "position_x": 5.01363,
+            "position_y": 2.93508,
+            "size": 0.26713914
+          },
+          {
+            "id": "struve_2398_planet_3",
+            "name": "Struve 2398 Planet 3",
+            "body_type": "Planet",
+            "position_x": -0.89350647,
+            "position_y": 3.4377337,
+            "size": 0.7258669
+          },
+          {
+            "id": "struve_2398_moon_3",
+            "name": "Struve 2398 Moon 3",
+            "body_type": "Moon",
+            "position_x": -0.6508112,
+            "position_y": 3.6790688,
+            "size": 0.11338794
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "MoonResidue",
+            "size": 58,
+            "resources": [
+              [
+                "Titanium",
+                60
+              ],
+              [
+                "Regolith",
+                70
+              ],
+              [
+                "Silicates",
+                55
+              ],
+              [
+                "Rare Earth Elements",
+                25
+              ]
+            ],
+            "position_x": -3.4621508,
+            "position_y": 1.5137899
+          },
+          {
+            "field_type": "MoonResidue",
+            "size": 38,
+            "resources": [
+              [
+                "Titanium",
+                60
+              ],
+              [
+                "Regolith",
+                70
+              ],
+              [
+                "Silicates",
+                55
+              ],
+              [
+                "Rare Earth Elements",
+                25
+              ]
+            ],
+            "position_x": 5.045433,
+            "position_y": 2.960649
+          },
+          {
+            "field_type": "MoonResidue",
+            "size": 31,
+            "resources": [
+              [
+                "Titanium",
+                60
+              ],
+              [
+                "Regolith",
+                70
+              ],
+              [
+                "Silicates",
+                55
+              ],
+              [
+                "Rare Earth Elements",
+                25
+              ]
+            ],
+            "position_x": -0.6265416,
+            "position_y": 3.7032022
+          },
+          {
+            "field_type": "IceField",
+            "size": 75,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": -4.6133375,
+            "position_y": -6.0929275
+          }
+        ],
+        "stations": [
+          {
+            "id": "struve_2398_research_station_station_1",
+            "name": "Struve 2398 Research Station",
+            "station_type": "Research",
+            "position_x": -3.267932,
+            "position_y": -4.2150865,
+            "faction": null,
+            "services": [
+              "Blueprint Research",
+              "Technology Exchange",
+              "Science Missions"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Hydrogen",
+            55
+          ],
+          [
+            "Hydrogen",
+            55
+          ],
+          [
+            "Copper",
+            55
+          ]
+        ]
+      },
+      "barnard's_star": {
+        "id": "barnard's_star",
+        "name": "Barnard's Star",
+        "x": 7.004908,
+        "y": 18.780876,
+        "celestial_bodies": [
+          {
+            "id": "barnard's_star_star",
+            "name": "Barnard's Star Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.2794112
+          },
+          {
+            "id": "barnard's_star_jump_gate",
+            "name": "Barnard's Star Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -2.5235248,
+            "position_y": -1.0429497,
+            "size": 0.5
+          },
+          {
+            "id": "barnard's_star_planet_1",
+            "name": "Barnard's Star Planet 1",
+            "body_type": "Planet",
+            "position_x": 5.620372,
+            "position_y": -4.957217,
+            "size": 0.5579907
+          },
+          {
+            "id": "barnard's_star_planet_2",
+            "name": "Barnard's Star Planet 2",
+            "body_type": "Planet",
+            "position_x": 2.4026155,
+            "position_y": 2.3417604,
+            "size": 0.4631415
+          },
+          {
+            "id": "barnard's_star_planet_3",
+            "name": "Barnard's Star Planet 3",
+            "body_type": "Planet",
+            "position_x": 1.7110143,
+            "position_y": 1.5470815,
+            "size": 1.1169817
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 44,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 3.2395897,
+            "position_y": -2.283926
+          },
+          {
+            "field_type": "IceField",
+            "size": 42,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": -6.683128,
+            "position_y": 3.6274643
+          }
+        ],
+        "stations": [
+          {
+            "id": "barnard's_star_military_outpost_station_1",
+            "name": "Barnard's Star Military Outpost",
+            "station_type": "Military",
+            "position_x": -0.20077658,
+            "position_y": -5.9316616,
+            "faction": null,
+            "services": [
+              "Bounty Office",
+              "Combat Training",
+              "Weapons Shop"
+            ]
+          },
+          {
+            "id": "barnard's_star_habitat_ring_station_2",
+            "name": "Barnard's Star Habitat Ring",
+            "station_type": "Habitation",
+            "position_x": -1.0624151,
+            "position_y": 5.1010456,
+            "faction": null,
+            "services": [
+              "Supplies",
+              "Medical Services",
+              "Crew Recruitment"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Water",
+            23
+          ],
+          [
+            "Gold",
+            23
+          ],
+          [
+            "Water",
+            23
+          ]
+        ]
+      },
+      "ross_154": {
+        "id": "ross_154",
+        "name": "Ross 154",
+        "x": 17.372458,
+        "y": -8.322078,
+        "celestial_bodies": [
+          {
+            "id": "ross_154_star",
+            "name": "Ross 154 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.2961911
+          },
+          {
+            "id": "ross_154_jump_gate",
+            "name": "Ross 154 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -5.1470184,
+            "position_y": 0.29676914,
+            "size": 0.5
+          },
+          {
+            "id": "ross_154_planet_1",
+            "name": "Ross 154 Planet 1",
+            "body_type": "Planet",
+            "position_x": 2.9319692,
+            "position_y": -5.7191615,
+            "size": 1.1022335
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 85,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": -2.7673016,
+            "position_y": -0.66383743
+          },
+          {
+            "field_type": "IceField",
+            "size": 78,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": 5.500595,
+            "position_y": -0.8845444
+          }
+        ],
+        "stations": [
+          {
+            "id": "ross_154_industrial_complex_station_1",
+            "name": "Ross 154 Industrial Complex",
+            "station_type": "Industrial",
+            "position_x": -1.9261694,
+            "position_y": 2.0877485,
+            "faction": null,
+            "services": [
+              "Manufacturing",
+              "Ship Construction",
+              "Equipment Crafting"
+            ]
+          },
+          {
+            "id": "ross_154_habitat_ring_station_2",
+            "name": "Ross 154 Habitat Ring",
+            "station_type": "Habitation",
+            "position_x": -4.4069095,
+            "position_y": 3.113535,
+            "faction": null,
+            "services": [
+              "Supplies",
+              "Medical Services",
+              "Crew Recruitment"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Copper",
+            51
+          ],
+          [
+            "Titanium",
+            51
+          ]
+        ]
+      },
+      "epsilon_indi": {
+        "id": "epsilon_indi",
+        "name": "Epsilon Indi",
+        "x": -17.077381,
+        "y": 8.878586,
+        "celestial_bodies": [
+          {
+            "id": "epsilon_indi_star",
+            "name": "Epsilon Indi Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.4321591
+          },
+          {
+            "id": "epsilon_indi_jump_gate",
+            "name": "Epsilon Indi Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -1.0510654,
+            "position_y": -2.8395057,
+            "size": 0.5
+          },
+          {
+            "id": "epsilon_indi_planet_1",
+            "name": "Epsilon Indi Planet 1",
+            "body_type": "Planet",
+            "position_x": -4.1714163,
+            "position_y": 5.945694,
+            "size": 1.1112363
+          },
+          {
+            "id": "epsilon_indi_planet_2",
+            "name": "Epsilon Indi Planet 2",
+            "body_type": "Planet",
+            "position_x": 1.9052938,
+            "position_y": 0.75432354,
+            "size": 0.9465505
+          },
+          {
+            "id": "epsilon_indi_moon_2",
+            "name": "Epsilon Indi Moon 2",
+            "body_type": "Moon",
+            "position_x": 2.3086498,
+            "position_y": 1.0172553,
+            "size": 0.2202135
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 45,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 2.8091621,
+            "position_y": -2.4283638
+          },
+          {
+            "field_type": "GasField",
+            "size": 68,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": -2.4359722,
+            "position_y": -1.4289079
+          }
+        ],
+        "stations": [
+          {
+            "id": "epsilon_indi_habitat_ring_station_1",
+            "name": "Epsilon Indi Habitat Ring",
+            "station_type": "Habitation",
+            "position_x": -3.431089,
+            "position_y": -4.040212,
+            "faction": null,
+            "services": [
+              "Supplies",
+              "Medical Services",
+              "Crew Recruitment"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Water",
+            100
+          ]
+        ]
+      },
+      "lacaille_9352": {
+        "id": "lacaille_9352",
+        "name": "Lacaille 9352",
+        "x": -3.9617183,
+        "y": 3.6221564,
+        "celestial_bodies": [
+          {
+            "id": "lacaille_9352_star",
+            "name": "Lacaille 9352 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.3674933
+          },
+          {
+            "id": "lacaille_9352_jump_gate",
+            "name": "Lacaille 9352 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -5.7925773,
+            "position_y": 4.1355877,
+            "size": 0.5
+          },
+          {
+            "id": "lacaille_9352_planet_1",
+            "name": "Lacaille 9352 Planet 1",
+            "body_type": "Planet",
+            "position_x": -1.5595644,
+            "position_y": -7.462459,
+            "size": 0.614056
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 76,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 6.8697815,
+            "position_y": 3.10701
+          },
+          {
+            "field_type": "IceField",
+            "size": 43,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": 7.5541496,
+            "position_y": -1.2902946
+          },
+          {
+            "field_type": "GasField",
+            "size": 66,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": -2.6561737,
+            "position_y": -2.9385638
+          }
+        ],
+        "stations": [
+          {
+            "id": "lacaille_9352_trading_hub_station_1",
+            "name": "Lacaille 9352 Trading Hub",
+            "station_type": "Trading",
+            "position_x": -3.374864,
+            "position_y": 0.2584591,
+            "faction": null,
+            "services": [
+              "Market",
+              "Trade Missions",
+              "Passenger Transport"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Gold",
+            32
+          ]
+        ]
+      },
+      "procyon": {
+        "id": "procyon",
+        "name": "Procyon",
+        "x": -4.740862,
+        "y": 18.973776,
+        "celestial_bodies": [
+          {
+            "id": "procyon_star",
+            "name": "Procyon Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.0696936
+          },
+          {
+            "id": "procyon_jump_gate",
+            "name": "Procyon Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -8.701553,
+            "position_y": -6.1315846,
+            "size": 0.5
+          },
+          {
+            "id": "procyon_planet_1",
+            "name": "Procyon Planet 1",
+            "body_type": "Planet",
+            "position_x": -0.11850702,
+            "position_y": -2.8585823,
+            "size": 0.32777226
+          },
+          {
+            "id": "procyon_moon_1",
+            "name": "Procyon Moon 1",
+            "body_type": "Moon",
+            "position_x": 0.21313745,
+            "position_y": -2.4684813,
+            "size": 0.23261625
+          },
+          {
+            "id": "procyon_planet_2",
+            "name": "Procyon Planet 2",
+            "body_type": "Planet",
+            "position_x": 1.4002241,
+            "position_y": 6.884971,
+            "size": 0.8332938
+          },
+          {
+            "id": "procyon_moon_2",
+            "name": "Procyon Moon 2",
+            "body_type": "Moon",
+            "position_x": 1.7457601,
+            "position_y": 7.265209,
+            "size": 0.18815492
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 51,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 1.305582,
+            "position_y": -2.6292992
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Oxygen",
+            63
+          ],
+          [
+            "Titanium",
+            63
+          ],
+          [
+            "Gold",
+            63
+          ]
+        ]
+      },
+      "sirius": {
+        "id": "sirius",
+        "name": "Sirius",
+        "x": -2.3842049,
+        "y": 9.115793,
+        "celestial_bodies": [
+          {
+            "id": "sirius_star",
+            "name": "Sirius Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.3490293
+          },
+          {
+            "id": "sirius_jump_gate",
+            "name": "Sirius Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": 5.6266594,
+            "position_y": 6.0976295,
+            "size": 0.5
+          },
+          {
+            "id": "sirius_planet_1",
+            "name": "Sirius Planet 1",
+            "body_type": "Planet",
+            "position_x": -2.451158,
+            "position_y": -3.5667343,
+            "size": 0.39329508
+          },
+          {
+            "id": "sirius_planet_2",
+            "name": "Sirius Planet 2",
+            "body_type": "Planet",
+            "position_x": -2.620296,
+            "position_y": -1.4007616,
+            "size": 0.90410966
+          },
+          {
+            "id": "sirius_moon_2",
+            "name": "Sirius Moon 2",
+            "body_type": "Moon",
+            "position_x": -2.153499,
+            "position_y": -1.024719,
+            "size": 0.26287568
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "IceField",
+            "size": 39,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": -7.525022,
+            "position_y": -2.9024053
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Iron",
+            74
+          ],
+          [
+            "Titanium",
+            74
+          ],
+          [
+            "Water",
+            74
+          ]
+        ]
+      },
+      "luyten_726-8": {
+        "id": "luyten_726-8",
+        "name": "Luyten 726-8",
+        "x": -11.270925,
+        "y": 5.714858,
+        "celestial_bodies": [
+          {
+            "id": "luyten_726-8_star",
+            "name": "Luyten 726-8 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 1.0622393
+          },
+          {
+            "id": "luyten_726-8_jump_gate",
+            "name": "Luyten 726-8 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -7.6410174,
+            "position_y": -1.9521446,
+            "size": 0.5
+          },
+          {
+            "id": "luyten_726-8_planet_1",
+            "name": "Luyten 726-8 Planet 1",
+            "body_type": "Planet",
+            "position_x": 7.6388245,
+            "position_y": -0.29041827,
+            "size": 0.3563042
+          },
+          {
+            "id": "luyten_726-8_planet_2",
+            "name": "Luyten 726-8 Planet 2",
+            "body_type": "Planet",
+            "position_x": 3.9050698,
+            "position_y": -6.5197744,
+            "size": 0.49245763
+          },
+          {
+            "id": "luyten_726-8_moon_2",
+            "name": "Luyten 726-8 Moon 2",
+            "body_type": "Moon",
+            "position_x": 4.367945,
+            "position_y": -6.208092,
+            "size": 0.12952037
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "MoonResidue",
+            "size": 57,
+            "resources": [
+              [
+                "Titanium",
+                60
+              ],
+              [
+                "Regolith",
+                70
+              ],
+              [
+                "Silicates",
+                55
+              ],
+              [
+                "Rare Earth Elements",
+                25
+              ]
+            ],
+            "position_x": 4.4142327,
+            "position_y": -6.1769238
+          },
+          {
+            "field_type": "AsteroidField",
+            "size": 41,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": 5.6239243,
+            "position_y": -0.11127472
+          },
+          {
+            "field_type": "IceField",
+            "size": 79,
+            "resources": [
+              [
+                "Water",
+                80
+              ],
+              [
+                "Methane",
+                60
+              ],
+              [
+                "Ammonia",
+                40
+              ],
+              [
+                "Carbon Dioxide",
+                50
+              ]
+            ],
+            "position_x": 2.57555,
+            "position_y": -0.26888084
+          }
+        ],
+        "stations": [
+          {
+            "id": "luyten_726-8_mining_facility_station_1",
+            "name": "Luyten 726-8 Mining Facility",
+            "station_type": "Mining",
+            "position_x": -4.677027,
+            "position_y": 4.3885603,
+            "faction": null,
+            "services": [
+              "Ore Refining",
+              "Mining Equipment",
+              "Resource Market"
+            ]
+          },
+          {
+            "id": "luyten_726-8_trading_hub_station_2",
+            "name": "Luyten 726-8 Trading Hub",
+            "station_type": "Trading",
+            "position_x": -0.57946587,
+            "position_y": 0.7771182,
+            "faction": null,
+            "services": [
+              "Market",
+              "Trade Missions",
+              "Passenger Transport"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Hydrogen",
+            53
+          ],
+          [
+            "Hydrogen",
+            53
+          ],
+          [
+            "Hydrogen",
+            53
+          ]
+        ]
+      },
+      "altair": {
+        "id": "altair",
+        "name": "Altair",
+        "x": 17.742485,
+        "y": 2.4422822,
+        "celestial_bodies": [
+          {
+            "id": "altair_star",
+            "name": "Altair Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 0.88044554
+          },
+          {
+            "id": "altair_jump_gate",
+            "name": "Altair Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": 1.5772104,
+            "position_y": 4.7065372,
+            "size": 0.5
+          },
+          {
+            "id": "altair_planet_1",
+            "name": "Altair Planet 1",
+            "body_type": "Planet",
+            "position_x": 1.5436379,
+            "position_y": -4.9400682,
+            "size": 1.1684961
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "GasField",
+            "size": 75,
+            "resources": [
+              [
+                "Hydrogen",
+                75
+              ],
+              [
+                "Helium",
+                65
+              ],
+              [
+                "Nitrogen",
+                55
+              ],
+              [
+                "Exotic Gas",
+                20
+              ]
+            ],
+            "position_x": -0.8669429,
+            "position_y": -0.1340046
+          }
+        ],
+        "stations": [
+          {
+            "id": "altair_trading_hub_station_1",
+            "name": "Altair Trading Hub",
+            "station_type": "Trading",
+            "position_x": -5.6519594,
+            "position_y": 1.4078908,
+            "faction": null,
+            "services": [
+              "Market",
+              "Trade Missions",
+              "Passenger Transport"
+            ]
+          },
+          {
+            "id": "altair_military_outpost_station_2",
+            "name": "Altair Military Outpost",
+            "station_type": "Military",
+            "position_x": 1.5725813,
+            "position_y": 0.3750372,
+            "faction": null,
+            "services": [
+              "Bounty Office",
+              "Combat Training",
+              "Weapons Shop"
+            ]
+          }
+        ],
+        "resources": [
+          [
+            "Titanium",
+            54
+          ],
+          [
+            "Silver",
+            54
+          ],
+          [
+            "Gold",
+            54
+          ]
+        ]
+      },
+      "gliese_892": {
+        "id": "gliese_892",
+        "name": "Gliese 892",
+        "x": -1.2922655,
+        "y": -13.540506,
+        "celestial_bodies": [
+          {
+            "id": "gliese_892_star",
+            "name": "Gliese 892 Star",
+            "body_type": "Star",
+            "position_x": 0.0,
+            "position_y": 0.0,
+            "size": 0.8885574
+          },
+          {
+            "id": "gliese_892_jump_gate",
+            "name": "Gliese 892 Jump Gate",
+            "body_type": "JumpGate",
+            "position_x": -7.0107317,
+            "position_y": 7.314686,
+            "size": 0.5
+          },
+          {
+            "id": "gliese_892_planet_1",
+            "name": "Gliese 892 Planet 1",
+            "body_type": "Planet",
+            "position_x": -2.346933,
+            "position_y": -6.2805195,
+            "size": 0.7450054
+          },
+          {
+            "id": "gliese_892_moon_1",
+            "name": "Gliese 892 Moon 1",
+            "body_type": "Moon",
+            "position_x": -2.0023394,
+            "position_y": -5.990881,
+            "size": 0.20387396
+          }
+        ],
+        "resource_fields": [
+          {
+            "field_type": "AsteroidField",
+            "size": 72,
+            "resources": [
+              [
+                "Iron",
+                70
+              ],
+              [
+                "Nickel",
+                50
+              ],
+              [
+                "Cobalt",
+                30
+              ],
+              [
+                "Rare Metals",
+                15
+              ]
+            ],
+            "position_x": -3.2604637,
+            "position_y": 6.8469715
+          }
+        ],
+        "stations": [],
+        "resources": [
+          [
+            "Gold",
+            21
+          ]
+        ]
+      }
+    },
+    "market_items": {
+      "lacaille_9352": [
+        [
+          {
+            "name": "Silver",
+            "value": 100,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          63
+        ],
+        [
+          {
+            "name": "Copper",
+            "value": 96,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          40
+        ],
+        [
+          {
+            "name": "Iron",
+            "value": 108,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          63
+        ],
+        [
+          {
+            "name": "Shield Generator",
+            "value": 322,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          14
+        ],
+        [
+          {
+            "name": "Power Cell",
+            "value": 309,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          9
+        ],
+        [
+          {
+            "name": "Power Cell",
+            "value": 302,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          5
+        ],
+        [
+          {
+            "name": "Ship Parts",
+            "value": 819,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          8
+        ]
+      ],
+      "sol": [
+        [
+          {
+            "name": "Copper",
+            "value": 95,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          76
+        ],
+        [
+          {
+            "name": "Gold",
+            "value": 102,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          50
+        ],
+        [
+          {
+            "name": "Silver",
+            "value": 98,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          30
+        ],
+        [
+          {
+            "name": "Titanium",
+            "value": 102,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          21
+        ],
+        [
+          {
+            "name": "Hydrogen",
+            "value": 128,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          74
+        ],
+        [
+          {
+            "name": "Shield Generator",
+            "value": 272,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          14
+        ],
+        [
+          {
+            "name": "Power Cell",
+            "value": 308,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          5
+        ],
+        [
+          {
+            "name": "Power Cell",
+            "value": 309,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          19
+        ],
+        [
+          {
+            "name": "Military Equipment",
+            "value": 814,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          6
+        ]
+      ],
+      "barnard's_star": [
+        [
+          {
+            "name": "Copper",
+            "value": 104,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          72
+        ],
+        [
+          {
+            "name": "Hydrogen",
+            "value": 113,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          70
+        ],
+        [
+          {
+            "name": "Oxygen",
+            "value": 112,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          38
+        ],
+        [
+          {
+            "name": "Oxygen",
+            "value": 120,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          50
+        ],
+        [
+          {
+            "name": "Computer Chip",
+            "value": 312,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          12
+        ],
+        [
+          {
+            "name": "Computer Chip",
+            "value": 283,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          17
+        ],
+        [
+          {
+            "name": "Warp Drive",
+            "value": 315,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          9
+        ],
+        [
+          {
+            "name": "Medical Supplies",
+            "value": 810,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          7
+        ]
+      ],
+      "luyten_726-8": [
+        [
+          {
+            "name": "Copper",
+            "value": 109,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          37
+        ],
+        [
+          {
+            "name": "Hydrogen",
+            "value": 123,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          33
+        ],
+        [
+          {
+            "name": "Hydrogen",
+            "value": 121,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          60
+        ],
+        [
+          {
+            "name": "Fusion Core",
+            "value": 302,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          15
+        ],
+        [
+          {
+            "name": "Fusion Core",
+            "value": 309,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          5
+        ],
+        [
+          {
+            "name": "Luxury Goods",
+            "value": 720,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          7
+        ],
+        [
+          {
+            "name": "Military Equipment",
+            "value": 863,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          9
+        ]
+      ],
+      "altair": [
+        [
+          {
+            "name": "Iron",
+            "value": 107,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          10
+        ],
+        [
+          {
+            "name": "Water",
+            "value": 86,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Ice"
+            }
+          },
+          77
+        ],
+        [
+          {
+            "name": "Water",
+            "value": 89,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Ice"
+            }
+          },
+          89
+        ],
+        [
+          {
+            "name": "Titanium",
+            "value": 102,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          70
+        ],
+        [
+          {
+            "name": "Hydrogen",
+            "value": 131,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          82
+        ],
+        [
+          {
+            "name": "Warp Drive",
+            "value": 316,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          10
+        ],
+        [
+          {
+            "name": "Computer Chip",
+            "value": 277,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          11
+        ],
+        [
+          {
+            "name": "Ship Parts",
+            "value": 753,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          4
+        ],
+        [
+          {
+            "name": "Ship Parts",
+            "value": 861,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          4
+        ]
+      ],
+      "epsilon_indi": [
+        [
+          {
+            "name": "Water",
+            "value": 84,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Ice"
+            }
+          },
+          38
+        ],
+        [
+          {
+            "name": "Titanium",
+            "value": 109,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          97
+        ],
+        [
+          {
+            "name": "Iron",
+            "value": 103,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          46
+        ],
+        [
+          {
+            "name": "Water",
+            "value": 86,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Ice"
+            }
+          },
+          32
+        ],
+        [
+          {
+            "name": "Computer Chip",
+            "value": 311,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          13
+        ],
+        [
+          {
+            "name": "Computer Chip",
+            "value": 305,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          19
+        ],
+        [
+          {
+            "name": "Medical Supplies",
+            "value": 810,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          3
+        ]
+      ],
+      "ross_154": [
+        [
+          {
+            "name": "Copper",
+            "value": 109,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          21
+        ],
+        [
+          {
+            "name": "Iron",
+            "value": 103,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          84
+        ],
+        [
+          {
+            "name": "Hydrogen",
+            "value": 116,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          93
+        ],
+        [
+          {
+            "name": "Titanium",
+            "value": 99,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          87
+        ],
+        [
+          {
+            "name": "Gold",
+            "value": 107,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          42
+        ],
+        [
+          {
+            "name": "Shield Generator",
+            "value": 295,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          15
+        ],
+        [
+          {
+            "name": "Fusion Core",
+            "value": 270,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          6
+        ],
+        [
+          {
+            "name": "Ship Parts",
+            "value": 739,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          7
+        ]
+      ],
+      "ross_248": [
+        [
+          {
+            "name": "Gold",
+            "value": 104,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          20
+        ],
+        [
+          {
+            "name": "Water",
+            "value": 92,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Ice"
+            }
+          },
+          88
+        ],
+        [
+          {
+            "name": "Iron",
+            "value": 103,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          73
+        ],
+        [
+          {
+            "name": "Warp Drive",
+            "value": 292,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          13
+        ],
+        [
+          {
+            "name": "Shield Generator",
+            "value": 296,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          9
+        ],
+        [
+          {
+            "name": "Luxury Goods",
+            "value": 862,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          8
+        ],
+        [
+          {
+            "name": "Medical Supplies",
+            "value": 774,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          8
+        ]
+      ],
+      "struve_2398": [
+        [
+          {
+            "name": "Iron",
+            "value": 107,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          44
+        ],
+        [
+          {
+            "name": "Oxygen",
+            "value": 129,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          91
+        ],
+        [
+          {
+            "name": "Iron",
+            "value": 95,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Mineral"
+            }
+          },
+          98
+        ],
+        [
+          {
+            "name": "Hydrogen",
+            "value": 112,
+            "weight": 1,
+            "item_type": {
+              "Resource": "Gas"
+            }
+          },
+          94
+        ],
+        [
+          {
+            "name": "Shield Generator",
+            "value": 326,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          13
+        ],
+        [
+          {
+            "name": "Power Cell",
+            "value": 296,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          5
+        ],
+        [
+          {
+            "name": "Shield Generator",
+            "value": 277,
+            "weight": 2,
+            "item_type": "Component"
+          },
+          15
+        ],
+        [
+          {
+            "name": "Luxury Goods",
+            "value": 756,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          2
+        ],
+        [
+          {
+            "name": "Ship Parts",
+            "value": 749,
+            "weight": 4,
+            "item_type": "Product"
+          },
+          4
+        ]
+      ]
+    },
+    "rng_seed": 12345
+  },
+  "current_screen": "MainMenu",
+  "previous_screen": "MainMenu",
+  "navigation_system": {
+    "travel_in_progress": false,
+    "destination": null,
+    "travel_time_remaining": {
+      "secs": 0,
+      "nanos": 0
+    }
+  },
+  "trading_system": {
+    "buy_mode": true,
+    "transaction_cooldown": {
+      "secs": 0,
+      "nanos": 500000000
+    },
+    "last_transaction": {
+      "secs": 0,
+      "nanos": 599704298
+    }
+  },
+  "mining_system": {
+    "selected_resource": null
+  },
+  "crafting_system": {
+    "blueprints": [
+      {
+        "name": "Power Cell",
+        "ingredients": [
+          [
+            "Copper",
+            2
+          ],
+          [
+            "Iron",
+            1
+          ]
+        ],
+        "output": {
+          "name": "Power Cell",
+          "value": 250,
+          "weight": 1,
+          "item_type": "Component"
+        },
+        "output_quantity": 1
+      },
+      {
+        "name": "Computer Chip",
+        "ingredients": [
+          [
+            "Silver",
+            1
+          ],
+          [
+            "Gold",
+            1
+          ]
+        ],
+        "output": {
+          "name": "Computer Chip",
+          "value": 350,
+          "weight": 1,
+          "item_type": "Component"
+        },
+        "output_quantity": 1
+      },
+      {
+        "name": "Shield Generator",
+        "ingredients": [
+          [
+            "Power Cell",
+            2
+          ],
+          [
+            "Titanium",
+            3
+          ]
+        ],
+        "output": {
+          "name": "Shield Generator",
+          "value": 800,
+          "weight": 2,
+          "item_type": "Component"
+        },
+        "output_quantity": 1
+      },
+      {
+        "name": "Medical Supplies",
+        "ingredients": [
+          [
+            "Water",
+            2
+          ],
+          [
+            "Oxygen",
+            1
+          ]
+        ],
+        "output": {
+          "name": "Medical Supplies",
+          "value": 600,
+          "weight": 3,
+          "item_type": "Product"
+        },
+        "output_quantity": 1
+      },
+      {
+        "name": "Ship Parts",
+        "ingredients": [
+          [
+            "Titanium",
+            3
+          ],
+          [
+            "Computer Chip",
+            1
+          ],
+          [
+            "Power Cell",
+            1
+          ]
+        ],
+        "output": {
+          "name": "Ship Parts",
+          "value": 1200,
+          "weight": 4,
+          "item_type": "Product"
+        },
+        "output_quantity": 1
+      }
+    ],
+    "selected_blueprint": null
+  },
+  "time_system": {
+    "game_epoch": "2300-01-01T00:00:00Z",
+    "game_time_multiplier": 60.0,
+    "elapsed_real_time": {
+      "secs": 541,
+      "nanos": 144719250
+    }
+  },
+  "last_update": [
+    0,
+    4745710
+  ],
+  "game_over": false,
+  "quit_confirmed": false,
+  "message": null,
+  "animation_frame": 38,
+  "show_animation_effects": true,
+  "character_name": "",
+  "selected_faction": 0,
+  "selected_storyline": 0,
+  "creation_stage": 0,
+  "character_info_tab": 0
+}

@@ -138,6 +138,42 @@ impl Skill {
         // Each level improves quality by 5%
         (self.level as f32) * 0.05
     }
+    
+    // Add experience points directly to this skill
+    pub fn add_experience(&mut self, amount: f64) {
+        // Add points based on the amount of experience gained
+        let points_gained = (amount as u32).max(1);
+        self.points += points_gained;
+        
+        // Update the skill level based on new points
+        self.level = self.calculate_level();
+        
+        // Update last update time
+        self.last_update = Some(std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs_f64());
+    }
+    
+    // Get progress to next level as a decimal between 0.0 and 1.0
+    pub fn get_level_progress(&self) -> f64 {
+        if self.level as usize >= SKILL_LEVEL_THRESHOLDS.len() {
+            return 1.0; // Max level reached
+        }
+        
+        let current_threshold = if self.level == 0 {
+            0
+        } else {
+            SKILL_LEVEL_THRESHOLDS[self.level as usize - 1]
+        };
+        
+        let next_threshold = SKILL_LEVEL_THRESHOLDS[self.level as usize];
+        
+        let points_in_level = self.points - current_threshold;
+        let points_required = next_threshold - current_threshold;
+        
+        points_in_level as f64 / points_required as f64
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -188,6 +224,38 @@ impl SkillSet {
             skill.deactivate()
         } else {
             false
+        }
+    }
+    
+    // Mining-specific methods
+    
+    // Get the current mining skill level
+    pub fn get_mining_level(&self) -> u8 {
+        if let Some(skill) = self.get_skill(&SkillCategory::Mining) {
+            skill.level
+        } else {
+            1 // Default level if skill not found
+        }
+    }
+    
+    // Add mining experience points
+    pub fn gain_mining_experience(&mut self, amount: u32) {
+        if let Some(skill) = self.get_skill_mut(&SkillCategory::Mining) {
+            skill.add_experience(amount as f64);
+        }
+    }
+    
+    // Check if the player meets the required mining level
+    pub fn meets_mining_requirement(&self, required_level: u8) -> bool {
+        self.get_mining_level() >= required_level
+    }
+    
+    // Get mining skill progress percentage to next level
+    pub fn get_mining_progress(&self) -> f64 {
+        if let Some(skill) = self.get_skill(&SkillCategory::Mining) {
+            skill.get_level_progress()
+        } else {
+            0.0
         }
     }
 }

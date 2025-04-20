@@ -31,3 +31,7 @@ args = "cargo run --bin space_trader"
 
 [deployment]
 run = ["sh", "-c", "cargo run --bin space_trader"]
+
+[[ports]]
+localPort = 7890
+externalPort = 80

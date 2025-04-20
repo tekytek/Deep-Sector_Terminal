@@ -9,13 +9,14 @@ use tui::{
 
 use crate::game::Game;
 use crate::ui::colors;
+use crate::models::universe::ResourceField;
 
 pub fn draw_mining_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     // Check if player is in a system with mineable resources
     let current_system = &game.player.current_system;
-    let resources = game.mining_system.get_resources_for_system(current_system.id.clone());
+    let resource_fields = game.mining_system.get_resources_for_system(&current_system.id);
     
-    if resources.is_empty() {
+    if resource_fields.is_empty() {
         draw_no_resources_message(f, area);
         return;
     }
@@ -24,16 +25,20 @@ pub fn draw_mining_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect)
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Min(10),    // Resources
+            Constraint::Min(10),    // Resource Fields
+            Constraint::Length(6),  // Active Operations
             Constraint::Length(3),  // Player info
         ])
         .split(area);
 
-    // Draw available resources
-    draw_resources(f, game, resources, chunks[0]);
+    // Draw available resource fields
+    draw_resource_fields(f, game, &resource_fields, chunks[0]);
+    
+    // Draw active mining operations
+    draw_active_operations(f, game, chunks[1]);
 
     // Draw player mining info
-    draw_player_mining_info(f, game, chunks[1]);
+    draw_player_mining_info(f, game, chunks[2]);
 }
 
 fn draw_no_resources_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
@@ -58,26 +63,44 @@ fn draw_no_resources_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
     f.render_widget(paragraph, area);
 }
 
-fn draw_resources<B: Backend>(f: &mut Frame<B>, _game: &Game, resources: Vec<(String, u32)>, area: Rect) {
+fn draw_resource_fields<B: Backend>(f: &mut Frame<B>, game: &Game, fields: &[ResourceField], area: Rect) {
     let block = Block::default()
-        .title(Span::styled(" DETECTED RESOURCE DEPOSITS ", Style::default().fg(colors::PRIMARY)))
+        .title(Span::styled(" DETECTED RESOURCE FIELDS ", Style::default().fg(colors::PRIMARY)))
         .borders(Borders::ALL)
         .border_style(Style::default().fg(colors::SECONDARY));
 
-    let header = Row::new(vec!["#", "Resource", "Abundance"]).style(Style::default().fg(colors::INFO));
+    let header = Row::new(vec!["#", "Field Type", "Size", "Resources", "Required Level"])
+        .style(Style::default().fg(colors::INFO));
     
-    let rows: Vec<Row> = resources.iter().enumerate().map(|(i, (name, abundance))| {
+    let rows: Vec<Row> = fields.iter().enumerate().map(|(i, field)| {
+        // List first few resources as a sample
+        let resource_list = field.resources.iter()
+            .take(2)
+            .map(|(name, _)| name.clone())
+            .collect::<Vec<String>>()
+            .join(", ");
+        
+        let resource_text = if field.resources.len() > 2 {
+            format!("{} (+{})", resource_list, field.resources.len() - 2)
+        } else {
+            resource_list
+        };
+        
         Row::new(vec![
             format!("{}", i + 1),
-            name.clone(),
-            format!("{}", abundance),
+            field.field_type.to_string(),
+            format!("{}", field.size),
+            resource_text,
+            format!("{}", field.field_type.required_mining_level()),
         ])
     }).collect();
 
     let widths = [
         Constraint::Length(3),
-        Constraint::Percentage(50),
         Constraint::Percentage(30),
+        Constraint::Length(6),
+        Constraint::Percentage(40),
+        Constraint::Length(7),
     ];
 
     let table = Table::new(rows)
@@ -88,9 +111,37 @@ fn draw_resources<B: Backend>(f: &mut Frame<B>, _game: &Game, resources: Vec<(St
     f.render_widget(table, area);
 }
 
+fn draw_active_operations<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
+    let block = Block::default()
+        .title(Span::styled(" ACTIVE MINING OPERATIONS ", Style::default().fg(colors::SUCCESS)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
+
+    let operations = game.mining_system.get_mining_status();
+    
+    if operations.is_empty() {
+        let text = vec![
+            Spans::from(vec![
+                Span::raw("No active mining operations. Press "),
+                Span::styled("1-9", Style::default().fg(colors::WARNING)),
+                Span::raw(" to start mining a resource field."),
+            ]),
+        ];
+        let paragraph = Paragraph::new(text).block(block);
+        f.render_widget(paragraph, area);
+    } else {
+        let text: Vec<Spans> = operations.into_iter()
+            .map(|op| Spans::from(vec![Span::raw(op)]))
+            .collect();
+        
+        let paragraph = Paragraph::new(text).block(block);
+        f.render_widget(paragraph, area);
+    }
+}
+
 fn draw_player_mining_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let block = Block::default()
-        .title(Span::styled(" EXTRACTION EQUIPMENT ", Style::default().fg(colors::WARNING)))
+        .title(Span::styled(" MINING EQUIPMENT ", Style::default().fg(colors::WARNING)))
         .borders(Borders::ALL)
         .border_style(Style::default().fg(colors::SECONDARY));
 
@@ -98,14 +149,11 @@ fn draw_player_mining_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect
         Spans::from(vec![
             Span::raw("Mining Power: "),
             Span::styled(format!("{}", game.player.ship.mining_power), Style::default().fg(colors::INFO)),
-            Span::raw("    Cargo: "),
-            Span::styled(
-                format!("{}/{}", game.player.inventory.used_capacity(), game.player.ship.cargo_capacity),
-                Style::default().fg(colors::INFO)
-            ),
-            Span::raw("    ["),
-            Span::styled("M", Style::default().fg(colors::WARNING)),
-            Span::raw("] Main Menu"),
+            Span::raw(" | Mining Level: "),
+            Span::styled(format!("{}", game.player.skills.get_mining_level()), Style::default().fg(colors::INFO)),
+            Span::raw(" | Press "),
+            Span::styled("S", Style::default().fg(colors::WARNING)),
+            Span::raw(" to stop mining"),
         ]),
     ];
 
