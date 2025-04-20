@@ -1,10 +1,17 @@
 use tui::style::Color;
 
-// Terminal-based color scheme using standard ANSI colors
-pub const PRIMARY: Color = Color::Green;       // #00FF00 (terminal green)
-pub const SECONDARY: Color = Color::Blue;      // #0000FF (deep blue)
-pub const WARNING: Color = Color::Yellow;      // #FFFF00 (yellow)
-pub const DANGER: Color = Color::Red;          // #FF0000 (red)
-pub const INFO: Color = Color::Cyan;           // #00FFFF (cyan)
-pub const NORMAL: Color = Color::White;        // #FFFFFF (white)
-pub const DIM: Color = Color::Gray;            // #808080 (gray)
+// Enhanced sci-fi color scheme using RGB colors for more vibrant appearance
+pub const PRIMARY: Color = Color::Rgb(0, 255, 136);       // #00FF88 (neon green)
+pub const SECONDARY: Color = Color::Rgb(0, 128, 255);     // #0080FF (bright blue)
+pub const WARNING: Color = Color::Rgb(255, 204, 0);       // #FFCC00 (bright yellow)
+pub const DANGER: Color = Color::Rgb(255, 51, 51);        // #FF3333 (bright red)
+pub const INFO: Color = Color::Rgb(0, 240, 255);          // #00F0FF (bright cyan)
+pub const NORMAL: Color = Color::Rgb(220, 220, 240);      // #DCDCF0 (slightly blue-tinted white)
+pub const DIM: Color = Color::Rgb(100, 110, 130);         // #646E82 (slate gray)
+
+// Animation colors
+pub const HIGHLIGHT: Color = Color::Rgb(255, 255, 255);   // #FFFFFF (pure white) 
+pub const ENERGY: Color = Color::Rgb(130, 60, 255);       // #823CFF (purple)
+pub const SHIELD: Color = Color::Rgb(60, 170, 255);       // #3CAAFF (shield blue)
+pub const HULL: Color = Color::Rgb(180, 180, 180);        // #B4B4B4 (hull gray)
+pub const STARS_BG: Color = Color::Rgb(5, 10, 25);        // #050A19 (deep space blue)

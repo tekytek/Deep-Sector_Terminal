@@ -50,6 +50,11 @@ pub struct Game {
     pub message: Option<String>,
     #[serde(with = "option_instant_serde", skip_serializing_if = "Option::is_none")]
     pub message_time: Option<Instant>,
+    // Animation related fields
+    #[serde(default)]
+    pub animation_frame: u64,
+    #[serde(default)]
+    pub show_animation_effects: bool,
 }
 
 impl Game {
@@ -76,6 +81,8 @@ impl Game {
                     quit_confirmed: false,
                     message: None,
                     message_time: None,
+                    animation_frame: 0,
+                    show_animation_effects: true,
                 }
             }
         }
@@ -90,6 +97,14 @@ impl Game {
         self.time_system.update(delta_time);
         self.navigation_system.update(&mut self.player, &self.universe, &self.time_system, delta_time);
         self.trading_system.update(&mut self.universe, delta_time);
+        
+        // Update animation frame
+        if self.show_animation_effects {
+            // Update animation frame counter approximately every 100ms
+            if delta_time.as_millis() > 100 {
+                self.animation_frame += 1;
+            }
+        }
         
         // Clear temporary messages after 3 seconds
         if let Some(message_time) = self.message_time {
