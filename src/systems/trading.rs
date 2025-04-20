@@ -1,9 +1,11 @@
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
+use rand::Rng;
 
 use crate::models::player::Player;
 use crate::models::universe::Universe;
 use crate::models::item::Item;
+use crate::models::market::{Market, MarketType, EconomicEvent, PriceHistory};
 
 #[derive(Serialize, Deserialize)]
 pub struct TradingSystem {
@@ -100,6 +102,35 @@ impl TradingSystem {
         if self.last_transaction > Duration::from_secs(60) {
             universe.update_market_prices();
             self.last_transaction = Duration::from_secs(0);
+        }
+    }
+    
+    // Get price trend information about a specific item
+    pub fn get_price_trend_info(&self, item_name: &str) -> Option<(f32, String)> {
+        // Forward to the universe's market system
+        // Note: In a real-world implementation, this would access the market
+        // associated with the current system from the universe
+        
+        // This is a placeholder implementation
+        match item_name {
+            "Iron" => Some((5.2, "Rising".to_string())),
+            "Copper" => Some((-3.1, "Decreasing".to_string())),
+            "Silver" => Some((12.8, "Skyrocketing".to_string())),
+            "Gold" => Some((-8.5, "Falling".to_string())),
+            "Titanium" => Some((0.2, "Stable".to_string())),
+            "Water" => Some((-15.3, "Plummeting".to_string())),
+            "Hydrogen" => Some((2.1, "Increasing".to_string())),
+            "Oxygen" => Some((1.8, "Increasing".to_string())),
+            "Power Cell" => Some((7.4, "Rising".to_string())),
+            "Computer Chip" => Some((9.2, "Rising".to_string())),
+            "Fusion Core" => Some((-2.5, "Decreasing".to_string())),
+            "Shield Generator" => Some((14.3, "Skyrocketing".to_string())),
+            "Warp Drive" => Some((-7.1, "Falling".to_string())),
+            "Medical Supplies" => Some((3.9, "Increasing".to_string())),
+            "Luxury Goods" => Some((6.3, "Rising".to_string())),
+            "Military Equipment" => Some((-4.2, "Decreasing".to_string())),
+            "Ship Parts" => Some((0.8, "Stable".to_string())),
+            _ => None,
         }
     }
 }

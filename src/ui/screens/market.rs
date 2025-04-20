@@ -2,7 +2,7 @@ use tui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Style},
-    text::{Span, Spans},
+    text::{Span, Spans, Text},
     widgets::{Block, Borders, Paragraph, Table, Row},
     Frame,
 };
@@ -38,8 +38,8 @@ pub fn draw_market_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect)
     // Draw player info
     draw_player_market_info(f, game, chunks[2]);
     
-    // Draw comms
-    draw_comms(f, chunks[3]);
+    // Draw comms with market info
+    draw_comms(f, game, chunks[3]);
 }
 
 fn draw_not_docked_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
@@ -91,7 +91,12 @@ fn draw_market_items<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 
     let block = style_utils::create_primary_block(title);
 
-    let header = Row::new(vec!["#", "Item", "Quantity", "Price"]).style(Style::default().fg(colors::INFO));
+    // Enhanced header with trend information
+    let header = if game.trading_system.is_buy_mode() {
+        Row::new(vec!["#", "Item", "Quantity", "Price", "Trend"]).style(Style::default().fg(colors::INFO))
+    } else {
+        Row::new(vec!["#", "Item", "Quantity", "Sell Price"]).style(Style::default().fg(colors::INFO))
+    };
     
     let items = if game.trading_system.is_buy_mode() {
         // Get market items for current system
@@ -129,20 +134,61 @@ fn draw_market_items<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
                 (item.value as f32 * 0.9) as u32
             };
             
-            Row::new(vec![
-                format!("{}", i + 1),
-                item.name.clone(),
-                format!("{}", quantity),
-                format!("{} cr", price),
-            ])
+            if game.trading_system.is_buy_mode() {
+                // Get price trend info from market if available
+                let trend_info = game.trading_system.get_price_trend_info(&item.name);
+                let trend_text = match trend_info {
+                    Some((_, trend)) => {
+                        // Determine visual indicator and color based on trend
+                        match trend.as_str() {
+                            "Skyrocketing" => "▲▲▲", // Triple up arrow
+                            "Rising" => "▲▲",       // Double up arrow
+                            "Increasing" => "▲",    // Single up arrow
+                            "Stable" => "◆",        // Diamond
+                            "Decreasing" => "▼",    // Single down arrow
+                            "Falling" => "▼▼",      // Double down arrow
+                            "Plummeting" => "▼▼▼",  // Triple down arrow
+                            _ => "◆",               // Default diamond
+                        }
+                    },
+                    None => "◆" // Default if no trend
+                };
+                
+                Row::new(vec![
+                    format!("{}", i + 1),
+                    item.name.clone(),
+                    format!("{}", quantity),
+                    format!("{} cr", price),
+                    trend_text.to_string(),
+                ])
+            } else {
+                // Simpler row for sell mode (player inventory)
+                Row::new(vec![
+                    format!("{}", i + 1),
+                    item.name.clone(),
+                    format!("{}", quantity),
+                    format!("{} cr", price),
+                ])
+            }
         }).collect();
 
-        let widths = [
-            Constraint::Length(3),
-            Constraint::Percentage(50),
-            Constraint::Percentage(15),
-            Constraint::Percentage(15),
-        ];
+        let widths = if game.trading_system.is_buy_mode() {
+            [
+                Constraint::Length(3),         // #
+                Constraint::Percentage(45),    // Item name
+                Constraint::Percentage(15),    // Quantity
+                Constraint::Percentage(20),    // Price
+                Constraint::Percentage(15),    // Trend
+            ]
+        } else {
+            [
+                Constraint::Length(3),         // #
+                Constraint::Percentage(55),    // Item name
+                Constraint::Percentage(20),    // Quantity
+                Constraint::Percentage(20),    // Price
+                Constraint::Percentage(0),     // Hidden column (to match the 5-column structure)
+            ]
+        };
 
         let table = Table::new(rows)
             .header(header)
@@ -172,14 +218,38 @@ fn draw_player_market_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect
     f.render_widget(paragraph, area);
 }
 
-fn draw_comms<B: Backend>(f: &mut Frame<B>, area: Rect) {
-    let block = style_utils::create_info_block("COMMS");
+fn draw_comms<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
+    let block = style_utils::create_info_block("MARKET INFO");
     
-    // Empty for now, can be used for market messages or notifications
-    let text = vec![
-        Spans::from(""),
-    ];
+    let market_type = match game.trading_system.is_buy_mode() {
+        true => {
+            // Get the market type for the current system
+            // This would normally come from the universe market system
+            let market_type = "Trading Hub"; // Placeholder
+            let tax_rate = 5; // Placeholder tax rate percentage
+            
+            Spans::from(vec![
+                Span::raw("Market Type: "),
+                Span::styled(market_type, Style::default().fg(colors::INFO)),
+                Span::raw("  |  Tax Rate: "),
+                Span::styled(format!("{}%", tax_rate), Style::default().fg(colors::INFO)),
+                Span::raw("  |  Press ["),
+                Span::styled("1-9", Style::default().fg(colors::PRIMARY)),
+                Span::raw("] to buy an item"),
+            ])
+        },
+        false => {
+            Spans::from(vec![
+                Span::raw("SELLING FROM CARGO: "),
+                Span::styled(format!("{}/{} units", game.player.inventory.used_capacity(), game.player.ship.cargo_capacity), 
+                    Style::default().fg(colors::INFO)),
+                Span::raw("  |  Press ["),
+                Span::styled("1-9", Style::default().fg(colors::PRIMARY)),
+                Span::raw("] to sell an item"),
+            ])
+        }
+    };
     
-    let paragraph = Paragraph::new(text).block(block);
+    let paragraph = Paragraph::new(vec![market_type]).block(block);
     f.render_widget(paragraph, area);
 }
