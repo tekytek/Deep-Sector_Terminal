@@ -9,6 +9,7 @@ use tui::{
 
 use crate::game::Game;
 use crate::ui::colors;
+use crate::ui::screens::style_utils;
 
 pub fn draw_market_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     // Check if player is docked at a station
@@ -24,6 +25,7 @@ pub fn draw_market_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect)
             Constraint::Length(3),  // Mode selection
             Constraint::Min(10),    // Market items
             Constraint::Length(3),  // Player info
+            Constraint::Length(3),  // Comms
         ])
         .split(area);
 
@@ -35,13 +37,13 @@ pub fn draw_market_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect)
 
     // Draw player info
     draw_player_market_info(f, game, chunks[2]);
+    
+    // Draw comms
+    draw_comms(f, chunks[3]);
 }
 
 fn draw_not_docked_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
-    let block = Block::default()
-        .title(Span::styled(" MARKET ACCESS DENIED ", Style::default().fg(colors::DANGER)))
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(colors::SECONDARY));
+    let block = style_utils::create_danger_block("MARKET ACCESS DENIED");
 
     let text = vec![
         Spans::from(vec![
@@ -60,10 +62,7 @@ fn draw_not_docked_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
 }
 
 fn draw_market_mode<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
-    let block = Block::default()
-        .title(Span::styled(" TRADING CONSOLE ", Style::default().fg(colors::PRIMARY)))
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(colors::SECONDARY));
+    let block = style_utils::create_primary_block("TRADING CONSOLE");
 
     let is_buy_mode = game.trading_system.is_buy_mode();
 
@@ -85,15 +84,12 @@ fn draw_market_mode<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 
 fn draw_market_items<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let title = if game.trading_system.is_buy_mode() {
-        " AVAILABLE MERCHANDISE "
+        "AVAILABLE MERCHANDISE"
     } else {
-        " CARGO MANIFEST "
+        "CARGO MANIFEST"
     };
 
-    let block = Block::default()
-        .title(Span::styled(title, Style::default().fg(colors::PRIMARY)))
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(colors::SECONDARY));
+    let block = style_utils::create_primary_block(title);
 
     let header = Row::new(vec!["#", "Item", "Quantity", "Price"]).style(Style::default().fg(colors::INFO));
     
@@ -158,10 +154,7 @@ fn draw_market_items<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 }
 
 fn draw_player_market_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
-    let block = Block::default()
-        .title(Span::styled(" FINANCIAL STATUS ", Style::default().fg(colors::INFO)))
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(colors::SECONDARY));
+    let block = style_utils::create_info_block("FINANCIAL STATUS");
 
     let text = vec![
         Spans::from(vec![
@@ -175,6 +168,18 @@ fn draw_player_market_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect
         ]),
     ];
 
+    let paragraph = Paragraph::new(text).block(block);
+    f.render_widget(paragraph, area);
+}
+
+fn draw_comms<B: Backend>(f: &mut Frame<B>, area: Rect) {
+    let block = style_utils::create_info_block("COMMS");
+    
+    // Empty for now, can be used for market messages or notifications
+    let text = vec![
+        Spans::from(""),
+    ];
+    
     let paragraph = Paragraph::new(text).block(block);
     f.render_widget(paragraph, area);
 }
