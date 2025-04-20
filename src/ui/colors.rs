@@ -6,6 +6,7 @@ pub const SECONDARY: Color = Color::Rgb(0, 128, 255);     // #0080FF (bright blu
 pub const WARNING: Color = Color::Rgb(255, 204, 0);       // #FFCC00 (bright yellow)
 pub const DANGER: Color = Color::Rgb(255, 51, 51);        // #FF3333 (bright red)
 pub const INFO: Color = Color::Rgb(0, 240, 255);          // #00F0FF (bright cyan)
+pub const SUCCESS: Color = Color::Rgb(0, 255, 0);         // #00FF00 (green)
 pub const NORMAL: Color = Color::Rgb(220, 220, 240);      // #DCDCF0 (slightly blue-tinted white)
 pub const DIM: Color = Color::Rgb(100, 110, 130);         // #646E82 (slate gray)
 

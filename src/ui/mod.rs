@@ -20,6 +20,7 @@ use screens::{
     help::draw_help,
     main_menu::draw_main_menu,
     character_creation::draw_character_creation,
+    character_info::draw_character_info,
 };
 use widgets::status_bar::draw_status_bar;
 
@@ -60,6 +61,7 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, game: &Game) {
         GameScreen::Mining => draw_mining_screen(f, game, chunks[1]),
         GameScreen::Crafting => draw_crafting_screen(f, game, chunks[1]),
         GameScreen::Inventory => draw_inventory(f, game, chunks[1]),
+        GameScreen::Character => draw_character_info(f, game, chunks[1]),
         GameScreen::Help => draw_help(f, game, chunks[1]),
         GameScreen::Quit => draw_quit_screen(f, game, chunks[1]),
     }

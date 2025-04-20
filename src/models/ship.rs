@@ -38,6 +38,10 @@ pub struct Ship {
     pub gas_bay_capacity: u32,      // For gas resources
     pub ice_bay_capacity: u32,      // For ice resources
     pub exotic_bay_capacity: u32,   // For exotic materials
+    // Fuel system
+    pub fuel_capacity: u32,        // Maximum fuel capacity
+    pub current_fuel: u32,         // Current fuel level
+    pub fuel_consumption_rate: f32, // Fuel used per light year of travel
 }
 
 impl Ship {
@@ -64,6 +68,14 @@ impl Ship {
             _ => (5, 5, 5, 2),  // Other ships get minimal specialized storage
         };
         
+        // Calculate fuel capacity and consumption based on ship type
+        let (fuel_capacity, fuel_consumption_rate) = match ship_type {
+            ShipType::Scout => (800, 0.8),      // Efficient, long range
+            ShipType::Freighter => (1500, 1.5), // Large capacity, higher consumption
+            ShipType::Miner => (1000, 1.2),     // Balanced for local operations
+            ShipType::Fighter => (600, 1.0),    // Balanced consumption
+        };
+
         Ship {
             name: name.to_string(),
             ship_type,
@@ -81,6 +93,10 @@ impl Ship {
             gas_bay_capacity: gas_bay,
             ice_bay_capacity: ice_bay,
             exotic_bay_capacity: exotic_bay,
+            // Initialize fuel system
+            fuel_capacity,
+            current_fuel: fuel_capacity, // Start with a full tank
+            fuel_consumption_rate,
         }
     }
     
@@ -149,6 +165,59 @@ impl Ship {
             0, self.gas_bay_capacity,     // These would track actual usage in full implementation
             0, self.ice_bay_capacity,
             0, self.exotic_bay_capacity
+        )
+    }
+    
+    // Fuel management methods
+    
+    // Calculate fuel required for a jump of given distance
+    pub fn calculate_fuel_for_distance(&self, distance: f32) -> u32 {
+        (distance * self.fuel_consumption_rate).ceil() as u32
+    }
+    
+    // Check if ship has enough fuel for a jump
+    pub fn has_fuel_for_jump(&self, distance: f32) -> bool {
+        let required_fuel = self.calculate_fuel_for_distance(distance);
+        self.current_fuel >= required_fuel
+    }
+    
+    // Consume fuel for a jump and return success/failure
+    pub fn consume_fuel_for_jump(&mut self, distance: f32) -> bool {
+        let required_fuel = self.calculate_fuel_for_distance(distance);
+        
+        if self.current_fuel < required_fuel {
+            return false; // Not enough fuel
+        }
+        
+        self.current_fuel -= required_fuel;
+        true
+    }
+    
+    // Refuel the ship by a specified amount
+    pub fn refuel(&mut self, amount: u32) -> u32 {
+        let before = self.current_fuel;
+        self.current_fuel = (self.current_fuel + amount).min(self.fuel_capacity);
+        self.current_fuel - before // Return the actual amount added
+    }
+    
+    // Get fuel status as a percentage
+    pub fn get_fuel_percentage(&self) -> f32 {
+        (self.current_fuel as f32 / self.fuel_capacity as f32) * 100.0
+    }
+    
+    // Get maximum travel range with current fuel
+    pub fn get_max_range_with_current_fuel(&self) -> f32 {
+        self.current_fuel as f32 / self.fuel_consumption_rate
+    }
+    
+    // Get fuel status display string
+    pub fn get_fuel_status(&self) -> String {
+        format!(
+            "Fuel: {}/{} ({:.1}%) | Range: {:.1} LY", 
+            self.current_fuel, 
+            self.fuel_capacity,
+            self.get_fuel_percentage(),
+            self.get_max_range_with_current_fuel()
         )
     }
 }

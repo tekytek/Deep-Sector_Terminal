@@ -138,6 +138,7 @@ fn get_animated_menu_items(game: &Game) -> Vec<Spans> {
         ("[R]", "Mining", GameScreen::Mining),
         ("[C]", "Crafting", GameScreen::Crafting),
         ("[I]", "Inventory", GameScreen::Inventory),
+        ("[P]", "Character Profile", GameScreen::Character),
         ("[H]", "Help", GameScreen::Help),
         ("[Q]", "Quit", GameScreen::Quit),
     ];

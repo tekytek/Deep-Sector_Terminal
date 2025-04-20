@@ -30,6 +30,7 @@ pub enum GameScreen {
     Mining,
     Crafting,
     Inventory,
+    Character, // New screen for character and skills information
     Help,
     Quit,
 }
@@ -67,6 +68,10 @@ pub struct Game {
     pub selected_storyline: usize,
     #[serde(default)]
     pub creation_stage: u8, // 0=name, 1=faction, 2=storyline, 3=confirm
+    
+    // Character info screen related fields
+    #[serde(default)]
+    pub character_info_tab: usize, // 0=skills, 1=reputation, 2=assets, 3=background
 }
 
 impl Game {
@@ -100,6 +105,7 @@ impl Game {
                     selected_faction: 0,
                     selected_storyline: 0,
                     creation_stage: 0,
+                    character_info_tab: 0,
                 }
             }
         }
@@ -144,6 +150,7 @@ impl Game {
             GameScreen::Mining => self.handle_mining_input(key),
             GameScreen::Crafting => self.handle_crafting_input(key),
             GameScreen::Inventory => self.handle_inventory_input(key),
+            GameScreen::Character => self.handle_character_input(key),
             GameScreen::Help => self.handle_help_input(key),
             GameScreen::Quit => self.handle_quit_input(key),
         }
@@ -157,6 +164,7 @@ impl Game {
             KeyCode::Char('r') => self.change_screen(GameScreen::Mining),
             KeyCode::Char('c') => self.change_screen(GameScreen::Crafting),
             KeyCode::Char('i') => self.change_screen(GameScreen::Inventory),
+            KeyCode::Char('p') => self.change_screen(GameScreen::Character), // 'p' for profile/pilot
             KeyCode::Char('h') => self.change_screen(GameScreen::Help),
             KeyCode::Char('q') => self.change_screen(GameScreen::Quit),
             _ => {}
@@ -538,6 +546,30 @@ impl Game {
     fn handle_inventory_input(&mut self, key: KeyEvent) {
         match key.code {
             KeyCode::Char('m') => self.change_screen(GameScreen::MainMenu),
+            _ => {}
+        }
+    }
+    
+    fn handle_character_input(&mut self, key: KeyEvent) {
+        match key.code {
+            KeyCode::Char('m') | KeyCode::Esc => self.change_screen(GameScreen::MainMenu),
+            // Set the active tab based on numeric input
+            KeyCode::Char('1') => {
+                self.character_info_tab = 0;
+                self.show_message("Viewing skills information".to_string());
+            },
+            KeyCode::Char('2') => {
+                self.character_info_tab = 1;
+                self.show_message("Viewing reputation information".to_string());
+            },
+            KeyCode::Char('3') => {
+                self.character_info_tab = 2;
+                self.show_message("Viewing assets information".to_string());
+            },
+            KeyCode::Char('4') => {
+                self.character_info_tab = 3;
+                self.show_message("Viewing background information".to_string());
+            },
             _ => {}
         }
     }
