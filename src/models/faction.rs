@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 use crate::models::ship::{Ship, ShipType};
-use crate::models::skills::{Skill, SkillCategory};
+use crate::models::skills::SkillCategory;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum FactionType {

@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 use rand::Rng;
 use serde::{Serialize, Deserialize};
-use crate::utils::serde::{instant_serde, option_instant_serde};
+use crate::utils::serde::option_instant_serde;
 
 use crate::models::player::Player;
 use crate::models::item::{Item, ItemType, ResourceType};

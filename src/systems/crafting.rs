@@ -1,5 +1,5 @@
 use crate::models::player::Player;
-use crate::models::item::{Item, ItemType, ResourceType};
+use crate::models::item::{Item, ItemType};
 use serde::{Serialize, Deserialize};
 
 #[derive(Clone, Serialize, Deserialize)]

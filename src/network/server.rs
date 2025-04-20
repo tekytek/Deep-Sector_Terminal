@@ -283,8 +283,8 @@ impl GameServer {
                 let mut game_state = game.lock().await;
                 
                 // Process navigation in the game logic
-                let mut success = false;
-                let mut message = String::new();
+                let success;
+                let message;
                 
                 // First, let's check if the system exists
                 let destination_system_exists = game_state.universe.get_system(&destination_system).is_some();
@@ -307,9 +307,11 @@ impl GameServer {
                         success = true;
                         message = format!("Traveling to {}", destination_system);
                     } else {
+                        success = false;
                         message = "Cannot travel to that system - too far away".to_string();
                     }
                 } else {
+                    success = false;
                     message = format!("Star system '{}' not found", destination_system);
                 }
                 
@@ -342,8 +344,8 @@ impl GameServer {
                 let game_state = game.lock().await;
                 
                 // Process mining in the game logic
-                let mut success = false;
-                let mut message = String::new();
+                let success;
+                let message;
                 
                 // Get the current system ID (skipping for now to avoid warning)
                 let _current_system_id = game_state.player.current_system.id.clone();
@@ -352,6 +354,7 @@ impl GameServer {
                 let available_space = game_state.player.ship.get_cargo_space_available();
                 
                 if quantity > available_space {
+                    success = false;
                     message = format!("Not enough cargo space. Available: {}", available_space);
                 } else {
                     // Instead of directly using mining_system, we'll do a simpler implementation
@@ -396,8 +399,8 @@ impl GameServer {
                 let game_state = game.lock().await;
                 
                 // Process market action in the game logic
-                let mut success = false;
-                let mut message = String::new();
+                let success;
+                let message;
                 let updated_market = None;
                 
                 // For simplicity in fixing borrow issues, we'll use a direct approach
