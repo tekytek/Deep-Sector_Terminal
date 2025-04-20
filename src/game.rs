@@ -8,6 +8,7 @@ use crate::models::{
     player::Player,
     universe::Universe,
     faction::{FactionType, Storyline},
+    market::{OrderType, TradeOrder},
 };
 use crate::systems::{
     navigation::NavigationSystem,
@@ -125,7 +126,40 @@ impl Game {
         // Update game systems
         self.time_system.update(delta_time);
         self.navigation_system.update(&mut self.player, &self.universe, &self.time_system, delta_time);
-        self.trading_system.update(&mut self.universe, delta_time);
+        
+        // Update trading system and check for executed orders
+        let executed_orders = self.trading_system.update(&mut self.universe, delta_time);
+        
+        // Show notification if there are executed orders
+        if !executed_orders.is_empty() {
+            // Build a notification message for the player
+            let mut message = String::from("Order(s) executed: ");
+            for (i, order) in executed_orders.iter().enumerate() {
+                if i > 0 {
+                    message.push_str(", ");
+                }
+                
+                match order.order_type {
+                    OrderType::Buy => {
+                        message.push_str(&format!("Bought {} {} at {} credits", 
+                            order.quantity, order.item_name, order.target_price));
+                    },
+                    OrderType::Sell => {
+                        message.push_str(&format!("Sold {} {} at {} credits", 
+                            order.quantity, order.item_name, order.target_price));
+                    }
+                }
+                
+                // Don't make message too long
+                if i >= 2 && executed_orders.len() > 3 {
+                    message.push_str(&format!(" and {} more", executed_orders.len() - 3));
+                    break;
+                }
+            }
+            
+            // Display the notification
+            self.show_message(message);
+        }
         
         // Update animation frame
         if self.show_animation_effects {

@@ -614,6 +614,12 @@ impl Universe {
         // In a real implementation, this would update the market in the universe's storage
         // For now, as a placeholder, we'll do nothing since our market is regenerated each time
     }
+    
+    // Get all system IDs in the universe
+    pub fn get_all_system_ids(&self) -> Vec<String> {
+        // Return a list of all system IDs (keys from the systems HashMap)
+        self.systems.keys().cloned().collect()
+    }
 }
 
 fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {

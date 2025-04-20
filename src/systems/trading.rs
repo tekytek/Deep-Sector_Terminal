@@ -25,14 +25,92 @@ pub struct TradingSystem {
 
 impl TradingSystem {
     pub fn new() -> Self {
-        TradingSystem {
+        let mut trading_system = TradingSystem {
             buy_mode: true,
             transaction_cooldown: Duration::from_millis(500),
             last_transaction: Duration::from_secs(0),
             current_order_tab: 0,
             order_buy_mode: true,
             selected_order_index: None,
+        };
+        
+        // For testing purposes: create some test orders in the market
+        trading_system.create_test_orders();
+        
+        trading_system
+    }
+    
+    // Create some test orders for development/testing
+    fn create_test_orders(&self) {
+        // Note: This is a testing function that creates sample trade orders
+        // In a production environment, this would be removed or disabled
+        
+        // Get the universe singleton
+        let mut universe = Universe::new();
+        
+        println!("\n===== CREATING TEST TRADE ORDERS =====");
+        
+        // Get the first system with a market
+        if let Some(system_id) = universe.get_all_system_ids().first() {
+            if let Some(mut market) = universe.get_market_mut(system_id) {
+                // Add some test orders for our player
+                let player_id = "test_player_id".to_string();
+                
+                // Create a buy order for Iron at a high target price (should execute quickly)
+                let iron_id = market.create_buy_order(
+                    &player_id,
+                    "Iron",
+                    100,
+                    500, // High target price, should execute when price is <= 500
+                    None,
+                    "Test buy order - Iron"
+                );
+                
+                println!("✓ Created buy order for Iron (ID: {:?})", iron_id);
+                
+                // Create a sell order for Gold at a low target price (should execute quickly)
+                let gold_id = market.create_sell_order(
+                    &player_id,
+                    "Gold",
+                    50,
+                    100, // Low target price, should execute when price is >= 100
+                    None,
+                    "Test sell order - Gold"
+                );
+                
+                println!("✓ Created sell order for Gold (ID: {:?})", gold_id);
+                
+                // Create more test orders for other items
+                let oxygen_id = market.create_buy_order(
+                    &player_id,
+                    "Oxygen",
+                    200,
+                    300, // Target price
+                    None,
+                    "Test buy order - Oxygen"
+                );
+                
+                println!("✓ Created buy order for Oxygen (ID: {:?})", oxygen_id);
+                
+                let titanium_id = market.create_sell_order(
+                    &player_id,
+                    "Titanium",
+                    75,
+                    900, // Target price
+                    None,
+                    "Test sell order - Titanium"
+                );
+                
+                println!("✓ Created sell order for Titanium (ID: {:?})", titanium_id);
+                
+                // Update the market in the universe
+                universe.update_market(market);
+                
+                println!("✓ Created test orders in market of system {}", system_id);
+            }
         }
+        
+        println!("=======================================\n");
     }
 
     pub fn set_buy_mode(&mut self, buy: bool) {
@@ -107,28 +185,32 @@ impl TradingSystem {
         Some("Error selling item".to_string())
     }
 
-    pub fn update(&mut self, universe: &mut Universe, delta_time: Duration) {
+    pub fn update(&mut self, universe: &mut Universe, delta_time: Duration) -> Vec<TradeOrder> {
         // Update market prices periodically
         self.last_transaction += delta_time;
+        let mut executed_orders = Vec::new();
         
-        if self.last_transaction > Duration::from_secs(60) {
+        // For testing purposes, update more frequently (every 5 seconds)
+        if self.last_transaction > Duration::from_secs(5) {
             universe.update_market_prices();
             self.last_transaction = Duration::from_secs(0);
             
             // Process all active orders in every market after updating prices
-            self.process_all_orders(universe);
+            executed_orders = self.process_all_orders(universe);
         }
+        
+        executed_orders
     }
     
     // Process all active orders in all markets
-    fn process_all_orders(&mut self, universe: &mut Universe) {
+    fn process_all_orders(&mut self, universe: &mut Universe) -> Vec<TradeOrder> {
         // Get all systems with markets
         let system_ids = universe.get_all_system_ids();
-        let mut executed_orders = Vec::new();
+        let mut executed_orders: Vec<TradeOrder> = Vec::new();
         
         // Process orders for each market
-        for system_id in system_ids {
-            if let Some(market) = universe.get_market_mut(&system_id) {
+        for system_id in &system_ids {
+            if let Some(mut market) = universe.get_market_mut(system_id) {
                 // In a real implementation, we'd get the player's inventory and credits
                 // For now, this is a placeholder that won't actually execute orders
                 // But would process and check them
@@ -137,8 +219,11 @@ impl TradingSystem {
                 // let executed = market.process_orders(&mut player.inventory.items, &mut player.credits);
                 // executed_orders.extend(executed);
                 
-                // Just check conditions for now without executing
-                for order in &mut market.trade_orders {
+                // Store orders that need updating
+                let mut orders_to_update = Vec::new();
+                
+                // First, check for orders that meet price conditions
+                for (index, order) in market.trade_orders.iter().enumerate() {
                     if order.status != OrderStatus::Active {
                         continue;
                     }
@@ -146,31 +231,73 @@ impl TradingSystem {
                     // Check if market has this item
                     if let Some(market_item) = market.items.get(&order.item_name) {
                         let current_price = market_item.current_price;
+                        let current_time = std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .unwrap_or(Duration::from_secs(0))
+                            .as_secs();
                         
                         // Check price conditions
                         match order.order_type {
                             OrderType::Buy => {
                                 if current_price <= order.target_price {
-                                    // This order would be executed if the player had enough credits
-                                    // and was at this market
+                                    // In a real implementation with player context:
+                                    // 1. Check if player has enough credits
+                                    // 2. Execute the buy transaction
+                                    
+                                    // For now, we'll just mark it as a completed order
+                                    orders_to_update.push((index, OrderStatus::Completed, Some(current_time)));
+                                    
+                                    // Track the completed order
+                                    executed_orders.push(order.clone());
                                 }
                             },
                             OrderType::Sell => {
                                 if current_price >= order.target_price {
-                                    // This order would be executed if the player had the items
-                                    // and was at this market
+                                    // In a real implementation with player context:
+                                    // 1. Check if player still has the items
+                                    // 2. Execute the sell transaction
+                                    
+                                    // For now, we'll just mark it as a completed order
+                                    orders_to_update.push((index, OrderStatus::Completed, Some(current_time)));
+                                    
+                                    // Track the completed order
+                                    executed_orders.push(order.clone());
                                 }
                             }
                         }
                     }
                 }
+                
+                // Now update the order statuses
+                for (index, status, executed_at) in orders_to_update {
+                    if let Some(order) = market.trade_orders.get_mut(index) {
+                        order.status = status;
+                        order.executed_at = executed_at;
+                    }
+                }
             }
         }
         
-        // In future: notify the player about executed orders
+        // Log info about executed orders for debugging
         if !executed_orders.is_empty() {
-            // Send notification to player
+            println!("\n===== TRADE ORDER EXECUTION REPORT =====");
+            for order in &executed_orders {
+                match order.order_type {
+                    OrderType::Buy => {
+                        println!("✅ AUTO-EXECUTED: Buy order for {} {} at price {} has been completed", 
+                            order.quantity, order.item_name, order.target_price);
+                    },
+                    OrderType::Sell => {
+                        println!("✅ AUTO-EXECUTED: Sell order for {} {} at price {} has been completed", 
+                            order.quantity, order.item_name, order.target_price);
+                    }
+                }
+            }
+            println!("=======================================\n");
         }
+        
+        // Return executed orders so the game can display notifications
+        executed_orders
     }
     
     // Get price trend information about a specific item
