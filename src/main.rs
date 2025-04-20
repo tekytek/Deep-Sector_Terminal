@@ -3,9 +3,13 @@ mod ui;
 mod models;
 mod systems;
 mod utils;
+mod network;
 
-use std::io;
+use std::io::{self, Write};
 use std::error::Error;
+use std::env;
+use std::process::Command;
+use dotenv::dotenv;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
     execute,
@@ -19,7 +23,84 @@ use tui::{
 use game::Game;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    // Setup terminal
+    // Load environment variables
+    dotenv().ok();
+    
+    // Parse command line arguments for client/server mode
+    let args: Vec<String> = env::args().collect();
+    
+    if args.len() > 1 {
+        match args[1].as_str() {
+            "server" => {
+                println!("Starting in SERVER mode...");
+                return Command::new("cargo")
+                    .args(["run", "--bin", "server"])
+                    .status()
+                    .map_err(|e| Box::new(e) as Box<dyn Error>)
+                    .map(|_| ());
+            }
+            "client" => {
+                println!("Starting in CLIENT mode...");
+                return Command::new("cargo")
+                    .args(["run", "--bin", "client"])
+                    .status()
+                    .map_err(|e| Box::new(e) as Box<dyn Error>)
+                    .map(|_| ());
+            }
+            _ => {
+                // Continue with normal execution or prompt
+            }
+        }
+    } else {
+        // Show mode selection menu
+        println!(" █████╗ ███████╗████████╗██████╗ ");
+        println!("██╔══██╗██╔════╝╚══██╔══╝██╔══██╗");
+        println!("███████║███████╗   ██║   ██████╔╝");
+        println!("██╔══██║╚════██║   ██║   ██╔══██╗");
+        println!("██║  ██║███████║   ██║   ██║  ██║");
+        println!("╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝");
+        println!("═══ SPACE TRADER CLIENT-SERVER ═══");
+        println!();
+        println!("Select mode:");
+        println!("1. Start SERVER");
+        println!("2. Start CLIENT");
+        println!("3. Start STANDALONE (legacy mode)");
+        print!("Enter choice (1-3): ");
+        io::stdout().flush()?;
+        
+        let mut choice = String::new();
+        io::stdin().read_line(&mut choice)?;
+        
+        match choice.trim() {
+            "1" => {
+                // Launch server
+                println!("Starting server...");
+                return Command::new("cargo")
+                    .args(["run", "--bin", "server"])
+                    .status()
+                    .map_err(|e| Box::new(e) as Box<dyn Error>)
+                    .map(|_| ());
+            }
+            "2" => {
+                // Launch client
+                println!("Starting client...");
+                return Command::new("cargo")
+                    .args(["run", "--bin", "client"])
+                    .status()
+                    .map_err(|e| Box::new(e) as Box<dyn Error>)
+                    .map(|_| ());
+            }
+            "3" => {
+                // Continue with standalone mode
+                println!("Starting in STANDALONE mode...");
+            }
+            _ => {
+                println!("Invalid choice. Using STANDALONE mode by default.");
+            }
+        }
+    }
+    
+    // Setup terminal for standalone mode
     enable_raw_mode()?;
     let mut stdout = io::stdout();
     execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;

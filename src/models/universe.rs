@@ -16,7 +16,7 @@ pub struct StarSystem {
     pub resources: Vec<(String, u32)>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Universe {
     systems: HashMap<String, StarSystem>,
     market_items: HashMap<String, Vec<(Item, u32)>>,

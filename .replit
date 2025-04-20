@@ -27,7 +27,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cargo run"
+args = "cargo run --bin space_trader"
 
 [deployment]
-run = ["sh", "-c", "cargo run"]
+run = ["sh", "-c", "cargo run --bin space_trader"]

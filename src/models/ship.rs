@@ -85,4 +85,11 @@ impl Ship {
         self.hull -= remaining_damage;
         false  // Ship still intact
     }
+    
+    // Added for client-server functionality
+    pub fn get_cargo_space_available(&self) -> u32 {
+        // In a full implementation, we would subtract the used cargo space from cargo_capacity
+        // For this example, just return the full capacity
+        self.cargo_capacity
+    }
 }
