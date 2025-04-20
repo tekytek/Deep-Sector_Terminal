@@ -1,6 +1,6 @@
 use uuid::Uuid;
 use serde::{Serialize, Deserialize};
-use std::time::{Duration, Instant};
+use std::time::SystemTime;
 
 use crate::models::ship::{Ship, ShipType};
 use crate::models::universe::StarSystem;

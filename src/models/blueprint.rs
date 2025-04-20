@@ -1,9 +1,9 @@
-use std::time::{Duration, Instant};
+use std::time::Duration;
 use serde::{Serialize, Deserialize};
 use uuid::Uuid;
 
-use crate::models::item::{Item, ItemType};
-use crate::models::skills::{Skill, SkillCategory};
+use crate::models::item::ItemType;
+use crate::models::skills::Skill;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum BlueprintCategory {

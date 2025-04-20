@@ -7,15 +7,11 @@ use std::time::Instant;
 use uuid::Uuid;
 use serde_json;
 use std::net::SocketAddr;
-use dotenv::dotenv;
-use std::env;
 use bcrypt::{hash, verify, DEFAULT_COST};
 
 use crate::network::error::{NetworkError, NetworkResult};
 use crate::network::protocol::{Message, MarketActionType, DEFAULT_SERVER_PORT, HEARTBEAT_INTERVAL, GameConfig};
 use crate::game::Game;
-use crate::models::ship::Ship;
-use crate::models::universe::Universe;
 use crate::utils::save_load;
 
 /// Represents a client connection to the server

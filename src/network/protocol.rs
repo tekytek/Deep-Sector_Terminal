@@ -1,10 +1,9 @@
 use serde::{Serialize, Deserialize};
 use uuid::Uuid;
-use std::time::{Duration, Instant};
+use std::time::Duration;
 use crate::utils::serde::SerializableInstant;
 use crate::models::ship::Ship;
 use crate::models::universe::Universe;
-use crate::models::item::Item;
 
 /// Market type just for network protocol
 #[derive(Serialize, Deserialize, Debug, Clone)]
