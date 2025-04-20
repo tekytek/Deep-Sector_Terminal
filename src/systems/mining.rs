@@ -2,7 +2,7 @@ use rand::Rng;
 use serde::{Serialize, Deserialize};
 
 use crate::models::player::Player;
-use crate::models::item::{Item, ItemType};
+use crate::models::item::{Item, ItemType, ResourceType};
 
 #[derive(Serialize, Deserialize)]
 pub struct MiningSystem {
@@ -52,7 +52,7 @@ impl MiningSystem {
                 name: resource_name.clone(),
                 value: 50 + (*abundance / 2), // More abundant resources are worth less
                 weight: 1,
-                item_type: ItemType::Resource,
+                item_type: ItemType::Resource(ResourceType::Mineral),
             };
             
             // Add to inventory

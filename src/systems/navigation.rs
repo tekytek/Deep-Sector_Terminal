@@ -78,7 +78,7 @@ impl NavigationSystem {
     }
 
     pub fn can_dock(&self, player: &Player) -> bool {
-        !player.is_docked && player.current_system.has_station
+        !player.is_docked && !player.current_system.stations.is_empty()
     }
 
     pub fn dock(&mut self, player: &mut Player) {

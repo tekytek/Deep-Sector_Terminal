@@ -2,10 +2,24 @@ use std::collections::HashMap;
 use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub enum ResourceType {
+    Mineral,     // From asteroid fields
+    Gas,         // From gas fields
+    Ice,         // From ice fields
+    Lunar,       // From moon residues
+    Stellar,     // From star coronas
+    Exotic,      // From black hole accretion disks
+    Refined,     // Processed resources
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum ItemType {
-    Resource,    // Basic materials like ores
-    Component,   // Processed materials
+    Resource(ResourceType), // Various types of raw materials
+    Component,   // Processed materials and parts
     Product,     // Final products
+    Blueprint,   // Item blueprints for crafting
+    Equipment,   // Ships parts and components that can be installed
+    ShipModule,  // Full ship modules/upgrades
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]

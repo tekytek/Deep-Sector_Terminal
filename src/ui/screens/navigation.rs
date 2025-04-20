@@ -94,7 +94,7 @@ fn draw_navigation_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     text.push(Spans::from(""));
 
     // Add station information if there is one
-    if current_system.has_station {
+    if !current_system.stations.is_empty() {
         if game.navigation_system.is_docked(&game.player) {
             text.push(Spans::from(vec![
                 Span::raw("Station: "),

@@ -35,7 +35,15 @@ pub struct Ship {
 }
 
 impl Ship {
-    pub fn new(name: &str, ship_type: ShipType) -> Self {
+    pub fn new(
+        name: &str, 
+        ship_type: ShipType,
+        cargo_override: Option<u32>,
+        speed_override: Option<u32>,
+        jump_range_override: Option<u32>,
+        weapon_power_override: Option<u32>,
+        mining_power_override: Option<u32>
+    ) -> Self {
         let (hull, cargo, speed, jump_range, weapon_power, mining_power) = match ship_type {
             ShipType::Scout => (100, 20, 100, 10, 5, 2),
             ShipType::Freighter => (200, 100, 60, 6, 2, 1),
@@ -50,12 +58,17 @@ impl Ship {
             max_hull: hull,
             shield: hull / 2,
             max_shield: hull / 2,
-            cargo_capacity: cargo,
-            speed,
-            jump_range,
-            weapon_power,
-            mining_power,
+            cargo_capacity: cargo_override.unwrap_or(cargo),
+            speed: speed_override.unwrap_or(speed),
+            jump_range: jump_range_override.unwrap_or(jump_range),
+            weapon_power: weapon_power_override.unwrap_or(weapon_power),
+            mining_power: mining_power_override.unwrap_or(mining_power),
         }
+    }
+    
+    // Legacy constructor for backward compatibility
+    pub fn default(name: &str, ship_type: ShipType) -> Self {
+        Self::new(name, ship_type, None, None, None, None, None)
     }
 
     pub fn repair(&mut self, amount: u32) {

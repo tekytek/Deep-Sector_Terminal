@@ -105,7 +105,7 @@ pub fn draw_main_menu<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let status_style = Style::default().fg(colors::INFO);
     let commander_info = format!(
         "Commander: {} | Ship: {} | Credits: {} | Location: {} | Time: {}", 
-        game.player.name,
+        game.player.character.name,
         game.player.ship.name,
         game.player.credits,
         game.player.current_system.name,

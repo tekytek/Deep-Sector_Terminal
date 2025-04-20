@@ -74,7 +74,7 @@ pub fn draw_starmap<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
                 let color = if system.id == current_system.id {
                     colors::PRIMARY  // Current system
                 } else if in_range {
-                    if system.has_station {
+                    if !system.stations.is_empty() {
                         colors::INFO // System with station in range
                     } else {
                         colors::NORMAL // System in range

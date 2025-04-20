@@ -29,7 +29,7 @@ pub fn draw_status_bar<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 
 fn draw_player_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let text = Spans::from(vec![
-        Span::raw(format!("{}  ", game.player.name)),
+        Span::raw(format!("{}  ", game.player.character.name)),
         Span::styled(
             format!("Credits: {} cr", game.player.credits),
             Style::default().fg(colors::INFO),
