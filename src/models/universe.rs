@@ -476,6 +476,11 @@ impl Universe {
     pub fn get_system(&self, id: &str) -> Option<&StarSystem> {
         self.systems.get(id)
     }
+    
+    /// Get the total number of star systems in the universe
+    pub fn get_systems_count(&self) -> usize {
+        self.systems.len()
+    }
 
     pub fn get_all_systems(&self) -> Vec<StarSystem> {
         self.systems.values().cloned().collect()

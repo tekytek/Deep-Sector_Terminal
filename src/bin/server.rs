@@ -117,8 +117,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "status" => {
                     let game = game_state_clone.lock().await;
                     println!("Server status: Running");
-                    println!("Game time: {}", game.time_system.get_date_time());
-                    println!("Universe: {} star systems", game.universe.systems.len());
+                    println!("Game time: {}", game.time_system.get_formatted_time());
+                    println!("Universe size: {} star systems", game.universe.get_systems_count());
                     // Add more status info as needed
                 },
                 "save" => {
