@@ -1,12 +1,11 @@
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
-use rand::Rng;
 use uuid::Uuid;
 
 use crate::models::player::Player;
 use crate::models::universe::Universe;
 use crate::models::item::Item;
-use crate::models::market::{Market, MarketType, EconomicEvent, PriceHistory, TradeOrder, OrderType, OrderStatus};
+use crate::models::market::{TradeOrder, OrderType, OrderStatus};
 
 #[derive(Serialize, Deserialize)]
 pub struct TradingSystem {
@@ -25,7 +24,7 @@ pub struct TradingSystem {
 
 impl TradingSystem {
     pub fn new() -> Self {
-        let mut trading_system = TradingSystem {
+        let trading_system = TradingSystem {
             buy_mode: true,
             transaction_cooldown: Duration::from_millis(500),
             last_transaction: Duration::from_secs(0),

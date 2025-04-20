@@ -3,12 +3,12 @@ use tui::{
     layout::{Constraint, Direction, Layout, Rect, Alignment},
     style::{Modifier, Style},
     text::{Span, Spans},
-    widgets::{Block, Borders, Paragraph, BorderType, Wrap, List, ListItem},
+    widgets::{Block, Borders, Paragraph, BorderType},
     Frame,
 };
-use crate::game::{Game, GameScreen};
-use crate::ui::{colors, ascii_art};
-use crate::models::faction::FactionType;
+use crate::game::Game;
+use crate::ui::colors;
+
 
 // Constants for faction and storyline descriptions
 const FACTION_NAMES: [&str; 4] = ["Traders", "Miners", "Military", "Scientists"];

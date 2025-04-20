@@ -1,7 +1,7 @@
 use tui::{
     backend::Backend,
-    layout::{Constraint, Direction, Layout, Rect},
-    style::{Color, Style},
+    layout::Rect,
+    style::Style,
     text::{Span, Spans},
     widgets::{Block, Borders, Paragraph},
     Frame,

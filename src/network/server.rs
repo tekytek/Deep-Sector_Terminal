@@ -339,7 +339,7 @@ impl GameServer {
             }
             
             Message::MiningAction { client_id, resource, quantity } => {
-                let mut game_state = game.lock().await;
+                let game_state = game.lock().await;
                 
                 // Process mining in the game logic
                 let mut success = false;
@@ -393,12 +393,12 @@ impl GameServer {
             }
             
             Message::MarketAction { client_id, action_type, item_name, quantity } => {
-                let mut game_state = game.lock().await;
+                let game_state = game.lock().await;
                 
                 // Process market action in the game logic
                 let mut success = false;
                 let mut message = String::new();
-                let mut updated_market = None;
+                let updated_market = None;
                 
                 // For simplicity in fixing borrow issues, we'll use a direct approach
                 match action_type {

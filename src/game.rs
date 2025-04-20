@@ -8,7 +8,7 @@ use crate::models::{
     player::Player,
     universe::Universe,
     faction::{FactionType, Storyline},
-    market::{OrderType, TradeOrder},
+    market::OrderType,
 };
 use crate::systems::{
     navigation::NavigationSystem,
@@ -214,7 +214,6 @@ impl Game {
     }
     
     fn handle_character_creation_input(&mut self, key: KeyEvent) {
-        use crate::models::faction::{FactionType, Storyline};
         
         match self.creation_stage {
             // Character Name Input
