@@ -39,8 +39,9 @@ pub fn draw_market_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect)
 
 fn draw_not_docked_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
     let block = Block::default()
-        .title("Market")
-        .borders(Borders::ALL);
+        .title(Span::styled(" MARKET ACCESS DENIED ", Style::default().fg(colors::DANGER)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let text = vec![
         Spans::from(vec![
@@ -60,8 +61,9 @@ fn draw_not_docked_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
 
 fn draw_market_mode<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let block = Block::default()
-        .title("Market Mode")
-        .borders(Borders::ALL);
+        .title(Span::styled(" TRADING CONSOLE ", Style::default().fg(colors::PRIMARY)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let is_buy_mode = game.trading_system.is_buy_mode();
 
@@ -83,14 +85,15 @@ fn draw_market_mode<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 
 fn draw_market_items<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let title = if game.trading_system.is_buy_mode() {
-        "Items for Sale"
+        " AVAILABLE MERCHANDISE "
     } else {
-        "Your Inventory"
+        " CARGO MANIFEST "
     };
 
     let block = Block::default()
-        .title(title)
-        .borders(Borders::ALL);
+        .title(Span::styled(title, Style::default().fg(colors::PRIMARY)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let header = Row::new(vec!["#", "Item", "Quantity", "Price"]).style(Style::default().fg(colors::INFO));
     
@@ -156,8 +159,9 @@ fn draw_market_items<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 
 fn draw_player_market_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let block = Block::default()
-        .title("Your Status")
-        .borders(Borders::ALL);
+        .title(Span::styled(" FINANCIAL STATUS ", Style::default().fg(colors::INFO)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let text = vec![
         Spans::from(vec![

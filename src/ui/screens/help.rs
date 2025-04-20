@@ -11,7 +11,7 @@ use crate::ui::colors;
 
 pub fn draw_help<B: Backend>(f: &mut Frame<B>, _game: &Game, area: Rect) {
     let block = Block::default()
-        .title(Span::styled(" Help ", Style::default().fg(colors::PRIMARY)))
+        .title(Span::styled(" COMMAND MANUAL ", Style::default().fg(colors::PRIMARY)))
         .borders(Borders::ALL)
         .border_style(Style::default().fg(colors::SECONDARY));
     
@@ -25,8 +25,8 @@ pub fn draw_help<B: Backend>(f: &mut Frame<B>, _game: &Game, area: Rect) {
         .split(area)[0];
     
     let text = Spans::from(vec![
-        Span::styled("Help screen coming soon", 
-                     Style::default().fg(colors::NORMAL))
+        Span::styled("Command reference database available in future update", 
+                     Style::default().fg(colors::INFO))
     ]);
     
     let paragraph = Paragraph::new(text);

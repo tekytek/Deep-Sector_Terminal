@@ -47,8 +47,9 @@ pub fn draw_crafting_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rec
 
 fn draw_not_docked_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
     let block = Block::default()
-        .title("Crafting")
-        .borders(Borders::ALL);
+        .title(Span::styled(" FABRICATION ACCESS DENIED ", Style::default().fg(colors::DANGER)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let text = vec![
         Spans::from(vec![
@@ -68,8 +69,9 @@ fn draw_not_docked_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
 
 fn draw_no_blueprints_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
     let block = Block::default()
-        .title("Crafting")
-        .borders(Borders::ALL);
+        .title(Span::styled(" FABRICATION SCHEMATICS ", Style::default().fg(colors::WARNING)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let text = vec![
         Spans::from(vec![
@@ -89,8 +91,9 @@ fn draw_no_blueprints_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
 
 fn draw_blueprints<B: Backend>(f: &mut Frame<B>, _game: &Game, blueprints: Vec<(String, Vec<(String, u32)>)>, area: Rect) {
     let block = Block::default()
-        .title("Available Blueprints")
-        .borders(Borders::ALL);
+        .title(Span::styled(" AVAILABLE SCHEMATICS ", Style::default().fg(colors::PRIMARY)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let header = Row::new(vec!["#", "Blueprint", "Produces"]).style(Style::default().fg(colors::INFO));
     
@@ -118,8 +121,9 @@ fn draw_blueprints<B: Backend>(f: &mut Frame<B>, _game: &Game, blueprints: Vec<(
 
 fn draw_ingredients<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let block = Block::default()
-        .title("Required Ingredients")
-        .borders(Borders::ALL);
+        .title(Span::styled(" REQUIRED COMPONENTS ", Style::default().fg(colors::INFO)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let selected_blueprint = game.crafting_system.get_selected_blueprint_index();
     
@@ -163,8 +167,9 @@ fn draw_ingredients<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 
 fn draw_player_crafting_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let block = Block::default()
-        .title("Crafting Status")
-        .borders(Borders::ALL);
+        .title(Span::styled(" FABRICATION STATION ", Style::default().fg(colors::PRIMARY)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let text = vec![
         Spans::from(vec![

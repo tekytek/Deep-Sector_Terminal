@@ -38,8 +38,9 @@ pub fn draw_mining_screen<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect)
 
 fn draw_no_resources_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
     let block = Block::default()
-        .title("Mining")
-        .borders(Borders::ALL);
+        .title(Span::styled(" MINING SCAN RESULTS ", Style::default().fg(colors::WARNING)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let text = vec![
         Spans::from(vec![
@@ -59,8 +60,9 @@ fn draw_no_resources_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
 
 fn draw_resources<B: Backend>(f: &mut Frame<B>, _game: &Game, resources: Vec<(String, u32)>, area: Rect) {
     let block = Block::default()
-        .title("Available Resources")
-        .borders(Borders::ALL);
+        .title(Span::styled(" DETECTED RESOURCE DEPOSITS ", Style::default().fg(colors::PRIMARY)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let header = Row::new(vec!["#", "Resource", "Abundance"]).style(Style::default().fg(colors::INFO));
     
@@ -88,8 +90,9 @@ fn draw_resources<B: Backend>(f: &mut Frame<B>, _game: &Game, resources: Vec<(St
 
 fn draw_player_mining_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let block = Block::default()
-        .title("Mining Stats")
-        .borders(Borders::ALL);
+        .title(Span::styled(" EXTRACTION EQUIPMENT ", Style::default().fg(colors::WARNING)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let text = vec![
         Spans::from(vec![

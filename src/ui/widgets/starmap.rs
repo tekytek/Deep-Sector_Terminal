@@ -1,7 +1,8 @@
 use tui::{
     backend::Backend,
     layout::Rect,
-    style::Color,
+    style::{Color, Style},
+    text::Span,
     widgets::{Block, Borders, canvas::Canvas},
     Frame,
 };
@@ -11,8 +12,9 @@ use crate::ui::colors;
 
 pub fn draw_starmap<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     let block = Block::default()
-        .title("Star Map")
-        .borders(Borders::ALL);
+        .title(Span::styled(" STELLAR CARTOGRAPHY ", Style::default().fg(colors::PRIMARY)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     // Get the current system and all systems in the universe
     let current_system = &game.player.current_system;

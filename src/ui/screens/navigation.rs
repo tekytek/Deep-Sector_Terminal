@@ -37,8 +37,9 @@ fn draw_navigation_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
     };
 
     let block = Block::default()
-        .title("Navigation")
-        .borders(Borders::ALL);
+        .title(Span::styled(" NAVIGATION SYSTEMS ", Style::default().fg(colors::PRIMARY)))
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(colors::SECONDARY));
 
     let mut text = vec![
         Spans::from(vec![
