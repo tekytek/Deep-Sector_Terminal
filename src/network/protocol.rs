@@ -23,6 +23,7 @@ pub struct MarketItem {
 // Constants
 pub const DEFAULT_SERVER_PORT: u16 = 7890;
 pub const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
+#[allow(dead_code)]
 pub const CONNECTION_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// Protocol messages between client and server

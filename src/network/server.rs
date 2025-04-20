@@ -15,6 +15,7 @@ use crate::game::Game;
 use crate::utils::save_load;
 
 /// Represents a client connection to the server
+#[allow(dead_code)]
 struct ClientConnection {
     id: Uuid,
     username: String,
@@ -24,13 +25,16 @@ struct ClientConnection {
 }
 
 /// Game server that manages connections and game state
+#[allow(dead_code)]
 pub struct GameServer {
     game: Arc<Mutex<Game>>,
     clients: Arc<Mutex<HashMap<Uuid, ClientConnection>>>,
     password: Option<String>,
+    #[allow(dead_code)]
     config: GameConfig,
 }
 
+#[allow(dead_code)]
 impl GameServer {
     /// Create a new game server with optional password protection and existing game state
     pub async fn new(password: Option<String>, game_state: Arc<Mutex<Game>>) -> Self {
@@ -478,4 +482,5 @@ impl GameServer {
 }
 
 // Define helper constants outside impl block
+#[allow(dead_code)]
 const CONNECTION_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(10);

@@ -10,6 +10,7 @@ pub enum FactionType {
     Scientists,   // Focus on research and development
 }
 
+#[allow(dead_code)]
 impl FactionType {
     pub fn to_string(&self) -> String {
         match self {
@@ -84,6 +85,7 @@ pub struct Storyline {
     pub starting_skills: Vec<(SkillCategory, u32)>, // Starting skill categories and levels
 }
 
+#[allow(dead_code)]
 impl Storyline {
     pub fn new(id: &str, faction: FactionType, name: &str, description: &str, total_steps: usize) -> Self {
         // Default implementation for backward compatibility
@@ -145,6 +147,7 @@ impl Storyline {
     }
 }
 
+#[allow(dead_code)]
 pub fn get_storylines_for_faction(faction: &FactionType) -> Vec<Storyline> {
     match faction {
         FactionType::Traders => vec![

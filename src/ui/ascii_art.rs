@@ -59,6 +59,7 @@ pub fn get_ship_art(ship_type: &ShipType) -> String {
     }
 }
 
+#[allow(dead_code)]
 pub fn get_station_art() -> String {
     r#"
            /\

@@ -30,6 +30,7 @@ pub struct Item {
     pub item_type: ItemType,
 }
 
+#[allow(dead_code)]
 impl Item {
     pub fn new(name: &str, value: u32, weight: u32, item_type: ItemType) -> Self {
         Item {

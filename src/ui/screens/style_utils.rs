@@ -103,6 +103,7 @@ pub fn create_danger_block(title: &str) -> Block {
 }
 
 /// Creates a status bar styled block with minimal borders
+#[allow(dead_code)]
 pub fn create_status_bar(title: &str) -> Block {
     Block::default()
         .title(Span::styled(format!(" {} ", title), Style::default().fg(colors::DIM)))
@@ -111,6 +112,7 @@ pub fn create_status_bar(title: &str) -> Block {
 }
 
 /// Formats a menu option with highlighted key and description
+#[allow(dead_code)]
 pub fn format_menu_option(key: char, label: &str, is_selected: bool) -> Spans<'static> {
     let style = if is_selected {
         Style::default().fg(colors::PRIMARY)
@@ -127,6 +129,7 @@ pub fn format_menu_option(key: char, label: &str, is_selected: bool) -> Spans<'s
 }
 
 /// Creates a gauge bar for displaying resources like hull, shield, etc.
+#[allow(dead_code)]
 pub fn create_gauge_text(label: &str, current: u32, max: u32, color: Color) -> Spans<'static> {
     let percentage = current as f32 / max as f32;
     let bar_width = 10;

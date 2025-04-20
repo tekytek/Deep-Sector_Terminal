@@ -14,6 +14,7 @@ pub enum BlueprintCategory {
     Special,       // Rare or unique items
 }
 
+#[allow(dead_code)]
 impl BlueprintCategory {
     pub fn to_string(&self) -> String {
         match self {
@@ -61,6 +62,7 @@ pub struct Blueprint {
     pub remaining_uses: Option<u32>, // Only for Copy type
 }
 
+#[allow(dead_code)]
 impl Blueprint {
     pub fn new(
         name: &str, 
@@ -241,6 +243,7 @@ pub struct BlueprintLibrary {
     pub blueprints: Vec<Blueprint>,
 }
 
+#[allow(dead_code)]
 impl BlueprintLibrary {
     pub fn new() -> Self {
         Self {

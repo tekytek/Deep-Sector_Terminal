@@ -99,6 +99,7 @@ pub struct Market {
     pub trade_orders: Vec<TradeOrder>, // Active trade orders in this market
 }
 
+#[allow(dead_code)]
 impl Market {
     pub fn new(system_id: &str) -> Self {
         Market {
@@ -367,6 +368,7 @@ impl Market {
     }
 
     // Update the price of a specific item based on supply and demand
+    #[allow(dead_code)]
     fn update_item_price(&mut self, item_name: &str) {
         if let Some(market_item) = self.items.get_mut(item_name) {
             // Calculate price adjustment based on supply and demand

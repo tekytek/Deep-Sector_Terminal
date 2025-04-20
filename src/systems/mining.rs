@@ -32,6 +32,7 @@ pub struct MiningSystem {
     active_operations: Vec<MiningOperation>,
 }
 
+#[allow(dead_code)]
 impl MiningSystem {
     pub fn new() -> Self {
         MiningSystem {

@@ -44,6 +44,7 @@ pub struct Ship {
     pub fuel_consumption_rate: f32, // Fuel used per light year of travel
 }
 
+#[allow(dead_code)]
 impl Ship {
     pub fn new(
         name: &str, 

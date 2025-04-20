@@ -22,6 +22,7 @@ pub struct TradingSystem {
     selected_order_index: Option<usize>,
 }
 
+#[allow(dead_code)]
 impl TradingSystem {
     pub fn new() -> Self {
         let trading_system = TradingSystem {

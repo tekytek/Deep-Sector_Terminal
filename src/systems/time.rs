@@ -9,6 +9,7 @@ pub struct TimeSystem {
     elapsed_real_time: Duration,
 }
 
+#[allow(dead_code)]
 impl TimeSystem {
     pub fn new() -> Self {
         // Start the game time at 2300-01-01

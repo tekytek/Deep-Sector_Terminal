@@ -16,6 +16,7 @@ pub struct CraftingSystem {
     selected_blueprint: Option<usize>,
 }
 
+#[allow(dead_code)]
 impl CraftingSystem {
     pub fn new() -> Self {
         let mut blueprints = Vec::new();

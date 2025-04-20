@@ -13,6 +13,7 @@ pub struct NavigationSystem {
     travel_time_remaining: Duration,
 }
 
+#[allow(dead_code)]
 impl NavigationSystem {
     pub fn new() -> Self {
         NavigationSystem {

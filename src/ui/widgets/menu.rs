@@ -9,6 +9,7 @@ use tui::{
 
 use crate::ui::colors;
 
+#[allow(dead_code)]
 pub fn draw_menu<B: Backend>(
     f: &mut Frame<B>,
     title: &str,

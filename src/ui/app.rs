@@ -26,13 +26,16 @@ use crate::ui::screens::{
     character_info::draw_character_info,
 };
 
+#[allow(dead_code)]
 pub struct App {
     game: Arc<Mutex<Game>>,
+    #[allow(dead_code)]
     tx_network: mpsc::Sender<Message>,
     rx_ui: mpsc::Receiver<Message>,
     network_messages: Vec<String>, // Store recent messages from server
 }
 
+#[allow(dead_code)]
 impl App {
     pub fn new(
         game: Arc<Mutex<Game>>, 
@@ -186,6 +189,7 @@ impl App {
     }
     
     // Method to send a navigation request to the server
+    #[allow(dead_code)]
     fn send_navigation_request(&self, destination: &str) {
         let _game = self.game.blocking_lock(); // Using _ prefix to indicate intentional non-use
         

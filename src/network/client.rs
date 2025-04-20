@@ -15,6 +15,7 @@ use crate::models::universe::Universe;
 use crate::models::market::Market;
 
 /// Client connection to a game server
+#[allow(dead_code)]
 pub struct GameClient {
     client_id: Uuid,
     username: String,
@@ -27,6 +28,7 @@ pub struct GameClient {
     rx: Arc<Mutex<mpsc::Receiver<Message>>>,
 }
 
+#[allow(dead_code)]
 impl GameClient {
     /// Create a new game client
     pub fn new(username: String) -> Self {

@@ -13,7 +13,11 @@ pub const DIM: Color = Color::Rgb(100, 110, 130);         // #646E82 (slate gray
 
 // Animation colors
 pub const HIGHLIGHT: Color = Color::Rgb(255, 255, 255);   // #FFFFFF (pure white) 
+#[allow(dead_code)]
 pub const ENERGY: Color = Color::Rgb(130, 60, 255);       // #823CFF (purple)
+#[allow(dead_code)]
 pub const SHIELD: Color = Color::Rgb(60, 170, 255);       // #3CAAFF (shield blue)
+#[allow(dead_code)]
 pub const HULL: Color = Color::Rgb(180, 180, 180);        // #B4B4B4 (hull gray)
+#[allow(dead_code)]
 pub const STARS_BG: Color = Color::Rgb(5, 10, 25);        // #050A19 (deep space blue)

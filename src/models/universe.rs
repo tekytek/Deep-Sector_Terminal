@@ -17,6 +17,7 @@ pub enum ResourceFieldType {
     BlackHoleAccretion,
 }
 
+#[allow(dead_code)]
 impl ResourceFieldType {
     pub fn to_string(&self) -> String {
         match self {
@@ -210,6 +211,7 @@ pub struct Universe {
     rng_seed: u64,
 }
 
+#[allow(dead_code)]
 impl Universe {
     pub fn new() -> Self {
         let seed = 12345;  // Fixed seed for reproducible universe

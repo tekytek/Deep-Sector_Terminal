@@ -18,6 +18,7 @@ pub enum CharacterInfoTab {
     Background,
 }
 
+#[allow(dead_code)]
 impl CharacterInfoTab {
     pub fn index(&self) -> usize {
         match self {

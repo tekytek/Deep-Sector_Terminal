@@ -2,6 +2,7 @@ use thiserror::Error;
 use std::io;
 
 #[derive(Error, Debug)]
+#[allow(dead_code)]
 pub enum NetworkError {
     #[error("IO error: {0}")]
     IoError(#[from] io::Error),

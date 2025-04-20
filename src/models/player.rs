@@ -16,6 +16,7 @@ pub struct Character {
     pub completed_storylines: Vec<Storyline>,
 }
 
+#[allow(dead_code)]
 impl Character {
     pub fn new(name: &str, faction: FactionType, storyline: Storyline) -> Self {
         Self {
@@ -66,6 +67,7 @@ pub struct Player {
     pub last_update: Option<f64>, // Serializable timestamp for real-time events
 }
 
+#[allow(dead_code)]
 impl Player {
     pub fn new(name: &str) -> Self {
         let id = Uuid::new_v4().to_string();

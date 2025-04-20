@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
 
 // Constants for skill leveling
+#[allow(dead_code)]
 const SKILL_POINTS_PER_SECOND: f32 = 0.1; // Base rate for skill point accumulation
 const SKILL_LEVEL_THRESHOLDS: [u32; 5] = [100, 300, 600, 1000, 1500]; // Points needed for each level
 
@@ -14,6 +15,7 @@ pub enum SkillCategory {
     Engineering, // Ship and equipment crafting/repair
 }
 
+#[allow(dead_code)]
 impl SkillCategory {
     pub fn to_string(&self) -> String {
         match self {
@@ -47,6 +49,7 @@ pub struct Skill {
     pub last_update: Option<f64>, // Serializable timestamp
 }
 
+#[allow(dead_code)]
 impl Skill {
     pub fn new(category: SkillCategory) -> Self {
         Self {
@@ -181,6 +184,7 @@ pub struct SkillSet {
     pub skills: Vec<Skill>,
 }
 
+#[allow(dead_code)]
 impl SkillSet {
     pub fn new() -> Self {
         // Create skills for all categories
