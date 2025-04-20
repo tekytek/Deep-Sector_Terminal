@@ -1,14 +1,13 @@
 use std::env;
 use std::io::{self, Write};
 use std::sync::Arc;
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, mpsc};
 use uuid::Uuid;
 use dotenv::dotenv;
-use crossterm::event::{self, Event, KeyCode, KeyEvent};
 
 use space_trader::network::client::GameClient;
-use space_trader::game::{Game, GameScreen};
-use space_trader::ui::app::App;
+use space_trader::network::protocol::Message;
+use space_trader::game::Game;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -18,8 +17,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let game = Game::new();
     let game_arc = Arc::new(Mutex::new(game));
     
+    // Create message channels for network communication
+    let (tx_network, rx_network) = mpsc::channel::<Message>(100);
+    let (tx_ui, rx_ui) = mpsc::channel::<Message>(100);
+    
     // Create the TUI app
-    let app = App::new(game_arc.clone());
+    let mut app = space_trader::ui::app::App::new(game_arc.clone(), tx_network, rx_ui);
     
     // Get connection details - use environment variables if available
     let server_host = env::var("SERVER_HOST").unwrap_or_else(|_| {
@@ -49,9 +52,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Create a client and connect to the server
     let mut client = GameClient::new(username.clone());
     
+    // Try to connect to the server
     match client.connect(&server_host, Some(port), password).await {
         Ok(_) => {
-            println!("Connected to server. Starting game...");
+            println!("Connected to server. Starting game in online mode...");
+            
+            // TODO: Set up game state synchronization with server
             
             // Start the TUI application
             if let Err(err) = app.run() {
@@ -64,7 +70,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
         Err(err) => {
-            eprintln!("Failed to connect to server: {}", err);
+            println!("Failed to connect to server: {}", err);
+            println!("Starting in OFFLINE mode. Your progress will not be synchronized.");
+            
+            // Load local game state if available
+            {
+                let mut game = game_arc.lock().await;
+                if let Err(e) = game.load_game() {
+                    println!("No saved game found or error loading: {}", e);
+                    println!("Starting a new game...");
+                }
+            }
+            
+            // Start the TUI application in offline mode
+            if let Err(err) = app.run() {
+                eprintln!("Application error: {}", err);
+            }
         }
     }
     

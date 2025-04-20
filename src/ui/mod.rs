@@ -2,6 +2,7 @@ pub mod colors;
 pub mod screens;
 pub mod widgets;
 pub mod ascii_art;
+pub mod app;
 
 use tui::{
     backend::Backend,

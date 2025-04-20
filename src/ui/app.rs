@@ -21,9 +21,9 @@ use crate::ui::screens::{
     ship::draw_ship_screen,
     mining::draw_mining_screen,
     crafting::draw_crafting_screen,
-    inventory::draw_inventory_screen,
-    help::draw_help_screen,
-    character_info::draw_character_info_screen,
+    inventory::draw_inventory,
+    help::draw_help,
+    character_info::draw_character_info,
 };
 
 pub struct App {
@@ -70,22 +70,23 @@ impl App {
                 
                 // Draw the appropriate screen based on game state
                 match game.current_screen {
-                    GameScreen::MainMenu => draw_main_menu(f, &game),
+                    GameScreen::MainMenu => draw_main_menu(f, &game, f.size()),
                     GameScreen::CharacterCreation => {
-                        // Character creation should be drawn by the appropriate module
-                        // This will be handled elsewhere in the codebase
+                        // Import and call the appropriate function
+                        use crate::ui::screens::character_creation::draw_character_creation;
+                        draw_character_creation(f, &game, f.size());
                     },
-                    GameScreen::Navigation => draw_navigation_screen(f, &game),
-                    GameScreen::Market => draw_market_screen(f, &game),
-                    GameScreen::Ship => draw_ship_screen(f, &game),
-                    GameScreen::Mining => draw_mining_screen(f, &game),
-                    GameScreen::Crafting => draw_crafting_screen(f, &game),
-                    GameScreen::Inventory => draw_inventory_screen(f, &game),
-                    GameScreen::Character => draw_character_info_screen(f, &game),
-                    GameScreen::Help => draw_help_screen(f, &game),
+                    GameScreen::Navigation => draw_navigation_screen(f, &game, f.size()),
+                    GameScreen::Market => draw_market_screen(f, &game, f.size()),
+                    GameScreen::Ship => draw_ship_screen(f, &game, f.size()),
+                    GameScreen::Mining => draw_mining_screen(f, &game, f.size()),
+                    GameScreen::Crafting => draw_crafting_screen(f, &game, f.size()),
+                    GameScreen::Inventory => draw_inventory(f, &game, f.size()),
+                    GameScreen::Character => draw_character_info(f, &game, f.size()),
+                    GameScreen::Help => draw_help(f, &game, f.size()),
                     GameScreen::Quit => {
                         // Draw quit confirmation
-                        draw_main_menu(f, &game); // For now, just show the main menu as background
+                        draw_main_menu(f, &game, f.size()); // For now, just show the main menu as background
                     }
                 }
                 
@@ -181,7 +182,7 @@ impl App {
     
     // Method to send a navigation request to the server
     fn send_navigation_request(&self, destination: &str) {
-        let game = self.game.blocking_lock();
+        let _game = self.game.blocking_lock(); // Using _ prefix to indicate intentional non-use
         
         // Create the navigation message
         // In a real implementation, you'd get the client_id from somewhere
