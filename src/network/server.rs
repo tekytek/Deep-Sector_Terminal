@@ -32,25 +32,13 @@ pub struct GameServer {
 }
 
 impl GameServer {
-    /// Create a new game server with optional password protection
-    pub async fn new(password: Option<String>) -> Self {
-        // Try to load existing game or create a new one
-        let game = match save_load::load_game::<Game>() {
-            Ok(loaded_game) => {
-                println!("Loaded existing game state");
-                loaded_game
-            }
-            Err(_) => {
-                println!("Creating new game state");
-                Game::new()
-            }
-        };
-        
+    /// Create a new game server with optional password protection and existing game state
+    pub async fn new(password: Option<String>, game_state: Arc<Mutex<Game>>) -> Self {
         // Load configuration or use defaults
         let config = GameConfig::default();
         
         Self {
-            game: Arc::new(Mutex::new(game)),
+            game: game_state,
             clients: Arc::new(Mutex::new(HashMap::new())),
             password: password.map(|p| {
                 // Hash the password for secure storage

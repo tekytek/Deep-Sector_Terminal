@@ -1,7 +1,7 @@
 use std::io;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, mpsc};
 use crossterm::{
     event::{self, Event, KeyCode, KeyEvent},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
@@ -13,6 +13,7 @@ use tui::{
 };
 
 use crate::game::{Game, GameScreen};
+use crate::network::protocol::Message;
 use crate::ui::screens::{
     main_menu::draw_main_menu,
     navigation::draw_navigation_screen,
@@ -22,18 +23,31 @@ use crate::ui::screens::{
     crafting::draw_crafting_screen,
     inventory::draw_inventory_screen,
     help::draw_help_screen,
+    character_info::draw_character_info_screen,
 };
 
 pub struct App {
     game: Arc<Mutex<Game>>,
+    tx_network: mpsc::Sender<Message>,
+    rx_ui: mpsc::Receiver<Message>,
+    network_messages: Vec<String>, // Store recent messages from server
 }
 
 impl App {
-    pub fn new(game: Arc<Mutex<Game>>) -> Self {
-        Self { game }
+    pub fn new(
+        game: Arc<Mutex<Game>>, 
+        tx_network: mpsc::Sender<Message>,
+        rx_ui: mpsc::Receiver<Message>
+    ) -> Self {
+        Self { 
+            game,
+            tx_network,
+            rx_ui,
+            network_messages: Vec::new(),
+        }
     }
 
-    pub fn run(&self) -> Result<(), io::Error> {
+    pub fn run(&mut self) -> Result<(), io::Error> {
         // Terminal initialization
         enable_raw_mode()?;
         let mut stdout = io::stdout();
@@ -46,6 +60,9 @@ impl App {
         let mut last_tick = Instant::now();
         
         loop {
+            // Check for network messages (non-blocking)
+            self.check_network_messages();
+            
             // Render the UI
             terminal.draw(|f| {
                 // Get a read lock on the game state
@@ -54,18 +71,26 @@ impl App {
                 // Draw the appropriate screen based on game state
                 match game.current_screen {
                     GameScreen::MainMenu => draw_main_menu(f, &game),
+                    GameScreen::CharacterCreation => {
+                        // Character creation should be drawn by the appropriate module
+                        // This will be handled elsewhere in the codebase
+                    },
                     GameScreen::Navigation => draw_navigation_screen(f, &game),
                     GameScreen::Market => draw_market_screen(f, &game),
                     GameScreen::Ship => draw_ship_screen(f, &game),
                     GameScreen::Mining => draw_mining_screen(f, &game),
                     GameScreen::Crafting => draw_crafting_screen(f, &game),
                     GameScreen::Inventory => draw_inventory_screen(f, &game),
+                    GameScreen::Character => draw_character_info_screen(f, &game),
                     GameScreen::Help => draw_help_screen(f, &game),
                     GameScreen::Quit => {
                         // Draw quit confirmation
                         draw_main_menu(f, &game); // For now, just show the main menu as background
                     }
                 }
+                
+                // If there are network messages, they could be displayed in a popup or status area
+                // This would be implemented in a separate UI component
             })?;
 
             // Handle input
@@ -89,6 +114,14 @@ impl App {
                         // Handle the key event in the game
                         game.handle_input(key);
                         
+                        // Send network messages based on game actions
+                        // (This would be implemented based on the specific action)
+                        // For example, if navigating to a new system:
+                        if game.current_screen == GameScreen::Navigation {
+                            // This is just an example - real implementation would check if navigation was requested
+                            // self.send_navigation_request(&game.destination_system);
+                        }
+                        
                         // Check if game is over after handling input
                         if game.is_game_over() {
                             break;
@@ -104,9 +137,6 @@ impl App {
                     eprintln!("Game update error: {}", e);
                 }
                 last_tick = Instant::now();
-                
-                // Save game state periodically
-                // In client-server mode, this would happen on the server
             }
         }
 
@@ -116,5 +146,57 @@ impl App {
         terminal.show_cursor()?;
 
         Ok(())
+    }
+    
+    // Method to check for new network messages
+    fn check_network_messages(&mut self) {
+        // Poll for network messages without blocking
+        if let Ok(msg) = self.rx_ui.try_recv() {
+            match msg {
+                Message::ActionResponse { success, message, .. } => {
+                    self.network_messages.push(format!("{}: {}", 
+                        if success { "Success" } else { "Error" },
+                        message
+                    ));
+                    
+                    // Limit the number of stored messages
+                    if self.network_messages.len() > 10 {
+                        self.network_messages.remove(0);
+                    }
+                },
+                Message::Error { code, message } => {
+                    self.network_messages.push(format!("Error {}: {}", code, message));
+                    
+                    // Limit the number of stored messages
+                    if self.network_messages.len() > 10 {
+                        self.network_messages.remove(0);
+                    }
+                },
+                _ => {
+                    // Handle other message types as needed
+                }
+            }
+        }
+    }
+    
+    // Method to send a navigation request to the server
+    fn send_navigation_request(&self, destination: &str) {
+        let game = self.game.blocking_lock();
+        
+        // Create the navigation message
+        // In a real implementation, you'd get the client_id from somewhere
+        let client_id = uuid::Uuid::new_v4(); // Placeholder 
+        let message = Message::NavigationAction {
+            client_id,
+            destination_system: destination.to_string(),
+        };
+        
+        // Send the message (this is a non-blocking operation)
+        let tx = self.tx_network.clone();
+        tokio::spawn(async move {
+            if let Err(e) = tx.send(message).await {
+                eprintln!("Failed to send navigation request: {}", e);
+            }
+        });
     }
 }
