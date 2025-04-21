@@ -158,7 +158,7 @@ impl Game {
             }
             
             // Display the notification
-            self.show_message(message);
+            self.show_message(&message);
         }
         
         // Update animation frame
@@ -234,7 +234,7 @@ impl Game {
                         if !self.character_name.is_empty() {
                             self.creation_stage = 1;
                         } else {
-                            self.show_message("Please enter a name".to_string());
+                            self.show_message("Please enter a name");
                         }
                     },
                     _ => {}
@@ -479,9 +479,9 @@ impl Game {
                 if let Some(destination) = self.universe.get_nearby_system(num - 1) {
                     if self.navigation_system.can_travel_to(&self.player, &destination) {
                         self.navigation_system.travel_to(&mut self.player, destination.clone());
-                        self.show_message(format!("Traveling to {}", destination.name));
+                        self.show_formatted_message(format!("Traveling to {}", destination.name));
                     } else {
-                        self.show_message("Cannot travel to that system - too far away".to_string());
+                        self.show_message("Cannot travel to that system - too far away");
                     }
                 }
             },
@@ -489,9 +489,9 @@ impl Game {
                 // Dock at the current system's station if there is one
                 if self.navigation_system.can_dock(&self.player) {
                     self.navigation_system.dock(&mut self.player);
-                    self.show_message("Docked at station".to_string());
+                    self.show_message("Docked at station");
                 } else {
-                    self.show_message("No station to dock at in this system".to_string());
+                    self.show_message("No station to dock at in this system");
                 }
             },
             KeyCode::Char('u') => {
@@ -500,7 +500,7 @@ impl Game {
                     self.navigation_system.undock(&mut self.player);
                     self.show_message("Undocked from station");
                 } else {
-                    self.show_message("Not currently docked".to_string());
+                    self.show_message("Not currently docked");
                 }
             },
             KeyCode::Char('m') => self.change_screen(GameScreen::MainMenu),
@@ -529,11 +529,11 @@ impl Game {
                 // Buy or sell the selected item
                 if self.trading_system.is_buy_mode() {
                     if let Some(result) = self.trading_system.buy_item(&mut self.player, num - 1) {
-                        self.show_message(result);
+                        self.show_formatted_message(result);
                     }
                 } else {
                     if let Some(result) = self.trading_system.sell_item(&mut self.player, num - 1) {
-                        self.show_message(result);
+                        self.show_formatted_message(result);
                     }
                 }
             },
@@ -558,7 +558,7 @@ impl Game {
                 };
                 
                 if let Some(result) = self.mining_system.mine_resource(&mut self.player, resource_idx) {
-                    self.show_message(result);
+                    self.show_formatted_message(result);
                 }
             },
             KeyCode::Char('m') => self.change_screen(GameScreen::MainMenu),
@@ -576,7 +576,7 @@ impl Game {
                 };
                 
                 match self.crafting_system.craft_item(&mut self.player, blueprint_idx) {
-                    Ok(result) => self.show_message(&format!("Started crafting job: {}", result)),
+                    Ok(result) => self.show_formatted_message(format!("Started crafting job: {}", result)),
                     Err(error) => self.show_message(&error),
                 }
             },

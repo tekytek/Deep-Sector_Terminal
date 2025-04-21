@@ -218,7 +218,7 @@ impl PlayerMarket {
         let mut results: Vec<&PlayerMarketListing> = self.listings.values()
             .filter(|listing| {
                 // Filter by visibility first
-                match &listing.visibility {
+                (match &listing.visibility {
                     ListingVisibility::Public => true,
                     ListingVisibility::FactionOnly(faction) => {
                         if let Some(player_faction) = player_faction {
@@ -230,7 +230,7 @@ impl PlayerMarket {
                     ListingVisibility::PlayerList(players) => {
                         players.contains(&player_id.to_string())
                     }
-                } &&
+                }) &&
                 // Then apply other filters
                 (item_name.is_none() || listing.item.name.contains(item_name.unwrap())) &&
                 (item_type.is_none() || &listing.item.item_type == item_type.unwrap()) &&
@@ -274,32 +274,53 @@ impl PlayerMarket {
         quantity: u32,
         buyer_reputation: i32,
     ) -> Result<MarketPurchase, String> {
-        // Get the listing
-        let listing = match self.listings.get_mut(listing_id) {
-            Some(l) => l,
-            None => return Err("Listing not found".to_string()),
-        };
+        // Get the listing and validate
+        let mut should_remove = false;
+        let mut item_name = String::new();
+        let mut seller_id = String::new();
+        let mut system_id = String::new();
+        let mut price_per_unit = 0;
+        
+        {
+            let listing = match self.listings.get_mut(listing_id) {
+                Some(l) => l,
+                None => return Err("Listing not found".to_string()),
+            };
 
-        // Check quantity
-        if listing.quantity < quantity {
-            return Err(format!("Not enough quantity available. Requested: {}, Available: {}", 
-                              quantity, listing.quantity));
+            // Check quantity
+            if listing.quantity < quantity {
+                return Err(format!("Not enough quantity available. Requested: {}, Available: {}", 
+                                  quantity, listing.quantity));
+            }
+
+            // Check reputation requirement
+            if self.reputation_requirements && buyer_reputation < listing.minimum_reputation {
+                return Err(format!("Insufficient reputation. Required: {}, You have: {}", 
+                                  listing.minimum_reputation, buyer_reputation));
+            }
+
+            // Check if negotiable - if yes, direct purchase may not be allowed
+            if listing.negotiable {
+                // For this implementation, we'll allow direct purchase even for negotiable items
+                // In a full implementation, you might want to enforce bidding for negotiable items
+            }
+
+            // Calculate total price
+            price_per_unit = listing.price_per_unit;
+            
+            // Save data we'll need later
+            item_name = listing.item.name.clone();
+            seller_id = listing.seller_id.clone();
+            system_id = listing.system_id.clone();
+            
+            // Update the listing quantity
+            listing.quantity -= quantity;
+            listing.quantity_sold += quantity;
+            
+            // Check if we should remove the listing
+            should_remove = listing.quantity == 0;
         }
-
-        // Check reputation requirement
-        if self.reputation_requirements && buyer_reputation < listing.minimum_reputation {
-            return Err(format!("Insufficient reputation. Required: {}, You have: {}", 
-                              listing.minimum_reputation, buyer_reputation));
-        }
-
-        // Check if negotiable - if yes, direct purchase may not be allowed
-        if listing.negotiable {
-            // For this implementation, we'll allow direct purchase even for negotiable items
-            // In a full implementation, you might want to enforce bidding for negotiable items
-        }
-
-        // Calculate total price
-        let price_per_unit = listing.price_per_unit;
+        
         let total_price = price_per_unit * quantity;
         
         // Create purchase record
@@ -313,27 +334,23 @@ impl PlayerMarket {
             id: purchase_id,
             listing_id: listing_id.to_string(),
             buyer_id: buyer_id.to_string(),
-            seller_id: listing.seller_id.clone(),
-            item_name: listing.item.name.clone(),
+            seller_id,
+            item_name: item_name.clone(),
             quantity,
             price_per_unit,
             total_price,
             timestamp: current_time,
-            system_id: listing.system_id.clone(),
+            system_id,
             was_negotiated: false,
         };
         
-        // Update the listing quantity
-        listing.quantity -= quantity;
-        listing.quantity_sold += quantity;
-        
         // Remove listing if sold out
-        if listing.quantity == 0 {
+        if should_remove {
             self.listings.remove(listing_id);
         }
         
         // Update price trend data
-        self.update_price_trend(&listing.item.name, price_per_unit, quantity);
+        self.update_price_trend(&item_name, price_per_unit, quantity);
         
         // Add to purchase history
         self.purchase_history.push(purchase.clone());
@@ -415,27 +432,48 @@ impl PlayerMarket {
             None => return Err("Bid not found".to_string()),
         };
         
-        // Get the listing
-        let listing = match self.listings.get_mut(&bid.listing_id) {
-            Some(l) => {
-                // Check if listing still has enough quantity
-                if l.quantity < bid.quantity {
-                    // Revert bid status to pending
-                    if let Some(b) = self.bids.get_mut(bid_id) {
-                        b.status = BidStatus::Pending;
+        // Variables to store data we'll need after releasing the borrow
+        let mut should_remove = false;
+        let mut item_name = String::new();
+        let mut seller_id = String::new();
+        let mut system_id = String::new();
+        let listing_id = bid.listing_id.clone();
+        
+        // Get the listing and process updates in a separate scope
+        {
+            let listing = match self.listings.get_mut(&listing_id) {
+                Some(l) => {
+                    // Check if listing still has enough quantity
+                    if l.quantity < bid.quantity {
+                        // Revert bid status to pending
+                        if let Some(b) = self.bids.get_mut(bid_id) {
+                            b.status = BidStatus::Pending;
+                        }
+                        return Err("Listing no longer has sufficient quantity available".to_string());
                     }
-                    return Err("Listing no longer has sufficient quantity available".to_string());
-                }
-                l
-            },
-            None => {
-                // If listing is gone, mark bid as failed
-                if let Some(b) = self.bids.get_mut(bid_id) {
-                    b.status = BidStatus::Rejected;
-                }
-                return Err("Listing no longer exists".to_string());
-            },
-        };
+                    l
+                },
+                None => {
+                    // If listing is gone, mark bid as failed
+                    if let Some(b) = self.bids.get_mut(bid_id) {
+                        b.status = BidStatus::Rejected;
+                    }
+                    return Err("Listing no longer exists".to_string());
+                },
+            };
+            
+            // Save data we'll need later
+            item_name = listing.item.name.clone();
+            seller_id = listing.seller_id.clone();
+            system_id = listing.system_id.clone();
+            
+            // Update the listing quantity
+            listing.quantity -= bid.quantity;
+            listing.quantity_sold += bid.quantity;
+            
+            // Check if we should remove the listing
+            should_remove = listing.quantity == 0;
+        }
         
         // Process the purchase
         let current_time = SystemTime::now()
@@ -449,27 +487,23 @@ impl PlayerMarket {
             id: purchase_id,
             listing_id: bid.listing_id.clone(),
             buyer_id: bid.bidder_id.clone(),
-            seller_id: listing.seller_id.clone(),
-            item_name: listing.item.name.clone(),
+            seller_id,
+            item_name: item_name.clone(),
             quantity: bid.quantity,
             price_per_unit: bid.bid_amount,
             total_price: bid.total_amount,
             timestamp: current_time,
-            system_id: listing.system_id.clone(),
+            system_id,
             was_negotiated: true,
         };
         
-        // Update the listing quantity
-        listing.quantity -= bid.quantity;
-        listing.quantity_sold += bid.quantity;
-        
         // Remove listing if sold out
-        if listing.quantity == 0 {
-            self.listings.remove(&bid.listing_id);
+        if should_remove {
+            self.listings.remove(&listing_id);
         }
         
         // Update price trend data
-        self.update_price_trend(&listing.item.name, bid.bid_amount, bid.quantity);
+        self.update_price_trend(&item_name, bid.bid_amount, bid.quantity);
         
         // Add to purchase history
         self.purchase_history.push(purchase.clone());

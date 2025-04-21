@@ -7,3 +7,4 @@ pub mod skills;
 pub mod blueprint;
 pub mod faction;
 pub mod account;
+pub mod player_market;

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use uuid::Uuid;
 
-use crate::models::item::{Item, ItemType, ResourceType};
+use crate::models::item::{Inventory, Item, ItemType, ResourceType};
 
 /// Represents a recipe/blueprint for crafting an item
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
