@@ -5,17 +5,52 @@ use tokio::sync::{Mutex, mpsc};
 use uuid::Uuid;
 use dotenv::dotenv;
 
+// Import debugging utilities
+use space_trader::debug::{self, LogLevel};
+use space_trader::debug::client_server::{ConnectionHealth, NetworkSimulator};
+use space_trader::debug::network::NetworkDiagnostics;
+use space_trader::debug::error_analysis;
+
 use space_trader::network::client::GameClient;
 use space_trader::network::protocol::Message;
 use space_trader::game::Game;
 
+// Initialize the debug system
+fn init_debug_system() {
+    // Initialize with default settings
+    debug::init(
+        Some("logs/client.log"),      // Log to a file
+        true,                         // Also print to console
+        debug::get_log_level_from_env(), // Get log level from env var or default to INFO
+    );
+    
+    // Configure module-specific log levels
+    debug::set_module_level("network", LogLevel::Debug);
+    debug::set_module_level("game", LogLevel::Info);
+    
+    // Log initialization
+    log_info!("Client debug system initialized");
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Initialize the debugging system first
+    init_debug_system();
+    
     dotenv().ok(); // Load .env file if available
+    log_info!("Client starting up");
     
     // Create the game (no need to load saves as they are on the server)
     let game = Game::new();
     let game_arc = Arc::new(Mutex::new(game));
+    
+    // Check network environment before attempting connection
+    log_debug!("Checking network environment before connection...");
+    let network_report = NetworkDiagnostics::network_environment_report();
+    log_debug!("Network environment report:\n{}", network_report);
+    
+    // Create connection health tracker
+    let connection_health = Arc::new(Mutex::new(ConnectionHealth::new("main_connection")));
     
     // Create message channels for network communication
     let (tx_network, rx_network) = mpsc::channel::<Message>(100);

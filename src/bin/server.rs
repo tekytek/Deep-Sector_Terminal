@@ -7,14 +7,47 @@ use tokio::signal;
 use tokio::time::interval;
 use dotenv::dotenv;
 
+// Import debugging utilities
+use space_trader::debug::{self, LogLevel};
+use space_trader::debug::network::NetworkDiagnostics;
+use space_trader::debug::error_analysis;
+
 use space_trader::game::Game;
 use space_trader::models::universe::Universe;
 use space_trader::network::server::GameServer;
 use space_trader::network::protocol::Message;
 
+// Initialize the debug system
+fn init_debug_system() {
+    // Initialize with default settings
+    debug::init(
+        Some("logs/server.log"),      // Log to a file
+        true,                         // Also print to console
+        debug::get_log_level_from_env(), // Get log level from env var or default to INFO
+    );
+    
+    // Configure module-specific log levels
+    debug::set_module_level("network", LogLevel::Debug);
+    debug::set_module_level("game", LogLevel::Info);
+    
+    // Log initialization
+    log_info!("Server debug system initialized");
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Initialize the debugging system first
+    init_debug_system();
+    
     dotenv().ok(); // Load .env file if available
+    log_info!("Server starting up");
+    
+    // Log system environment information
+    log_debug!("System information:\n{}", debug::system_info());
+    
+    // Check network environment
+    let network_report = NetworkDiagnostics::network_environment_report();
+    log_debug!("Network environment report:\n{}", network_report);
     
     // Get server port from environment or use default
     let port_str = env::var("SERVER_PORT").unwrap_or_else(|_| {
@@ -111,6 +144,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     println!("  status    - Show server status and connected players");
                     println!("  save      - Save game state");
                     println!("  clients   - List connected clients");
+                    println!("  debug     - Show debug information and perform diagnostics");
                     println!("  stop      - Stop the server");
                     println!("  help      - Show this help");
                 },
@@ -131,6 +165,76 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "clients" => {
                     println!("Connected clients: [Feature not implemented]");
                     // This would show connected clients in a real implementation
+                },
+                "debug" => {
+                    println!("Debug menu:");
+                    println!("1. System information");
+                    println!("2. Network diagnostics");
+                    println!("3. Error report");
+                    println!("4. Connection test");
+                    println!("5. Back to main menu");
+                    print!("Select option: ");
+                    io::stdout().flush().unwrap();
+                    
+                    let mut option = String::new();
+                    if io::stdin().read_line(&mut option).is_err() {
+                        println!("Invalid input");
+                        continue;
+                    }
+                    
+                    match option.trim() {
+                        "1" => {
+                            // System information
+                            println!("{}", debug::system_info());
+                        },
+                        "2" => {
+                            // Network diagnostics
+                            println!("Running network diagnostics...");
+                            println!("{}", NetworkDiagnostics::network_environment_report());
+                            
+                            // Check local port availability
+                            let port = 7890; // Default port
+                            let is_available = NetworkDiagnostics::check_port_available(port);
+                            println!("Port {} is {}available", port, if is_available { "" } else { "not " });
+                        },
+                        "3" => {
+                            // Error report
+                            println!("Error Report:");
+                            println!("{}", error_analysis::generate_error_report());
+                        },
+                        "4" => {
+                            // Connection test
+                            print!("Enter address to test (host:port): ");
+                            io::stdout().flush().unwrap();
+                            
+                            let mut addr = String::new();
+                            if io::stdin().read_line(&mut addr).is_err() {
+                                println!("Invalid input");
+                                continue;
+                            }
+                            
+                            println!("Running connection test (this may take a few seconds)...");
+                            
+                            // This would be async in a production environment
+                            // For now, we'll just run some basic checks
+                            if let Some((host, port_str)) = addr.trim().split_once(':') {
+                                if let Ok(port) = port_str.parse::<u16>() {
+                                    let is_reachable = NetworkDiagnostics::check_port(host, port, 5000);
+                                    println!("Host {}:{} is {}reachable", host, port, if is_reachable { "" } else { "not " });
+                                } else {
+                                    println!("Invalid port number");
+                                }
+                            } else {
+                                println!("Invalid address format. Use host:port");
+                            }
+                        },
+                        "5" | "" => {
+                            println!("Returning to main menu");
+                        },
+                        _ => {
+                            println!("Invalid option");
+                        }
+                    }
                 },
                 "stop" => {
                     println!("Stopping server...");

@@ -21,7 +21,7 @@ use crate::utils::save_load::{save_game, load_game};
 
 
 
-#[derive(PartialEq, Clone, Serialize, Deserialize)]
+#[derive(PartialEq, Clone, Serialize, Deserialize, Debug)]
 pub enum GameScreen {
     MainMenu,
     CharacterCreation,
