@@ -554,6 +554,14 @@ impl Game {
                     self.show_message("Not currently docked");
                 }
             },
+            KeyCode::Char('t') => {
+                // Access station services when docked
+                if self.navigation_system.is_docked(&self.player) {
+                    self.change_screen(GameScreen::StationServices);
+                } else {
+                    self.show_message("You must be docked at a station to access services");
+                }
+            },
             KeyCode::Char('m') => self.change_screen(GameScreen::MainMenu),
             _ => {}
         }

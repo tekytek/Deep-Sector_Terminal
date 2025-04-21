@@ -105,6 +105,11 @@ fn draw_navigation_info<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
                 Span::styled("U", Style::default().fg(colors::WARNING)),
                 Span::raw("] Undock"),
             ]));
+            text.push(Spans::from(vec![
+                Span::raw("["),
+                Span::styled("T", Style::default().fg(colors::WARNING)),
+                Span::raw("] Station Services"),
+            ]));
         } else {
             text.push(Spans::from(vec![
                 Span::raw("Station: "),
