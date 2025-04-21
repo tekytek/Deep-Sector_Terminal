@@ -1,5 +1,4 @@
-pub mod navigation;
-pub mod trading;
 pub mod mining;
+pub mod trading;
 pub mod crafting;
-pub mod time;
+pub mod economy;

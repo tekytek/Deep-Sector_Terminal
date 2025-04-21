@@ -13,6 +13,7 @@ use crate::network::error::{NetworkError, NetworkResult};
 use crate::network::protocol::{Message, MarketActionType, DEFAULT_SERVER_PORT, HEARTBEAT_INTERVAL, GameConfig};
 use crate::game::Game;
 use crate::utils::save_load;
+use crate::models::account::{AccountManager, AccountError, UserAccount};
 
 /// Represents a client connection to the server
 #[allow(dead_code)]
@@ -32,6 +33,7 @@ pub struct GameServer {
     password: Option<String>,
     #[allow(dead_code)]
     config: GameConfig,
+    accounts: Arc<Mutex<AccountManager>>,
 }
 
 #[allow(dead_code)]
@@ -41,6 +43,10 @@ impl GameServer {
         // Load configuration or use defaults
         let config = GameConfig::default();
         
+        // Load account manager or create new
+        let accounts = AccountManager::load();
+        println!("Loaded account manager");
+        
         Self {
             game: game_state,
             clients: Arc::new(Mutex::new(HashMap::new())),
@@ -49,6 +55,7 @@ impl GameServer {
                 hash(p, DEFAULT_COST).expect("Failed to hash password")
             }),
             config,
+            accounts: Arc::new(Mutex::new(accounts)),
         }
     }
     
@@ -101,9 +108,10 @@ impl GameServer {
             let game = self.game.clone();
             let clients = self.clients.clone();
             let password = self.password.clone();
+            let accounts = self.accounts.clone();
             
             tokio::spawn(async move {
-                if let Err(e) = Self::handle_connection(stream, addr, game, clients, password).await {
+                if let Err(e) = Self::handle_connection(stream, addr, game, clients, accounts, password).await {
                     eprintln!("Connection error: {}", e);
                 }
             });
@@ -118,6 +126,7 @@ impl GameServer {
         addr: SocketAddr,
         game: Arc<Mutex<Game>>,
         clients: Arc<Mutex<HashMap<Uuid, ClientConnection>>>,
+        accounts: Arc<Mutex<AccountManager>>,
         server_password: Option<String>
     ) -> NetworkResult<()> {
         let (mut reader, mut writer) = stream.into_split();
@@ -215,7 +224,7 @@ impl GameServer {
                         break; // Connection closed
                     }
                     
-                    if let Err(e) = Self::process_message(&buffer[..n], client_id, game.clone(), clients.clone()).await {
+                    if let Err(e) = Self::process_message(&buffer[..n], client_id, game.clone(), clients.clone(), accounts.clone()).await {
                         eprintln!("Error processing message: {}", e);
                         
                         // Send error to client
@@ -234,8 +243,131 @@ impl GameServer {
                 println!("Client {} disconnected", username);
                 clients.lock().await.remove(&client_id);
             }
+            
+            // Allow account registration as first message
+            Message::RegisterAccount { username, password, email } => {
+                println!("New account registration from {}: {}", addr, username);
+                
+                // Create a temporary client ID for this registration
+                let client_id = Uuid::new_v4();
+                
+                // Register the client temporarily
+                let client = ClientConnection {
+                    id: client_id,
+                    username: "registration".to_string(),
+                    addr,
+                    last_heartbeat: Instant::now(),
+                    sender: tx.clone(),
+                };
+                
+                // Add client to connected clients
+                clients.lock().await.insert(client_id, client);
+                
+                // Process the registration message
+                if let Err(e) = Self::process_message(&buffer[..n], client_id, game.clone(), clients.clone(), accounts.clone()).await {
+                    eprintln!("Error processing registration: {}", e);
+                    
+                    // Send error to client
+                    let error_msg = Message::Error {
+                        code: 500,
+                        message: format!("Server error: {}", e),
+                    };
+                    
+                    if let Ok(error_bytes) = serde_json::to_vec(&error_msg) {
+                        let _ = tx.send(error_bytes).await;
+                    }
+                }
+                
+                // After registration, continue processing messages
+                let mut buffer = [0u8; 8192];
+                while let Ok(n) = reader.read(&mut buffer).await {
+                    if n == 0 {
+                        break; // Connection closed
+                    }
+                    
+                    if let Err(e) = Self::process_message(&buffer[..n], client_id, game.clone(), clients.clone(), accounts.clone()).await {
+                        eprintln!("Error processing message: {}", e);
+                        
+                        // Send error to client
+                        let error_msg = Message::Error {
+                            code: 500,
+                            message: format!("Server error: {}", e),
+                        };
+                        
+                        if let Ok(error_bytes) = serde_json::to_vec(&error_msg) {
+                            let _ = tx.send(error_bytes).await;
+                        }
+                    }
+                }
+                
+                // Client disconnected
+                println!("Registration client disconnected");
+                clients.lock().await.remove(&client_id);
+            }
+            
+            // Allow login as first message
+            Message::LoginAccount { username, password } => {
+                println!("Login attempt from {}: {}", addr, username);
+                
+                // Create a temporary client ID for this login
+                let client_id = Uuid::new_v4();
+                
+                // Register the client temporarily
+                let client = ClientConnection {
+                    id: client_id,
+                    username: "login".to_string(),
+                    addr,
+                    last_heartbeat: Instant::now(),
+                    sender: tx.clone(),
+                };
+                
+                // Add client to connected clients
+                clients.lock().await.insert(client_id, client);
+                
+                // Process the login message
+                if let Err(e) = Self::process_message(&buffer[..n], client_id, game.clone(), clients.clone(), accounts.clone()).await {
+                    eprintln!("Error processing login: {}", e);
+                    
+                    // Send error to client
+                    let error_msg = Message::Error {
+                        code: 500,
+                        message: format!("Server error: {}", e),
+                    };
+                    
+                    if let Ok(error_bytes) = serde_json::to_vec(&error_msg) {
+                        let _ = tx.send(error_bytes).await;
+                    }
+                }
+                
+                // After login, continue processing messages
+                let mut buffer = [0u8; 8192];
+                while let Ok(n) = reader.read(&mut buffer).await {
+                    if n == 0 {
+                        break; // Connection closed
+                    }
+                    
+                    if let Err(e) = Self::process_message(&buffer[..n], client_id, game.clone(), clients.clone(), accounts.clone()).await {
+                        eprintln!("Error processing message: {}", e);
+                        
+                        // Send error to client
+                        let error_msg = Message::Error {
+                            code: 500,
+                            message: format!("Server error: {}", e),
+                        };
+                        
+                        if let Ok(error_bytes) = serde_json::to_vec(&error_msg) {
+                            let _ = tx.send(error_bytes).await;
+                        }
+                    }
+                }
+                
+                // Client disconnected
+                println!("Login client disconnected");
+                clients.lock().await.remove(&client_id);
+            }
+            
             _ => {
-                return Err(NetworkError::ConnectionError("Expected Connect message".to_string()));
+                return Err(NetworkError::ConnectionError("Expected Connect, RegisterAccount, or LoginAccount message".to_string()));
             }
         }
         
@@ -247,7 +379,8 @@ impl GameServer {
         data: &[u8],
         client_id: Uuid,
         game: Arc<Mutex<Game>>,
-        clients: Arc<Mutex<HashMap<Uuid, ClientConnection>>>
+        clients: Arc<Mutex<HashMap<Uuid, ClientConnection>>>,
+        accounts: Arc<Mutex<AccountManager>>
     ) -> NetworkResult<()> {
         let message: Message = serde_json::from_slice(data)
             .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
@@ -447,6 +580,362 @@ impl GameServer {
                     }
                 }
                 
+                Ok(())
+            }
+            
+            Message::RegisterAccount { username, password, email } => {
+                let mut accounts_lock = accounts.lock().await;
+                
+                // Try to register the account
+                match accounts_lock.register_account(&username, &password, email.as_deref()) {
+                    Ok(account) => {
+                        // Success, send response
+                        let response = Message::RegisterAccountResponse {
+                            success: true,
+                            message: format!("Account created successfully! Welcome, {}!", username),
+                            account: Some(account),
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        println!("New account registered: {}", username);
+                        Ok(())
+                    },
+                    Err(e) => {
+                        // Registration failed
+                        let response = Message::RegisterAccountResponse {
+                            success: false,
+                            message: format!("Failed to register account: {}", e),
+                            account: None,
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        println!("Account registration failed for {}: {}", username, e);
+                        Ok(())
+                    }
+                }
+            }
+            
+            Message::LoginAccount { username, password } => {
+                let mut accounts_lock = accounts.lock().await;
+                
+                // Try to authenticate
+                match accounts_lock.authenticate(&username, &password) {
+                    Ok(account) => {
+                        // Success, send response
+                        let characters = account.characters.clone();
+                        
+                        let response = Message::LoginAccountResponse {
+                            success: true,
+                            message: format!("Welcome back, {}!", username),
+                            account: Some(account),
+                            characters,
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        println!("User logged in: {}", username);
+                        Ok(())
+                    },
+                    Err(e) => {
+                        // Login failed
+                        let response = Message::LoginAccountResponse {
+                            success: false,
+                            message: format!("Login failed: {}", e),
+                            account: None,
+                            characters: vec![],
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        println!("Login failed for {}: {}", username, e);
+                        Ok(())
+                    }
+                }
+            }
+            
+            Message::ChangePassword { client_id, username, current_password, new_password } => {
+                let mut accounts_lock = accounts.lock().await;
+                
+                // Try to change password
+                match accounts_lock.change_password(&username, &current_password, &new_password) {
+                    Ok(()) => {
+                        // Success, send response
+                        let response = Message::ChangePasswordResponse {
+                            success: true,
+                            message: "Password changed successfully!".to_string(),
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        println!("Password changed for user: {}", username);
+                        Ok(())
+                    },
+                    Err(e) => {
+                        // Password change failed
+                        let response = Message::ChangePasswordResponse {
+                            success: false,
+                            message: format!("Failed to change password: {}", e),
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        println!("Password change failed for {}: {}", username, e);
+                        Ok(())
+                    }
+                }
+            }
+            
+            Message::DeleteAccount { client_id, username, password } => {
+                let mut accounts_lock = accounts.lock().await;
+                
+                // Try to delete account
+                match accounts_lock.delete_account(&username, &password) {
+                    Ok(()) => {
+                        // Success, send response
+                        let response = Message::DeleteAccountResponse {
+                            success: true,
+                            message: "Account deleted successfully.".to_string(),
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        println!("Account deleted: {}", username);
+                        Ok(())
+                    },
+                    Err(e) => {
+                        // Delete failed
+                        let response = Message::DeleteAccountResponse {
+                            success: false,
+                            message: format!("Failed to delete account: {}", e),
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        println!("Account deletion failed for {}: {}", username, e);
+                        Ok(())
+                    }
+                }
+            }
+            
+            Message::CreateCharacter { client_id, account_username, character_name, faction_type, storyline_id } => {
+                // This would create a new character for the user
+                // For now, we'll just create a placeholder character ID
+                let character_id = Uuid::new_v4().to_string();
+                
+                // Add the character to the account
+                let mut accounts_lock = accounts.lock().await;
+                if let Err(e) = accounts_lock.add_character(&account_username, &character_id) {
+                    // Failed to add character to account
+                    let response = Message::CreateCharacterResponse {
+                        success: false,
+                        message: format!("Failed to create character: {}", e),
+                        character_id: None,
+                    };
+                    
+                    let response_bytes = serde_json::to_vec(&response)
+                        .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                    
+                    if let Some(client) = clients.lock().await.get(&client_id) {
+                        client.sender.send(response_bytes).await
+                            .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                    }
+                    
+                    return Ok(());
+                }
+                
+                // In a complete implementation, we would:
+                // 1. Create a new Player object with the character info
+                // 2. Set up initial ship, inventory, etc.
+                // 3. Add the character to the game state
+
+                let response = Message::CreateCharacterResponse {
+                    success: true,
+                    message: format!("Character '{}' created successfully!", character_name),
+                    character_id: Some(character_id.clone()),
+                };
+                
+                let response_bytes = serde_json::to_vec(&response)
+                    .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                
+                if let Some(client) = clients.lock().await.get(&client_id) {
+                    client.sender.send(response_bytes).await
+                        .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                }
+                
+                println!("New character created for {}: {} ({})", account_username, character_name, character_id);
+                Ok(())
+            }
+            
+            Message::ListCharacters { client_id, account_username } => {
+                // Get the account
+                let accounts_lock = accounts.lock().await;
+                let account = match accounts_lock.get_account_by_username(&account_username) {
+                    Some(acc) => acc,
+                    None => {
+                        // Account not found
+                        let response = Message::ListCharactersResponse {
+                            success: false,
+                            message: "Account not found".to_string(),
+                            characters: vec![],
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        return Ok(());
+                    }
+                };
+                
+                // In a complete implementation, we would look up character details
+                // For now, we'll just return a list of character IDs with placeholder names
+                let character_pairs: Vec<(String, String)> = account.characters.iter()
+                    .map(|id| (id.clone(), format!("Character-{}", id)))
+                    .collect();
+                
+                let response = Message::ListCharactersResponse {
+                    success: true,
+                    message: format!("Found {} characters", character_pairs.len()),
+                    characters: character_pairs,
+                };
+                
+                let response_bytes = serde_json::to_vec(&response)
+                    .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                
+                if let Some(client) = clients.lock().await.get(&client_id) {
+                    client.sender.send(response_bytes).await
+                        .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                }
+                
+                println!("Character list requested for {}", account_username);
+                Ok(())
+            }
+            
+            Message::SelectCharacter { client_id, account_username, character_id } => {
+                // Get the account to verify the character belongs to it
+                let accounts_lock = accounts.lock().await;
+                let account = match accounts_lock.get_account_by_username(&account_username) {
+                    Some(acc) => acc,
+                    None => {
+                        // Account not found
+                        let response = Message::SelectCharacterResponse {
+                            success: false,
+                            message: "Account not found".to_string(),
+                            universe: None,
+                            player_ship: None,
+                        };
+                        
+                        let response_bytes = serde_json::to_vec(&response)
+                            .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                        
+                        if let Some(client) = clients.lock().await.get(&client_id) {
+                            client.sender.send(response_bytes).await
+                                .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                        }
+                        
+                        return Ok(());
+                    }
+                };
+                
+                // Check if character belongs to this account
+                if !account.characters.contains(&character_id) {
+                    // Character not found
+                    let response = Message::SelectCharacterResponse {
+                        success: false,
+                        message: "Character not found on this account".to_string(),
+                        universe: None,
+                        player_ship: None,
+                    };
+                    
+                    let response_bytes = serde_json::to_vec(&response)
+                        .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                    
+                    if let Some(client) = clients.lock().await.get(&client_id) {
+                        client.sender.send(response_bytes).await
+                            .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                    }
+                    
+                    println!("Character selection failed for {}: Character not found", account_username);
+                    return Ok(());
+                }
+                
+                // In a complete implementation, we would load the character's state
+                // For now, we'll just return the current game state
+                
+                let game_state = game.lock().await;
+                let universe = game_state.universe.clone();
+                let player_ship = game_state.player.ship.clone();
+                
+                let response = Message::SelectCharacterResponse {
+                    success: true,
+                    message: format!("Character selected successfully!"),
+                    universe: Some(universe),
+                    player_ship: Some(player_ship),
+                };
+                
+                let response_bytes = serde_json::to_vec(&response)
+                    .map_err(|e| NetworkError::SerializationError(e.to_string()))?;
+                
+                if let Some(client) = clients.lock().await.get(&client_id) {
+                    client.sender.send(response_bytes).await
+                        .map_err(|_| NetworkError::ConnectionError("Failed to send response".to_string()))?;
+                }
+                
+                println!("Character {} selected for {}", character_id, account_username);
                 Ok(())
             }
             

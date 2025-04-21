@@ -498,7 +498,7 @@ impl Game {
                 // Undock from current station
                 if self.navigation_system.is_docked(&self.player) {
                     self.navigation_system.undock(&mut self.player);
-                    self.show_message("Undocked from station".to_string());
+                    self.show_message("Undocked from station");
                 } else {
                     self.show_message("Not currently docked".to_string());
                 }
@@ -575,8 +575,9 @@ impl Game {
                     _ => 0, // Default fallback, though this match arm should never be reached
                 };
                 
-                if let Some(result) = self.crafting_system.craft_item(&mut self.player, blueprint_idx) {
-                    self.show_message(result);
+                match self.crafting_system.craft_item(&mut self.player, blueprint_idx) {
+                    Ok(result) => self.show_message(&format!("Started crafting job: {}", result)),
+                    Err(error) => self.show_message(&error),
                 }
             },
             KeyCode::Char('m') => self.change_screen(GameScreen::MainMenu),
@@ -597,19 +598,19 @@ impl Game {
             // Set the active tab based on numeric input
             KeyCode::Char('1') => {
                 self.character_info_tab = 0;
-                self.show_message("Viewing skills information".to_string());
+                self.show_message("Viewing skills information");
             },
             KeyCode::Char('2') => {
                 self.character_info_tab = 1;
-                self.show_message("Viewing reputation information".to_string());
+                self.show_message("Viewing reputation information");
             },
             KeyCode::Char('3') => {
                 self.character_info_tab = 2;
-                self.show_message("Viewing assets information".to_string());
+                self.show_message("Viewing assets information");
             },
             KeyCode::Char('4') => {
                 self.character_info_tab = 3;
-                self.show_message("Viewing background information".to_string());
+                self.show_message("Viewing background information");
             },
             _ => {}
         }
@@ -643,13 +644,13 @@ impl Game {
                         target_price, 
                         notes
                     ) {
-                        Ok(_) => self.show_message(format!("Created buy order for {} {}", quantity, item_name)),
-                        Err(e) => self.show_message(format!("Error creating buy order: {}", e)),
+                        Ok(_) => self.show_formatted_message(format!("Created buy order for {} {}", quantity, item_name)),
+                        Err(e) => self.show_formatted_message(format!("Error creating buy order: {}", e)),
                     }
                 } else if !self.player.is_docked {
-                    self.show_message("You must be docked at a station to create orders".to_string());
+                    self.show_message("You must be docked at a station to create orders");
                 } else {
-                    self.show_message("You can only create orders in the active orders view".to_string());
+                    self.show_message("You can only create orders in the active orders view");
                 }
             },
             KeyCode::Char('s') => {
@@ -676,29 +677,29 @@ impl Game {
                             target_price, 
                             notes
                         ) {
-                            Ok(_) => self.show_message(format!("Created sell order for {} {}", quantity, item_name)),
-                            Err(e) => self.show_message(format!("Error creating sell order: {}", e)),
+                            Ok(_) => self.show_formatted_message(format!("Created sell order for {} {}", quantity, item_name)),
+                            Err(e) => self.show_formatted_message(format!("Error creating sell order: {}", e)),
                         }
                     } else {
-                        self.show_message("You have no items to sell".to_string());
+                        self.show_message("You have no items to sell");
                     }
                 } else if !self.player.is_docked {
-                    self.show_message("You must be docked at a station to create orders".to_string());
+                    self.show_message("You must be docked at a station to create orders");
                 } else {
-                    self.show_message("You can only create orders in the active orders view".to_string());
+                    self.show_message("You can only create orders in the active orders view");
                 }
             },
             KeyCode::Char('c') => {
                 // Cancel selected order
                 if self.orders_view_active && self.player.is_docked {
                     match self.trading_system.cancel_selected_order(&mut self.player) {
-                        Ok(_) => self.show_message("Order cancelled successfully".to_string()),
-                        Err(e) => self.show_message(format!("Error cancelling order: {}", e)),
+                        Ok(_) => self.show_message("Order cancelled successfully"),
+                        Err(e) => self.show_formatted_message(format!("Error cancelling order: {}", e)),
                     }
                 } else if !self.player.is_docked {
-                    self.show_message("You must be docked at a station to cancel orders".to_string());
+                    self.show_message("You must be docked at a station to cancel orders");
                 } else {
-                    self.show_message("You can only cancel orders in the active orders view".to_string());
+                    self.show_message("You can only cancel orders in the active orders view");
                 }
             },
             KeyCode::Up => {
@@ -715,7 +716,7 @@ impl Game {
                 // Clear selection when changing views
                 self.trading_system.deselect_order();
                 let status = if self.orders_view_active { "active" } else { "completed" };
-                self.show_message(format!("Viewing {} orders", status));
+                self.show_formatted_message(format!("Viewing {} orders", status));
             },
             _ => {}
         }
@@ -760,7 +761,13 @@ impl Game {
         self.current_screen = screen;
     }
 
-    fn show_message(&mut self, message: String) {
+    fn show_message(&mut self, message: &str) {
+        self.message = Some(message.to_string());
+        self.message_time = Some(Instant::now());
+    }
+    
+    // Helper method for formatted messages
+    fn show_formatted_message(&mut self, message: String) {
         self.message = Some(message);
         self.message_time = Some(Instant::now());
     }

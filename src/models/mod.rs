@@ -6,3 +6,4 @@ pub mod item;
 pub mod skills;
 pub mod blueprint;
 pub mod faction;
+pub mod account;

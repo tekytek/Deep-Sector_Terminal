@@ -84,16 +84,26 @@ fn draw_no_blueprints_message<B: Backend>(f: &mut Frame<B>, area: Rect) {
     f.render_widget(paragraph, area);
 }
 
-fn draw_blueprints<B: Backend>(f: &mut Frame<B>, _game: &Game, blueprints: Vec<(String, Vec<(String, u32)>)>, area: Rect) {
+fn draw_blueprints<B: Backend>(f: &mut Frame<B>, _game: &Game, blueprints: Vec<&crate::systems::crafting::Blueprint>, area: Rect) {
     let block = style_utils::create_primary_block("AVAILABLE SCHEMATICS");
 
-    let header = Row::new(vec!["#", "Blueprint", "Produces"]).style(Style::default().fg(colors::INFO));
+    let header = Row::new(vec!["#", "Blueprint", "Rarity"]).style(Style::default().fg(colors::INFO));
     
-    let rows: Vec<Row> = blueprints.iter().enumerate().map(|(i, (name, _))| {
+    let rows: Vec<Row> = blueprints.iter().enumerate().map(|(i, blueprint)| {
+        // Format rarity with appropriate color
+        let rarity_str = match blueprint.rarity {
+            crate::systems::crafting::BlueprintRarity::Common => "Common",
+            crate::systems::crafting::BlueprintRarity::Uncommon => "Uncommon",
+            crate::systems::crafting::BlueprintRarity::Rare => "Rare",
+            crate::systems::crafting::BlueprintRarity::VeryRare => "Very Rare",
+            crate::systems::crafting::BlueprintRarity::Exceptional => "Exceptional",
+            crate::systems::crafting::BlueprintRarity::Legendary => "Legendary",
+        };
+        
         Row::new(vec![
             format!("{}", i + 1),
-            name.clone(),
-            "1".to_string(),
+            blueprint.name.clone(),
+            rarity_str.to_string(),
         ])
     }).collect();
 
@@ -116,35 +126,48 @@ fn draw_ingredients<B: Backend>(f: &mut Frame<B>, game: &Game, area: Rect) {
 
     let selected_blueprint = game.crafting_system.get_selected_blueprint_index();
     
-    let text = if let Some(index) = selected_blueprint {
-        let blueprints = game.crafting_system.get_available_blueprints();
-        if index < blueprints.len() {
-            let (name, ingredients) = &blueprints[index];
+    let text = if let Some(_) = selected_blueprint {
+        let selected_blueprint = game.crafting_system.get_selected_blueprint();
+        
+        if let Some(blueprint) = selected_blueprint {
+            // Get the recipe for the blueprint
+            let recipe_id = &blueprint.recipe_id;
+            let mut spans = Vec::new();
             
-            let mut spans = vec![
-                Spans::from(vec![
-                    Span::styled(format!("Blueprint: {}", name), Style::default().fg(colors::PRIMARY)),
-                ]),
-                Spans::from("Requires:"),
-            ];
-            
-            for (ingredient_name, amount) in ingredients {
-                let owned = game.player.inventory.get_item_quantity(ingredient_name);
-                let style = if owned >= *amount {
-                    Style::default().fg(colors::PRIMARY)
-                } else {
-                    Style::default().fg(colors::DANGER)
-                };
-                
+            if let Some(recipe) = game.crafting_system.recipes.get(recipe_id) {
                 spans.push(Spans::from(vec![
-                    Span::raw(format!("- {} x ", ingredient_name)),
-                    Span::styled(format!("{} ({}/{})", amount, owned, amount), style),
+                    Span::styled(format!("Blueprint: {}", blueprint.name), Style::default().fg(colors::PRIMARY)),
                 ]));
+                spans.push(Spans::from("Requires:"));
+                
+                // Display ingredients from the recipe
+                for (ingredient_name, amount) in &recipe.input_items {
+                    let owned = game.player.inventory.get_item_quantity(ingredient_name);
+                    let style = if owned >= *amount {
+                        Style::default().fg(colors::PRIMARY)
+                    } else {
+                        Style::default().fg(colors::DANGER)
+                    };
+                    
+                    spans.push(Spans::from(vec![
+                        Span::raw(format!("- {} x ", ingredient_name)),
+                        Span::styled(format!("{} ({}/{})", amount, owned, amount), style),
+                    ]));
+                }
+                
+                // Add rarity and other details
+                spans.push(Spans::from(""));
+                spans.push(Spans::from(vec![
+                    Span::raw("Rarity: "),
+                    Span::styled(format!("{:?}", blueprint.rarity), Style::default().fg(colors::INFO)),
+                ]));
+                
+                spans
+            } else {
+                vec![Spans::from("Recipe data not found for this blueprint")]
             }
-            
-            spans
         } else {
-            vec![Spans::from("Select a blueprint to see ingredients")]
+            vec![Spans::from("Blueprint data not found")]
         }
     } else {
         vec![Spans::from("Select a blueprint to see ingredients")]

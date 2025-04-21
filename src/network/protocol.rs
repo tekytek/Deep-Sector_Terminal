@@ -4,6 +4,7 @@ use std::time::Duration;
 use crate::utils::serde::SerializableInstant;
 use crate::models::ship::Ship;
 use crate::models::universe::Universe;
+use crate::models::account::UserAccount;
 
 /// Market type just for network protocol
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -47,6 +48,81 @@ pub enum Message {
     Heartbeat {
         client_id: Uuid,
         timestamp: SerializableInstant,
+    },
+    
+    // Account management messages
+    RegisterAccount {
+        username: String,
+        password: String,
+        email: Option<String>,
+    },
+    RegisterAccountResponse {
+        success: bool,
+        message: String,
+        account: Option<UserAccount>,
+    },
+    LoginAccount {
+        username: String,
+        password: String,
+    },
+    LoginAccountResponse {
+        success: bool,
+        message: String,
+        account: Option<UserAccount>,
+        characters: Vec<String>, // Character IDs
+    },
+    ChangePassword {
+        client_id: Uuid,
+        username: String,
+        current_password: String,
+        new_password: String,
+    },
+    ChangePasswordResponse {
+        success: bool,
+        message: String,
+    },
+    DeleteAccount {
+        client_id: Uuid,
+        username: String,
+        password: String,
+    },
+    DeleteAccountResponse {
+        success: bool,
+        message: String,
+    },
+    
+    // Character management
+    CreateCharacter {
+        client_id: Uuid,
+        account_username: String,
+        character_name: String,
+        faction_type: u8,
+        storyline_id: String,
+    },
+    CreateCharacterResponse {
+        success: bool,
+        message: String,
+        character_id: Option<String>,
+    },
+    ListCharacters {
+        client_id: Uuid,
+        account_username: String,
+    },
+    ListCharactersResponse {
+        success: bool,
+        message: String,
+        characters: Vec<(String, String)>, // (ID, Name) pairs
+    },
+    SelectCharacter {
+        client_id: Uuid,
+        account_username: String,
+        character_id: String,
+    },
+    SelectCharacterResponse {
+        success: bool,
+        message: String,
+        universe: Option<Universe>,
+        player_ship: Option<Ship>,
     },
     
     // Game state messages
