@@ -50,16 +50,41 @@ impl NavigationSystem {
         
         // Check if destination is within jump range
         let distance = self.calculate_distance(&player.current_system, destination);
-        self.is_in_range(player, distance)
+        if !self.is_in_range(player, distance) {
+            return false;
+        }
+        
+        // Check if player has enough fuel
+        let fuel_required = self.calculate_fuel_required(distance);
+        player.ship.current_fuel >= fuel_required
+    }
+    
+    // Calculate how much fuel is required for a given distance
+    pub fn calculate_fuel_required(&self, distance: f32) -> u32 {
+        // Base fuel consumption is 1 unit per light year
+        let base_consumption = distance.ceil() as u32;
+        
+        // Ensure a minimum consumption
+        if base_consumption == 0 {
+            1
+        } else {
+            base_consumption
+        }
     }
 
     pub fn travel_to(&mut self, player: &mut Player, destination: StarSystem) {
         let distance = self.calculate_distance(&player.current_system, &destination);
         let travel_time = self.calculate_travel_time(distance);
         
-        self.travel_in_progress = true;
-        self.destination = Some(destination);
-        self.travel_time_remaining = travel_time;
+        // Consume fuel
+        let fuel_required = self.calculate_fuel_required(distance);
+        if player.ship.current_fuel >= fuel_required {
+            player.ship.current_fuel -= fuel_required;
+            
+            self.travel_in_progress = true;
+            self.destination = Some(destination);
+            self.travel_time_remaining = travel_time;
+        }
     }
 
     pub fn update(&mut self, player: &mut Player, _universe: &Universe, _time_system: &TimeSystem, delta_time: Duration) {

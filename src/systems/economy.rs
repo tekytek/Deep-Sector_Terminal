@@ -179,6 +179,7 @@ impl EconomySystem {
                 ItemType::Blueprint => 0.8,   // Blueprints less demand
                 ItemType::Equipment => 1.1,   // Equipment moderate demand
                 ItemType::ShipModule => 1.3,  // Ship modules high demand
+                ItemType::Fuel => 1.4,        // Fuel is highly in demand
             };
             
             // Apply local market events

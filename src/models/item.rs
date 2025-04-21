@@ -20,6 +20,7 @@ pub enum ItemType {
     Blueprint,   // Item blueprints for crafting
     Equipment,   // Ships parts and components that can be installed
     ShipModule,  // Full ship modules/upgrades
+    Fuel,        // Ship fuel for travel
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]

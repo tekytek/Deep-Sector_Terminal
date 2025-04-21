@@ -131,16 +131,19 @@ impl StationType {
                 "Market".to_string(), 
                 "Trade Missions".to_string(),
                 "Passenger Transport".to_string(),
+                "Refueling".to_string(),
             ],
             StationType::Military => vec![
                 "Bounty Office".to_string(),
                 "Combat Training".to_string(),
                 "Weapons Shop".to_string(),
+                "Refueling".to_string(),
             ],
             StationType::Mining => vec![
                 "Ore Refining".to_string(),
                 "Mining Equipment".to_string(),
                 "Resource Market".to_string(),
+                "Refueling".to_string(),
             ],
             StationType::Research => vec![
                 "Blueprint Research".to_string(),
@@ -548,6 +551,7 @@ impl Universe {
                     ItemType::Blueprint => 1200,
                     ItemType::Equipment => 500,
                     ItemType::ShipModule => 1000,
+                    ItemType::Fuel => 150,
                 };
                 
                 item.value = (base_value as f32 * fluctuation) as u32;
@@ -928,6 +932,19 @@ fn generate_market_items(
         
         items.push((item, quantity));
     }
+    
+    // Add fuel to all markets (since it's essential for travel)
+    let base_value = 120 + rng.gen_range(0..60);
+    let quantity = rng.gen_range(30..100);
+    
+    let fuel_item = Item {
+        name: "Standard Fuel".to_string(),
+        value: base_value,
+        weight: 1,
+        item_type: ItemType::Fuel,
+    };
+    
+    items.push((fuel_item, quantity));
     
     market_items.insert(system_id.to_string(), items);
 }

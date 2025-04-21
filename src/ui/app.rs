@@ -91,6 +91,11 @@ impl App {
                         use crate::ui::screens::orders::draw_orders_screen;
                         draw_orders_screen(f, &game, f.size());
                     },
+                    GameScreen::StationServices => {
+                        // Import and call the appropriate function
+                        use crate::ui::screens::station_services::draw_station_services_screen;
+                        draw_station_services_screen(f, &game, f.size());
+                    },
                     GameScreen::Help => draw_help(f, &game, f.size()),
                     GameScreen::Quit => {
                         // Draw quit confirmation

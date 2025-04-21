@@ -33,6 +33,7 @@ pub enum GameScreen {
     Inventory,
     Character, // New screen for character and skills information
     Orders,    // Trade order management screen
+    StationServices, // Screen for station services including refueling
     Help,
     Quit,
 }
@@ -192,9 +193,58 @@ impl Game {
             GameScreen::Inventory => self.handle_inventory_input(key),
             GameScreen::Character => self.handle_character_input(key),
             GameScreen::Orders => self.handle_orders_input(key),
+            GameScreen::StationServices => self.handle_station_services_input(key),
             GameScreen::Help => self.handle_help_input(key),
             GameScreen::Quit => self.handle_quit_input(key),
         }
+    }
+    
+    fn handle_station_services_input(&mut self, key: KeyEvent) {
+        match key.code {
+            // Refuel ship
+            KeyCode::Char('2') => {
+                self.refuel_ship();
+            },
+            KeyCode::Char('m') => self.change_screen(GameScreen::MainMenu),
+            _ => {}
+        }
+    }
+    
+    // Refuel the player's ship
+    fn refuel_ship(&mut self) {
+        // Check if player is docked
+        if !self.navigation_system.is_docked(&self.player) {
+            self.show_message("You must be docked at a station to refuel");
+            return;
+        }
+        
+        // Check if ship is already at full fuel
+        if self.player.ship.current_fuel >= self.player.ship.fuel_capacity {
+            self.show_message("Ship fuel tank is already full");
+            return;
+        }
+        
+        // Calculate refuel amount and cost
+        let missing_fuel = self.player.ship.fuel_capacity - self.player.ship.current_fuel;
+        let fuel_price = 25; // 25 credits per unit
+        let total_cost = missing_fuel as u32 * fuel_price;
+        
+        // Check if player has enough credits
+        if self.player.credits < total_cost {
+            self.show_message(&format!("Not enough credits. Refueling costs {} credits", total_cost));
+            return;
+        }
+        
+        // Deduct credits and refill fuel
+        self.player.remove_credits(total_cost);
+        self.player.ship.current_fuel = self.player.ship.fuel_capacity;
+        
+        self.show_formatted_message(format!(
+            "Ship refueled for {} credits. Fuel now at {}/{}", 
+            total_cost, 
+            self.player.ship.current_fuel, 
+            self.player.ship.fuel_capacity
+        ));
     }
 
     fn handle_main_menu_input(&mut self, key: KeyEvent) {
@@ -207,6 +257,7 @@ impl Game {
             KeyCode::Char('i') => self.change_screen(GameScreen::Inventory),
             KeyCode::Char('p') => self.change_screen(GameScreen::Character), // 'p' for profile/pilot
             KeyCode::Char('o') => self.change_screen(GameScreen::Orders),    // 'o' for orders
+            KeyCode::Char('t') => self.change_screen(GameScreen::StationServices), // 't' for station
             KeyCode::Char('h') => self.change_screen(GameScreen::Help),
             KeyCode::Char('q') => self.change_screen(GameScreen::Quit),
             _ => {}

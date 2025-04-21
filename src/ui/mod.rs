@@ -23,6 +23,7 @@ use screens::{
     character_creation::draw_character_creation,
     character_info::draw_character_info,
     orders::draw_orders_screen,
+    station_services::draw_station_services_screen,
 };
 use widgets::status_bar::draw_status_bar;
 
@@ -65,6 +66,7 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, game: &Game) {
         GameScreen::Inventory => draw_inventory(f, game, chunks[1]),
         GameScreen::Character => draw_character_info(f, game, chunks[1]),
         GameScreen::Orders => draw_orders_screen(f, game, chunks[1]),
+        GameScreen::StationServices => draw_station_services_screen(f, game, chunks[1]),
         GameScreen::Help => draw_help(f, game, chunks[1]),
         GameScreen::Quit => draw_quit_screen(f, game, chunks[1]),
     }

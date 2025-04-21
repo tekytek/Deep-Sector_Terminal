@@ -469,6 +469,29 @@ impl CraftingSystem {
     
     /// Set up a list of basic crafting recipes for testing
     pub fn setup_basic_recipes(&mut self) {
+        // Fuel recipe
+        let standard_fuel = Item::new(
+            "Standard Fuel", 
+            150, 
+            1, 
+            ItemType::Fuel
+        );
+        
+        let recipe = Self::create_recipe(
+            "Standard Fuel", 
+            "Craft standard ship fuel for interstellar travel", 
+            vec![
+                ("Hydrogen".to_string(), 2),
+                ("Oxygen".to_string(), 1),
+            ],
+            standard_fuel,
+            5, // 5 units of fuel per craft
+            180, // 3 minutes
+        );
+        
+        let recipe_id = self.register_recipe(recipe);
+        self.add_skill_requirement(&recipe_id, "Engineering", 1);
+        
         // Basic resources refining
         let mineral_alloy = Item::new(
             "Mineral Alloy", 
